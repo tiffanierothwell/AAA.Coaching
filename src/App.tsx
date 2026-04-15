@@ -31,6 +31,7 @@ const CARD: React.CSSProperties = {
 // ── Pill ─────────────────────────────────────────────────────
 type PillKind = "solid" | "outline" | "muted"
 function Pill({ label, kind = "outline" }: { label: string; kind?: PillKind }) {
+  const isMobile = useIsMobile()
   const s: Record<PillKind, React.CSSProperties> = {
     solid:   { background: INK,   color: "#fff", border: `1px solid ${INK}` },
     outline: { background: "transparent", color: INK2, border: "1px solid rgba(0,0,0,0.25)" },
@@ -38,10 +39,11 @@ function Pill({ label, kind = "outline" }: { label: string; kind?: PillKind }) {
   }
   return (
     <span style={{
-      fontFamily: FONT, fontSize: 8, fontWeight: 800, letterSpacing: 1.5,
+      fontFamily: FONT, fontSize: isMobile ? 7 : 8, fontWeight: 800,
+      letterSpacing: isMobile ? 0.8 : 1.5,
       textTransform: "uppercase" as const,
-      padding: "3px 9px", borderRadius: 99,
-      whiteSpace: "nowrap" as const, ...s[kind],
+      padding: isMobile ? "2px 7px" : "3px 9px", borderRadius: 99,
+      whiteSpace: "nowrap" as const, flexShrink: 0, ...s[kind],
     }}>{label}</span>
   )
 }
@@ -62,13 +64,14 @@ function SectionLabel({ label }: { label: string }) {
 
 // ── Row ───────────────────────────────────────────────────────
 function Row({ label, value, pill }: { label: string; value: string; pill?: React.ReactNode }) {
+  const isMobile = useIsMobile()
   return (
     <div style={{
-      display: "flex", alignItems: "center", gap: 12,
+      display: "flex", alignItems: "center", gap: isMobile ? 8 : 12,
       padding: "9px 0", borderBottom: `1px solid ${RULE}`,
     }}>
-      <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 300, color: INK3, minWidth: 112, flexShrink: 0, letterSpacing: 0.2 }}>{label}</span>
-      <span style={{ fontFamily: FONT, fontSize: 12, fontWeight: 500, color: INK2, flex: 1, lineHeight: 1.4 }}>{value}</span>
+      <span style={{ fontFamily: FONT, fontSize: isMobile ? 9 : 10, fontWeight: 300, color: INK3, minWidth: isMobile ? 76 : 112, flexShrink: 0, letterSpacing: 0.2 }}>{label}</span>
+      <span style={{ fontFamily: FONT, fontSize: isMobile ? 11 : 12, fontWeight: 500, color: INK2, flex: 1, lineHeight: 1.4, minWidth: 0 }}>{value}</span>
       {pill}
     </div>
   )
@@ -518,7 +521,7 @@ export default function App() {
 
             {/* Project brief + mini calendar side by side */}
             <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: "stretch" }}>
-              <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
+              <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px", flex: 1 }}>
                 <SectionLabel label="Project in one sentence" />
                 <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 13, color: INK2, lineHeight: 1.8, margin: 0 }}>
                   Internal IT ticketing system for 3 gas station / convenience stores. Staff submit tickets when the POS breaks → Manager triages → Owner receives daily reports.
@@ -531,7 +534,7 @@ export default function App() {
             </div>
 
             {/* What exists today */}
-            <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
+            <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px", flex: 1 }}>
               <SectionLabel label="What exists today" />
               <Row label="Language"       value="PHP + HTML / CSS"                     pill={<Pill label="Don't change" kind="muted"   />} />
               <Row label="All screens"    value="Submit, Board, Detail, Analytics"     pill={<Pill label="Built"        kind="solid"   />} />
@@ -546,7 +549,7 @@ export default function App() {
             </div>
 
             {/* People */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
+            <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
               <SectionLabel label="People" />
               <Row label="Tiffanie"  value="Project owner — builds with Claude Code, not a developer" />
               <Row label="Andre B."  value="IT lead, 10+ yrs. Owns server + MySQL DB. Supabase ✗" />
@@ -561,7 +564,7 @@ export default function App() {
             {/* ── THIS WEEK'S FOCUS — right col row 1 ── */}
             <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
               {/* Top: white */}
-              <div style={{ padding: "28px 28px 22px", background: "#fff" }}>
+              <div style={{ padding: isMobile ? "18px 16px 16px" : "28px 28px 22px", background: "#fff" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                   <div style={{ width: 5, height: 5, borderRadius: 1, background: INK }} />
                   <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
@@ -586,7 +589,7 @@ export default function App() {
                 </div>
               </div>
               {/* Bottom: dark */}
-              <div style={{ background: INK, padding: "20px 28px 22px" }}>
+              <div style={{ background: INK, padding: isMobile ? "16px 16px 18px" : "20px 28px 22px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
                   <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
                   <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
@@ -612,7 +615,7 @@ export default function App() {
             </div>
 
             {/* Fireflies meetings */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
+            <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
               <SectionLabel label="Fireflies meeting recordings" />
               {([
                 {
@@ -651,7 +654,7 @@ export default function App() {
             </div>
 
             {/* Agreed architecture — moved lower */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
+            <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
               <SectionLabel label="Agreed architecture" />
               <Row label="App hosting"  value="Andre's server (littletree.itgeneration.ca)" pill={<Pill label="Confirmed" kind="solid"   />} />
               <Row label="Database"     value="Supabase — Postgres"                         pill={<Pill label="Confirmed" kind="solid"   />} />
