@@ -553,7 +553,7 @@ export default function App() {
             <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
               <SectionLabel label="People" />
               <Row label="Tiffanie"  value="Project owner — builds with Claude Code, not a developer" />
-              <Row label="Andre B."  value="IT lead, 10+ yrs. Owns server + MySQL DB. Supabase ✗" />
+              <Row label="Andre B."  value="IT lead, 25+ yrs. Owns server + MySQL DB. Supabase ✗. Go-to for all IT, very experienced, coaching Tiffanie." />
               <Row label="Mike D."   value="Business owner — financial decision maker" />
               <Row label="Valera"    value="You — coaching Tiffanie through the technical build" />
             </div>
