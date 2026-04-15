@@ -508,60 +508,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* ── FOCUS CARD — stacked in left col ── */}
-            <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
-              {/* Top: white section */}
-              <div style={{ padding: "28px 28px 22px", background: "#fff" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: 1, background: INK }} />
-                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-                    This session's focus
-                  </span>
-                </div>
-                <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                  Walk Tiffanie through Supabase CLI — install, authorize, and let Claude Code create the schema directly from terminal.
-                </h2>
-                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                  Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
-                </p>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                  {["Supabase CLI", "Schema migration", "Session 2"].map(tag => (
-                    <span key={tag} style={{
-                      fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
-                      color: INK2, background: CHIP,
-                      border: `1px solid ${RULE}`,
-                      padding: "3px 10px", borderRadius: 99,
-                    }}>{tag}</span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom: dark section */}
-              <div style={{ background: INK, padding: "20px 28px 22px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                  <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
-                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
-                    Also needed
-                  </span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                  {[
-                    "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
-                    "Guide the MySQL login instruction Tiffanie gives Claude Code",
-                    "Validate her written plan — Andre asked her to send it to both of you",
-                  ].map((t, i) => (
-                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                      <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
-                      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{t}</p>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · April 15, 2026</span>
-                </div>
-              </div>
-            </div>
-
             {/* What exists today */}
             <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
               <SectionLabel label="What exists today" />
@@ -590,17 +536,56 @@ export default function App() {
           {/* ── RIGHT COL ── */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
-            {/* Credentials */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
-              <SectionLabel label="Credentials status" />
-              <Row label="Supabase"    value="Connection details received from Andre"  pill={<Pill label="In hand" kind="solid"   />} />
-              <Row label="MySQL"       value="Read-only user + Cashiers table query"   pill={<Pill label="In hand" kind="solid"   />} />
-              <Row label="PHP Mailer"  value="Andre to provide in next exchange"       pill={<Pill label="Pending" kind="outline" />} />
-              <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginTop: 16 }}>
-                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, margin: 0 }}>
-                  <span style={{ fontWeight: 700, color: INK }}>Note — </span>
-                  All credentials stored privately. Tiffanie has them directly from Andre via email.
+            {/* ── THIS WEEK'S FOCUS — right col row 1 ── */}
+            <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+              {/* Top: white */}
+              <div style={{ padding: "28px 28px 22px", background: "#fff" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: 1, background: INK }} />
+                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+                    This week's focus
+                  </span>
+                </div>
+                <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
+                  Walk Tiffanie through Supabase CLI — install, authorize, and let Claude Code create the schema directly from terminal.
+                </h2>
+                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
+                  Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
                 </p>
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
+                  {["Supabase CLI", "Schema migration", "Session 2"].map(tag => (
+                    <span key={tag} style={{
+                      fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
+                      color: INK2, background: CHIP,
+                      border: `1px solid ${RULE}`,
+                      padding: "3px 10px", borderRadius: 99,
+                    }}>{tag}</span>
+                  ))}
+                </div>
+              </div>
+              {/* Bottom: dark */}
+              <div style={{ background: INK, padding: "20px 28px 22px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                  <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
+                  <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
+                    Also needed
+                  </span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
+                  {[
+                    "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
+                    "Guide the MySQL login instruction Tiffanie gives Claude Code",
+                    "Validate her written plan — Andre asked her to send it to both of you",
+                  ].map((t, i) => (
+                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+                      <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
+                      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{t}</p>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · April 15, 2026</span>
+                </div>
               </div>
             </div>
 
