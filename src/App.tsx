@@ -298,7 +298,7 @@ function AprilCalendar() {
   const meetingCount = Object.keys(APRIL_MEETINGS).length
 
   return (
-    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const }}>
+    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const, width: "100%", height: "100%" }}>
 
       {/* Compact header */}
       <div style={{ marginBottom: 12 }}>
@@ -503,7 +503,7 @@ export default function App() {
                   <span style={{ fontWeight: 700, color: INK }}> Fully internal. No customer-facing layer.</span>
                 </p>
               </div>
-              <div style={{ flexShrink: 0, width: 190 }}>
+              <div style={{ flexShrink: 0, width: 190, display: "flex" }}>
                 <AprilCalendar />
               </div>
             </div>
