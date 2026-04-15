@@ -640,57 +640,88 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════
-            FOCUS BANNER — dark, full-width
+            FOCUS CARD — split light / dark
         ════════════════════════════════════════ */}
-        <div style={{ ...CARD, background: INK, boxShadow: "none" }}>
-          <div style={{ display: "flex", alignItems: "stretch" }}>
+        <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "stretch", minHeight: 220 }}>
 
-            {/* Label stripe */}
-            <div style={{
-              width: 52, flexShrink: 0,
-              background: "rgba(255,255,255,0.05)",
-              borderRight: "1px solid rgba(255,255,255,0.08)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <span style={{
-                fontFamily: FONT, fontWeight: 800, fontSize: 8, letterSpacing: 2.5,
-                textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)",
-                transform: "rotate(-90deg)", whiteSpace: "nowrap" as const,
-              }}>For Valera</span>
-            </div>
+            {/* LEFT — light panel */}
+            <div style={{ flex: 1, padding: "36px 40px", background: "#fff", display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}>
 
-            {/* Left: focus */}
-            <div style={{ flex: 1, padding: "32px 36px", borderRight: "1px solid rgba(255,255,255,0.08)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-                <div style={{ width: 4, height: 4, background: "#fff", borderRadius: 1 }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)" }}>This session's focus</span>
+              {/* Label */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+                <div style={{ width: 6, height: 6, borderRadius: 2, background: INK }} />
+                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+                  This session's focus
+                </span>
               </div>
-              <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 20, color: "#fff", lineHeight: 1.4, letterSpacing: -0.5, margin: "0 0 12px" }}>
+
+              {/* Big headline */}
+              <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 22, color: INK, lineHeight: 1.35, letterSpacing: -0.6, margin: "0 0 16px" }}>
                 Walk Tiffanie through Supabase CLI — install, authorize, and let Claude Code create the schema directly from terminal.
               </h2>
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: "rgba(255,255,255,0.45)", lineHeight: 1.7, margin: 0 }}>
+
+              {/* Description */}
+              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.75, margin: 0 }}>
                 Tiffanie has a new iMac. Supabase CLI is not installed. Once it's authorized, Claude Code can run the full schema migration without manual SQL.
               </p>
-            </div>
 
-            {/* Right: also needed */}
-            <div style={{ width: 300, flexShrink: 0, padding: "32px 32px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-                <div style={{ width: 4, height: 4, background: "rgba(255,255,255,0.3)", borderRadius: 1 }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.25)" }}>Also needed</span>
+              {/* Tag pills */}
+              <div style={{ display: "flex", gap: 8, marginTop: 24, flexWrap: "wrap" as const }}>
+                {["Supabase CLI", "Schema migration", "Session 2"].map(tag => (
+                  <span key={tag} style={{
+                    fontFamily: FONT, fontWeight: 500, fontSize: 10,
+                    color: INK2, background: CHIP,
+                    border: `1px solid ${RULE}`,
+                    padding: "4px 12px", borderRadius: 99,
+                  }}>{tag}</span>
+                ))}
               </div>
-              {[
-                "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
-                "Guide the MySQL login instruction Tiffanie gives Claude Code",
-                "Validate her written plan — Andre asked her to send it to both of you",
-              ].map((t, i) => (
-                <div key={i} style={{ display: "flex", gap: 12, marginBottom: 16, alignItems: "flex-start" }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 14, color: "rgba(255,255,255,0.2)", lineHeight: 1, flexShrink: 0, marginTop: 1 }}>0{i + 1}</span>
-                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: "rgba(255,255,255,0.55)", lineHeight: 1.65, margin: 0 }}>{t}</p>
-                </div>
-              ))}
             </div>
 
+            {/* RIGHT — dark panel */}
+            <div style={{
+              width: 320, flexShrink: 0,
+              background: INK,
+              borderRadius: "0 20px 20px 0",
+              padding: "36px 32px",
+              display: "flex", flexDirection: "column" as const, justifyContent: "space-between",
+            }}>
+
+              {/* Label */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
+                <div style={{ width: 6, height: 6, borderRadius: 2, background: "rgba(255,255,255,0.25)" }} />
+                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
+                  Also needed
+                </span>
+              </div>
+
+              {/* Numbered items */}
+              <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 20 }}>
+                {[
+                  "Review the schema Claude generates: tickets, stores, attachments, ticket_updates",
+                  "Guide the MySQL login instruction Tiffanie gives Claude Code",
+                  "Validate her written plan — Andre asked her to send it to both of you",
+                ].map((t, i) => (
+                  <div key={i} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                    <span style={{
+                      fontFamily: FONT, fontWeight: 900, fontSize: 11,
+                      color: "rgba(255,255,255,0.18)",
+                      lineHeight: 1.5, flexShrink: 0, letterSpacing: 0.5,
+                    }}>0{i + 1}</span>
+                    <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: "rgba(255,255,255,0.65)", lineHeight: 1.65, margin: 0 }}>{t}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom label */}
+              <div style={{ marginTop: 28, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: 0.5 }}>
+                  For Valera · April 15, 2026
+                </span>
+              </div>
+
+            </div>
           </div>
         </div>
 
