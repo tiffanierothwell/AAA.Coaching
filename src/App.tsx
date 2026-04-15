@@ -136,6 +136,51 @@ function Step({ n, title, who, detail, status }: {
   )
 }
 
+// ── Waving figure SVG ─────────────────────────────────────────
+function WavingFigure() {
+  const stroke = CYAN
+  const sw = 2.5
+  return (
+    <svg viewBox="0 0 130 200" width="130" height="200" style={{ position: "relative" as const, zIndex: 1, filter: `drop-shadow(0 0 10px rgba(${hex(CYAN)},0.45))` }}>
+      {/* Head */}
+      <circle cx="65" cy="46" r="24" fill={`rgba(${hex(CYAN)},0.05)`} stroke={stroke} strokeWidth={sw}/>
+      {/* Glasses left */}
+      <rect x="46" y="39" width="16" height="11" rx="5.5" fill="none" stroke={stroke} strokeWidth="1.8"/>
+      {/* Glasses right */}
+      <rect x="65" y="39" width="16" height="11" rx="5.5" fill="none" stroke={stroke} strokeWidth="1.8"/>
+      {/* Bridge */}
+      <line x1="62" y1="44" x2="65" y2="44" stroke={stroke} strokeWidth="1.8"/>
+      {/* Eyes */}
+      <circle cx="54" cy="44" r="2.5" fill={CYAN}/>
+      <circle cx="73" cy="44" r="2.5" fill={CYAN}/>
+      {/* Smile */}
+      <path d="M 54 54 Q 65 62 76 54" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+      {/* Neck */}
+      <line x1="65" y1="70" x2="65" y2="83" stroke={stroke} strokeWidth={sw}/>
+      {/* Body */}
+      <path d="M 38 83 Q 65 78 92 83 L 94 138 Q 65 142 36 138 Z" fill={`rgba(${hex(CYAN)},0.04)`} stroke={stroke} strokeWidth={sw} strokeLinejoin="round"/>
+      {/* Left arm — hanging down */}
+      <path d="M 39 90 Q 24 112 22 132" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+      {/* Left hand */}
+      <circle cx="21" cy="136" r="6" fill={`rgba(${hex(CYAN)},0.08)`} stroke={stroke} strokeWidth="1.8"/>
+      {/* Right arm — waving UP */}
+      <path d="M 91 90 Q 108 68 112 46" fill="none" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+      {/* Waving hand */}
+      <circle cx="113" cy="40" r="9" fill={`rgba(${hex(CYAN)},0.08)`} stroke={stroke} strokeWidth="1.8"/>
+      {/* Fingers */}
+      <line x1="113" y1="31" x2="110" y2="24" stroke={stroke} strokeWidth="1.4" strokeLinecap="round"/>
+      <line x1="117" y1="31" x2="117" y2="23" stroke={stroke} strokeWidth="1.4" strokeLinecap="round"/>
+      <line x1="121" y1="33" x2="124" y2="26" stroke={stroke} strokeWidth="1.4" strokeLinecap="round"/>
+      {/* Legs */}
+      <line x1="52" y1="138" x2="46" y2="178" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+      <line x1="78" y1="138" x2="84" y2="178" stroke={stroke} strokeWidth={sw} strokeLinecap="round"/>
+      {/* Feet */}
+      <path d="M 46 178 Q 36 180 34 178 Q 35 174 46 175" fill="none" stroke={stroke} strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M 84 178 Q 94 180 96 178 Q 95 174 84 175" fill="none" stroke={stroke} strokeWidth="1.8" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
 // ── App ───────────────────────────────────────────────────────
 export default function App() {
   return (
@@ -156,37 +201,78 @@ export default function App() {
       <div style={{ maxWidth: 880, margin: "0 auto", position: "relative" as const }}>
 
         {/* ── HERO HEADER ── */}
-        <Card glow={BLUE} style={{ marginBottom: 20, padding: "28px 32px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 20, flexWrap: "wrap" as const }}>
-            <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-                <div style={{ ...G2, padding: "4px 12px", border: `1px solid rgba(${hex(PINK)},0.2)` }}>
+        <Card glow={CYAN} style={{ marginBottom: 20, overflow: "hidden", padding: 0 }}>
+          <div style={{ display: "flex", alignItems: "stretch", minHeight: 240 }}>
+
+            {/* Left — greeting + stats */}
+            <div style={{ flex: 1, padding: "32px 36px", display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}>
+              {/* Top row: badges */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, flexWrap: "wrap" as const }}>
+                <div style={{ ...G2, padding: "4px 12px", border: `1px solid rgba(${hex(PINK)},0.25)` }}>
                   <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: PINK }}>
-                    AAA Accelerator · April 15, 2026
+                    AAA Accelerator
                   </span>
                 </div>
+                <div style={{ ...G2, padding: "4px 12px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: DIM, letterSpacing: 1 }}>April 15, 2026</span>
+                </div>
+                <div style={{ ...G2, padding: "4px 12px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: DIM, letterSpacing: 1 }}>Session 2</span>
+                </div>
               </div>
-              <h1 style={{ fontSize: 30, fontWeight: 800, color: "#fff", margin: "0 0 6px", letterSpacing: -0.8 }}>
-                Little Tree — POS Help Desk
-              </h1>
-              <p style={{ color: DIM, margin: 0, fontSize: 13, letterSpacing: 0.2 }}>
-                Tiffanie Rothwell &nbsp;·&nbsp; MJM Ventures (Mike David)
-              </p>
+
+              {/* Greeting */}
+              <div>
+                <h1 style={{ fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 6px", letterSpacing: -1.5, lineHeight: 1.05 }}>
+                  Hi Valera!
+                </h1>
+                <p style={{ fontSize: 13, color: DIM, margin: "0 0 24px", lineHeight: 1.6 }}>
+                  It's good to see you again.&nbsp; Here's the full picture for today's session — Little Tree POS Help Desk.
+                </p>
+              </div>
+
+              {/* Quick-glance stat chips */}
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" as const }}>
+                {([
+                  { value: "5", sub: "Screens built",     accent: BLUE   },
+                  { value: "0", sub: "DB connected",      accent: AMBER  },
+                  { value: "1", sub: "Today's goal",      accent: CYAN   },
+                  { value: "3", sub: "Store locations",   accent: VIOLET },
+                ] as { value: string; sub: string; accent: string }[]).map(({ value, sub, accent }) => (
+                  <div key={sub} style={{
+                    ...G2,
+                    padding: "12px 18px",
+                    border: `1px solid rgba(${hex(accent)},0.22)`,
+                    background: `rgba(${hex(accent)},0.07)`,
+                    display: "flex", flexDirection: "column" as const, alignItems: "center",
+                    minWidth: 72,
+                  }}>
+                    <span style={{ fontSize: 24, fontWeight: 900, color: accent, lineHeight: 1, letterSpacing: -1 }}>{value}</span>
+                    <span style={{ fontSize: 9.5, color: DIM, marginTop: 4, letterSpacing: 0.5, textAlign: "center" as const, lineHeight: 1.3 }}>{sub}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Status summary */}
-            <div style={{ display: "flex", flex: "none", flexDirection: "column" as const, gap: 8, alignItems: "flex-end" }}>
-              {[
-                { dot: BLUE,   label: "All screens built in PHP" },
-                { dot: AMBER,  label: "No database connected yet" },
-                { dot: PINK,   label: "Next: Supabase CLI with Valera" },
-              ].map(({ dot, label }) => (
-                <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, ...G2, padding: "7px 14px" }}>
-                  <Dot color={dot} />
-                  <span style={{ fontSize: 12, color: WHITE, fontWeight: 500 }}>{label}</span>
-                </div>
-              ))}
+            {/* Right — illustrated character panel */}
+            <div style={{
+              width: 200, flexShrink: 0,
+              display: "flex", alignItems: "flex-end", justifyContent: "center",
+              padding: "0 16px 0",
+              background: `linear-gradient(160deg, rgba(${hex(VIOLET)},0.07), rgba(${hex(CYAN)},0.04))`,
+              borderLeft: "1px solid rgba(255,255,255,0.06)",
+              position: "relative" as const,
+            }}>
+              {/* glow orb behind figure */}
+              <div style={{
+                position: "absolute", width: 160, height: 160, borderRadius: "50%",
+                background: `radial-gradient(circle, rgba(${hex(CYAN)},0.12) 0%, transparent 70%)`,
+                top: "50%", left: "50%", transform: "translate(-50%, -55%)",
+                pointerEvents: "none",
+              }}/>
+              <WavingFigure />
             </div>
+
           </div>
         </Card>
 
