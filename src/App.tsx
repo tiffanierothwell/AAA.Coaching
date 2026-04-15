@@ -287,62 +287,45 @@ const APRIL_START_DAY = 3
 const APRIL_DAYS      = 30
 const TODAY_DATE      = 15
 
-const WEEK_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 
 function AprilCalendar() {
   const [hovered, setHovered] = useState<number | null>(null)
 
-  // Build cell array: nulls for empty leading cells, then 1-30
   const cells: (number | null)[] = [
     ...Array(APRIL_START_DAY).fill(null),
     ...Array.from({ length: APRIL_DAYS }, (_, i) => i + 1),
   ]
-
-  const meetingDays = Object.keys(APRIL_MEETINGS).map(Number)
+  const meetingCount = Object.keys(APRIL_MEETINGS).length
 
   return (
-    <div style={{ ...CARD, padding: "28px 32px" }}>
+    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const }}>
 
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+      {/* Compact header */}
+      <div style={{ marginBottom: 12 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
           <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-            April 2026 — Coaching sessions
-          </span>
+          <span style={{ fontFamily: FONT, fontSize: 8, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>April 2026</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: 3, background: INK }} />
-            <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>Meeting</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 10, height: 10, borderRadius: 3, border: `2px solid ${INK}` }} />
-            <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>Today</span>
-          </div>
-          <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 10, color: INK }}>
-            {meetingDays.length} session{meetingDays.length !== 1 ? "s" : ""} this month
-          </span>
-        </div>
+        <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 11, color: INK }}>
+          {meetingCount} sessions
+        </span>
       </div>
 
-      {/* Day-of-week headers */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5, marginBottom: 5 }}>
-        {WEEK_LABELS.map(d => (
-          <div key={d} style={{
+      {/* Day-of-week initials */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, marginBottom: 3 }}>
+        {["S","M","T","W","T","F","S"].map((d, i) => (
+          <div key={i} style={{
             textAlign: "center" as const,
-            fontFamily: FONT, fontWeight: 700, fontSize: 8.5,
-            letterSpacing: 1.2, color: INK3,
-            textTransform: "uppercase" as const,
-            paddingBottom: 6,
+            fontFamily: FONT, fontWeight: 700, fontSize: 7.5,
+            color: INK3, paddingBottom: 4,
           }}>{d}</div>
         ))}
       </div>
 
-      {/* Calendar grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5 }}>
+      {/* Grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, position: "relative" as const }}>
         {cells.map((day, i) => {
-          if (!day) return <div key={`e${i}`} style={{ aspectRatio: "1", borderRadius: 10 }} />
+          if (!day) return <div key={`e${i}`} style={{ height: 22, borderRadius: 6 }} />
 
           const hasMeeting = !!APRIL_MEETINGS[day]
           const isToday    = day === TODAY_DATE
@@ -353,25 +336,16 @@ function AprilCalendar() {
             <div
               key={day}
               style={{
-                aspectRatio: "1",
-                borderRadius: 10,
+                height: 22, borderRadius: 6,
                 display: "flex", alignItems: "center", justifyContent: "center",
                 position: "relative" as const,
                 cursor: hasMeeting ? "pointer" : "default",
-                background: hasMeeting
-                  ? INK
-                  : isToday
-                  ? "transparent"
-                  : "transparent",
-                border: hasMeeting
-                  ? "none"
-                  : isToday
-                  ? `2px solid ${INK}`
-                  : `1px solid ${RULE}`,
-                opacity: isFuture && !hasMeeting ? 0.4 : 1,
+                background: hasMeeting ? INK : "transparent",
+                border: hasMeeting ? "none" : isToday ? `2px solid ${INK}` : `1px solid ${RULE}`,
+                opacity: isFuture && !hasMeeting ? 0.35 : 1,
                 transition: "transform 0.12s, box-shadow 0.12s",
-                transform: hovered === day ? "scale(1.18)" : "scale(1)",
-                boxShadow: hovered === day ? "0 6px 20px rgba(0,0,0,0.18)" : "none",
+                transform: hovered === day ? "scale(1.25)" : "scale(1)",
+                boxShadow: hovered === day ? "0 4px 16px rgba(0,0,0,0.22)" : "none",
                 zIndex: hovered === day ? 10 : 1,
               }}
               onMouseEnter={() => hasMeeting && setHovered(day)}
@@ -380,52 +354,49 @@ function AprilCalendar() {
               <span style={{
                 fontFamily: FONT,
                 fontWeight: hasMeeting ? 800 : isToday ? 700 : isPast ? 400 : 300,
-                fontSize: 12,
+                fontSize: 9,
                 color: hasMeeting ? "#fff" : isToday ? INK : isPast ? INK2 : INK3,
                 userSelect: "none" as const,
+                lineHeight: 1,
               }}>{day}</span>
 
-              {/* Hover tooltip */}
+              {/* Tooltip */}
               {hovered === day && APRIL_MEETINGS[day] && (
                 <div style={{
                   position: "absolute" as const,
-                  bottom: "calc(100% + 10px)",
+                  bottom: "calc(100% + 8px)",
                   left: "50%",
                   transform: "translateX(-50%)",
                   background: INK,
-                  borderRadius: 12,
-                  padding: "12px 16px",
+                  borderRadius: 10,
+                  padding: "10px 14px",
                   whiteSpace: "nowrap" as const,
                   zIndex: 999,
-                  boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
-                  minWidth: 190,
+                  boxShadow: "0 10px 28px rgba(0,0,0,0.28)",
+                  minWidth: 180,
                   pointerEvents: "none" as const,
                 }}>
-                  {/* Date chip */}
-                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 6 }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 5 }}>
                     April {day}, 2026
                   </div>
-                  {/* Title */}
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: "#fff", marginBottom: 8, lineHeight: 1.3 }}>
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: "#fff", marginBottom: 7, lineHeight: 1.3 }}>
                     {APRIL_MEETINGS[day].title}
                   </div>
-                  {/* Attendees */}
-                  <div style={{ display: "flex", flexDirection: "column" as const, gap: 4 }}>
+                  <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
                     {APRIL_MEETINGS[day].who.map(name => (
-                      <div key={name} style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(255,255,255,0.4)", flexShrink: 0 }} />
-                        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.75)" }}>{name}</span>
+                      <div key={name} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.35)", flexShrink: 0 }} />
+                        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.75)" }}>{name}</span>
                       </div>
                     ))}
                   </div>
-                  {/* Arrow */}
                   <div style={{
                     position: "absolute" as const,
                     top: "100%", left: "50%", transform: "translateX(-50%)",
                     width: 0, height: 0,
-                    borderLeft: "7px solid transparent",
-                    borderRight: "7px solid transparent",
-                    borderTop: `7px solid ${INK}`,
+                    borderLeft: "6px solid transparent",
+                    borderRight: "6px solid transparent",
+                    borderTop: `6px solid ${INK}`,
                   }}/>
                 </div>
               )}
@@ -516,12 +487,6 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════
-            APRIL CALENDAR
-        ════════════════════════════════════════ */}
-        <AprilCalendar />
-
-
-        {/* ════════════════════════════════════════
             2-COL CONTENT GRID
         ════════════════════════════════════════ */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -529,13 +494,18 @@ export default function App() {
           {/* ── LEFT COL ── */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
-            {/* Project brief */}
-            <div style={{ ...CARD, padding: "28px 28px" }}>
-              <SectionLabel label="Project in one sentence" />
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 13, color: INK2, lineHeight: 1.8, margin: 0 }}>
-                Internal IT ticketing system for 3 gas station / convenience stores. Staff submit tickets when the POS breaks → Manager triages → Owner receives daily reports.
-                <span style={{ fontWeight: 700, color: INK }}> Fully internal. No customer-facing layer.</span>
-              </p>
+            {/* Project brief + mini calendar side by side */}
+            <div style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
+              <div style={{ ...CARD, padding: "28px 28px", flex: 1 }}>
+                <SectionLabel label="Project in one sentence" />
+                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 13, color: INK2, lineHeight: 1.8, margin: 0 }}>
+                  Internal IT ticketing system for 3 gas station / convenience stores. Staff submit tickets when the POS breaks → Manager triages → Owner receives daily reports.
+                  <span style={{ fontWeight: 700, color: INK }}> Fully internal. No customer-facing layer.</span>
+                </p>
+              </div>
+              <div style={{ flexShrink: 0, width: 190 }}>
+                <AprilCalendar />
+              </div>
             </div>
 
             {/* What exists today */}
