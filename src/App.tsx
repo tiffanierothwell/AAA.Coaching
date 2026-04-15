@@ -1,4 +1,5 @@
 import './App.css'
+import { useState } from 'react'
 
 // ── Design tokens ─────────────────────────────────────────────
 const INK   = "#0A0A0A"
@@ -270,6 +271,167 @@ function ProgressTimeline() {
   )
 }
 
+// ── April 2026 meeting data ───────────────────────────────────
+// Add meetings here: day number → { title, who[] }
+const APRIL_MEETINGS: Record<number, { title: string; who: string[] }> = {
+  15: { title: "Coach Session 2 — Supabase CLI",     who: ["Tiffanie Rothwell", "Valera Tumash"] },
+}
+
+// April 1, 2026 = Wednesday (index 3, Sun=0)
+const APRIL_START_DAY = 3
+const APRIL_DAYS      = 30
+const TODAY_DATE      = 15
+
+const WEEK_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+
+function AprilCalendar() {
+  const [hovered, setHovered] = useState<number | null>(null)
+
+  // Build cell array: nulls for empty leading cells, then 1-30
+  const cells: (number | null)[] = [
+    ...Array(APRIL_START_DAY).fill(null),
+    ...Array.from({ length: APRIL_DAYS }, (_, i) => i + 1),
+  ]
+
+  const meetingDays = Object.keys(APRIL_MEETINGS).map(Number)
+
+  return (
+    <div style={{ ...CARD, padding: "28px 32px" }}>
+
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 22 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+            April 2026 — Coaching sessions
+          </span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 3, background: INK }} />
+            <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>Meeting</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 3, border: `2px solid ${INK}` }} />
+            <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>Today</span>
+          </div>
+          <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 10, color: INK }}>
+            {meetingDays.length} session{meetingDays.length !== 1 ? "s" : ""} this month
+          </span>
+        </div>
+      </div>
+
+      {/* Day-of-week headers */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5, marginBottom: 5 }}>
+        {WEEK_LABELS.map(d => (
+          <div key={d} style={{
+            textAlign: "center" as const,
+            fontFamily: FONT, fontWeight: 700, fontSize: 8.5,
+            letterSpacing: 1.2, color: INK3,
+            textTransform: "uppercase" as const,
+            paddingBottom: 6,
+          }}>{d}</div>
+        ))}
+      </div>
+
+      {/* Calendar grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 5 }}>
+        {cells.map((day, i) => {
+          if (!day) return <div key={`e${i}`} style={{ aspectRatio: "1", borderRadius: 10 }} />
+
+          const hasMeeting = !!APRIL_MEETINGS[day]
+          const isToday    = day === TODAY_DATE
+          const isPast     = day < TODAY_DATE
+          const isFuture   = day > TODAY_DATE
+
+          return (
+            <div
+              key={day}
+              style={{
+                aspectRatio: "1",
+                borderRadius: 10,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                position: "relative" as const,
+                cursor: hasMeeting ? "pointer" : "default",
+                background: hasMeeting
+                  ? INK
+                  : isToday
+                  ? "transparent"
+                  : "transparent",
+                border: hasMeeting
+                  ? "none"
+                  : isToday
+                  ? `2px solid ${INK}`
+                  : `1px solid ${RULE}`,
+                opacity: isFuture && !hasMeeting ? 0.4 : 1,
+                transition: "transform 0.12s, box-shadow 0.12s",
+                transform: hovered === day ? "scale(1.18)" : "scale(1)",
+                boxShadow: hovered === day ? "0 6px 20px rgba(0,0,0,0.18)" : "none",
+                zIndex: hovered === day ? 10 : 1,
+              }}
+              onMouseEnter={() => hasMeeting && setHovered(day)}
+              onMouseLeave={() => setHovered(null)}
+            >
+              <span style={{
+                fontFamily: FONT,
+                fontWeight: hasMeeting ? 800 : isToday ? 700 : isPast ? 400 : 300,
+                fontSize: 12,
+                color: hasMeeting ? "#fff" : isToday ? INK : isPast ? INK2 : INK3,
+                userSelect: "none" as const,
+              }}>{day}</span>
+
+              {/* Hover tooltip */}
+              {hovered === day && APRIL_MEETINGS[day] && (
+                <div style={{
+                  position: "absolute" as const,
+                  bottom: "calc(100% + 10px)",
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  background: INK,
+                  borderRadius: 12,
+                  padding: "12px 16px",
+                  whiteSpace: "nowrap" as const,
+                  zIndex: 999,
+                  boxShadow: "0 12px 32px rgba(0,0,0,0.25)",
+                  minWidth: 190,
+                  pointerEvents: "none" as const,
+                }}>
+                  {/* Date chip */}
+                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 6 }}>
+                    April {day}, 2026
+                  </div>
+                  {/* Title */}
+                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: "#fff", marginBottom: 8, lineHeight: 1.3 }}>
+                    {APRIL_MEETINGS[day].title}
+                  </div>
+                  {/* Attendees */}
+                  <div style={{ display: "flex", flexDirection: "column" as const, gap: 4 }}>
+                    {APRIL_MEETINGS[day].who.map(name => (
+                      <div key={name} style={{ display: "flex", alignItems: "center", gap: 7 }}>
+                        <div style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(255,255,255,0.4)", flexShrink: 0 }} />
+                        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.75)" }}>{name}</span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Arrow */}
+                  <div style={{
+                    position: "absolute" as const,
+                    top: "100%", left: "50%", transform: "translateX(-50%)",
+                    width: 0, height: 0,
+                    borderLeft: "7px solid transparent",
+                    borderRight: "7px solid transparent",
+                    borderTop: `7px solid ${INK}`,
+                  }}/>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 // ── App ───────────────────────────────────────────────────────
 export default function App() {
   return (
@@ -346,6 +508,12 @@ export default function App() {
             PROGRESS TIMELINE
         ════════════════════════════════════════ */}
         <ProgressTimeline />
+
+
+        {/* ════════════════════════════════════════
+            APRIL CALENDAR
+        ════════════════════════════════════════ */}
+        <AprilCalendar />
 
 
         {/* ════════════════════════════════════════
