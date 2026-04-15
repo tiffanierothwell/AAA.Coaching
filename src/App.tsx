@@ -288,14 +288,24 @@ export default function App() {
             {/* Greeting */}
             <div style={{ flex: 1, padding: "36px 40px", display: "flex", flexDirection: "column" as const, justifyContent: "space-between" }}>
               {/* Meta badges */}
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const }}>
-                {["AAA Accelerator", "April 15, 2026", "Session 2"].map((badge, i) => (
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "center" }}>
+                {/* AAA Accelerator logo badge */}
+                <span style={{
+                  fontFamily: FONT, fontSize: 9, fontWeight: 800,
+                  letterSpacing: 1.5, textTransform: "uppercase" as const,
+                  padding: "5px 14px", borderRadius: 99,
+                  background: INK,
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                }}>
+                  <span style={{ color: "#FF1493", letterSpacing: 0, fontWeight: 900, fontSize: 11 }}>///</span>
+                  <span style={{ color: "#ffffff" }}>Accelerator</span>
+                </span>
+                {["April 15, 2026", "Session 2"].map((badge) => (
                   <span key={badge} style={{
-                    fontFamily: FONT, fontSize: 9, fontWeight: i === 0 ? 800 : 300,
-                    letterSpacing: i === 0 ? 2 : 0.5, textTransform: "uppercase" as const,
+                    fontFamily: FONT, fontSize: 9, fontWeight: 300,
+                    letterSpacing: 0.5, textTransform: "uppercase" as const,
                     padding: "4px 12px", borderRadius: 99,
-                    background: i === 0 ? INK : CHIP,
-                    color: i === 0 ? "#fff" : INK3,
+                    background: CHIP, color: INK3,
                   }}>{badge}</span>
                 ))}
               </div>
