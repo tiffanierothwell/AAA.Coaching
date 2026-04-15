@@ -140,6 +140,136 @@ function Step({ n, title, who, detail, status }: {
   )
 }
 
+// ── Progress Timeline ─────────────────────────────────────────
+type MS = "done" | "now" | "later"
+const MILESTONES: { label: string; sub: string; status: MS }[] = [
+  { label: "Consultation",  sub: "Andre · needs",       status: "done"  },
+  { label: "Build App",     sub: "Claude Code · PHP",   status: "done"  },
+  { label: "GitHub",        sub: "Repo + deployed",     status: "done"  },
+  { label: "Demo",          sub: "Shown to Andre",      status: "done"  },
+  { label: "Approval",      sub: "Andre confirms",      status: "done"  },
+  { label: "Session 1",     sub: "Valera · intro",      status: "done"  },
+  { label: "Tech Q&A",      sub: "Andre + Valera",      status: "done"  },
+  { label: "Supabase CLI",  sub: "TODAY · Session 2",   status: "now"   },
+  { label: "Connect DB",    sub: "PHP + Supabase",      status: "later" },
+  { label: "Login Auth",    sub: "MySQL · Cashiers",    status: "later" },
+  { label: "Email Alerts",  sub: "PHP Mailer",          status: "later" },
+  { label: "Launch",        sub: "Andre's server",      status: "later" },
+]
+
+function ProgressTimeline() {
+  const total    = MILESTONES.length
+  const doneCount = MILESTONES.filter(m => m.status === "done").length
+  const nowIdx   = MILESTONES.findIndex(m => m.status === "now")
+  // line fills up to centre of current step
+  const halfStep = 100 / total / 2
+  const fillPct  = nowIdx >= 0 ? halfStep + (nowIdx / (total - 1)) * (100 - 2 * halfStep) : 100
+
+  return (
+    <div style={{ ...CARD, padding: "26px 32px 28px" }}>
+
+      {/* Header row */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+            Project timeline
+          </span>
+        </div>
+        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3 }}>
+          <span style={{ fontWeight: 800, color: INK }}>{doneCount}</span> of {total} steps complete
+        </span>
+      </div>
+
+      {/* Track + steps */}
+      <div style={{ position: "relative" as const }}>
+
+        {/* Grey track */}
+        <div style={{
+          position: "absolute" as const,
+          top: 27, left: `${halfStep}%`, right: `${halfStep}%`,
+          height: 2, background: RULE, borderRadius: 99, zIndex: 0,
+        }}/>
+        {/* Black fill */}
+        <div style={{
+          position: "absolute" as const,
+          top: 27, left: `${halfStep}%`,
+          width: `${fillPct - halfStep}%`,
+          height: 2, background: INK, borderRadius: 99, zIndex: 1,
+        }}/>
+
+        {/* Step nodes */}
+        <div style={{ display: "flex", position: "relative" as const, zIndex: 2 }}>
+          {MILESTONES.map((m, i) => {
+            const done  = m.status === "done"
+            const now   = m.status === "now"
+            const later = m.status === "later"
+            return (
+              <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 0 }}>
+
+                {/* "TODAY" pin above current */}
+                <div style={{ height: 18, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 2 }}>
+                  {now && (
+                    <span style={{
+                      fontFamily: FONT, fontWeight: 800, fontSize: 7.5, letterSpacing: 1.5,
+                      textTransform: "uppercase" as const,
+                      background: INK, color: "#fff",
+                      padding: "2px 7px", borderRadius: 99,
+                    }}>Today</span>
+                  )}
+                </div>
+
+                {/* Circle */}
+                <div style={{
+                  width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                  background: done ? INK : "#fff",
+                  border: done ? `2px solid ${INK}` : now ? `2.5px solid ${INK}` : `2px solid #D8D8D8`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  boxShadow: now ? "0 0 0 5px rgba(0,0,0,0.07)" : "none",
+                }}>
+                  {done && (
+                    <svg width="11" height="11" viewBox="0 0 12 12">
+                      <polyline points="2,6 5,9 10,3" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  )}
+                  {now && <div style={{ width: 8, height: 8, borderRadius: "50%", background: INK }}/>}
+                  {later && <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#D8D8D8" }}/>}
+                </div>
+
+                {/* Labels */}
+                <div style={{ marginTop: 9, textAlign: "center" as const, lineHeight: 1.35, padding: "0 2px" }}>
+                  <div style={{
+                    fontFamily: FONT, fontSize: 9.5,
+                    fontWeight: now ? 800 : done ? 600 : 400,
+                    color: now ? INK : done ? INK2 : INK3,
+                    letterSpacing: now ? 0.2 : 0,
+                  }}>{m.label}</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: now ? INK3 : "#C0C0C0", marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Bottom progress bar */}
+      <div style={{ marginTop: 22 }}>
+        <div style={{ height: 3, background: RULE, borderRadius: 99, overflow: "hidden" as const }}>
+          <div style={{ height: "100%", width: `${(doneCount / total) * 100}%`, background: INK, borderRadius: 99 }}/>
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "#C0C0C0", letterSpacing: 0.5 }}>Project start</span>
+          <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9, color: INK3 }}>
+            {total - doneCount - 1} steps remaining after today
+          </span>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "#C0C0C0", letterSpacing: 0.5 }}>Launch</span>
+        </div>
+      </div>
+
+    </div>
+  )
+}
+
 // ── App ───────────────────────────────────────────────────────
 export default function App() {
   return (
@@ -218,6 +348,12 @@ export default function App() {
             ))}
           </div>
         </div>
+
+
+        {/* ════════════════════════════════════════
+            PROGRESS TIMELINE
+        ════════════════════════════════════════ */}
+        <ProgressTimeline />
 
 
         {/* ════════════════════════════════════════
