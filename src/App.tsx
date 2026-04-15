@@ -274,7 +274,12 @@ function ProgressTimeline() {
 // ── April 2026 meeting data ───────────────────────────────────
 // Add meetings here: day number → { title, who[] }
 const APRIL_MEETINGS: Record<number, { title: string; who: string[] }> = {
-  15: { title: "Coach Session 2 — Supabase CLI",     who: ["Tiffanie Rothwell", "Valera Tumash"] },
+   3: { title: "AAA On-boarding",              who: ["Tiffanie Rothwell", "Mara"] },
+   7: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
+   9: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
+  14: { title: "Coaching with Valera",         who: ["Mike David", "Tiffanie Rothwell", "Valera Tumash"] },
+  15: { title: "Coaching with Valera",         who: ["Andre B.", "Tiffanie Rothwell", "Valera Tumash"] },
+  16: { title: "Coaching with Valera",         who: ["Tiffanie Rothwell", "Valera Tumash"] },
 }
 
 // April 1, 2026 = Wednesday (index 3, Sun=0)
