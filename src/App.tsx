@@ -554,7 +554,7 @@ export default function App() {
               <SectionLabel label="People" />
               <Row label="Tiffanie"  value="Project owner — builds with Claude Code, not a developer" />
               <Row label="Andre B."  value="IT lead, 10+ yrs. Owns server + MySQL DB. Supabase ✗" />
-              <Row label="Mike D."   value="Business owner — approves tickets, wants daily reports" />
+              <Row label="Mike D."   value="Business owner — financial decision maker" />
               <Row label="Valera"    value="You — coaching Tiffanie through the technical build" />
             </div>
           </div>
