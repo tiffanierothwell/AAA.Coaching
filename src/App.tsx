@@ -1226,27 +1226,9 @@ const EMAIL_THREAD: EmailMsg[] = [
         <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>WHAT WE AGREED ON TODAY:</p>
         <p style={{ margin: "0 0 8px" }}>1. Two databases — Littletree MySQL stays read-only, build a 2nd Supabase Postgres ("Little Tree Ventures") for everything outside the transactional layer. 2. Service-by-service schema (don't design upfront). 3. Drop Google SSO from Week 1. 4. No dev/test DB yet. 5. Timeline compressed 5 weeks → 3 weeks per Valera.</p>
         <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>SCHEMA PROPOSAL:</p>
-        <p style={{ margin: "0 0 8px" }}>Saved as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>mikes-world-schema.sql</code>. 25 tables in 7 service blocks (foundation, ingestion, workflow, intelligence, cross-venture, mentors/RAG, snapshots). 10 migration blocks M001–M010 to apply in clean steps via Supabase CLI. RLS via <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>has_company_access(company_id)</code> helper. Companies seeded with all 10 entities. pgvector(1536) for mentor PDF search.</p>
+        <p style={{ margin: "0 0 8px" }}>Saved as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>mikes-world-schema.sql</code> — <a href="https://drive.google.com/file/d/1WpVNLR25b_RApnffXMyvmYB1w7xbW7q4/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: "#FF1493", fontWeight: 700, textDecoration: "underline" }}>open in Google Drive</a>. 25 tables in 7 service blocks (foundation, ingestion, workflow, intelligence, cross-venture, mentors/RAG, snapshots). 10 migration blocks M001–M010 to apply in clean steps via Supabase CLI. RLS via <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>has_company_access(company_id)</code> helper. Companies seeded with all 10 entities. pgvector(1536) for mentor PDF search.</p>
         <p style={{ margin: "0 0 0" }}>Asked Andre to review M001 + M002 first — profiles, companies, company_access, auth_audit, activity_log.</p>
       </>
-    ),
-  },
-  {
-    from: "andre.guy.b@gmail.com",
-    fromShort: "Andre",
-    to: "Tiffanie, Mike",
-    date: "Tue, May 5 · 2:10 PM",
-    body: <p style={{ margin: 0, fontStyle: "italic" }}>Hi, Missing this — Review mikes-world-schema.sql. — André</p>,
-  },
-  {
-    from: "Tiffanie Rothwell <tiffanie@mjmventures.ai>",
-    fromShort: "Tiffanie",
-    to: "Andre · cc Mike",
-    date: "Tue, May 5 · 2:20 PM",
-    body: (
-      <p style={{ margin: 0 }}>
-        Sent the Google Drive link + pasted the full SQL inline. 25 tables across the 7 service blocks, RLS scaffolding, 10-migration build order at the bottom for Andre.
-      </p>
     ),
   },
   {
@@ -1311,12 +1293,30 @@ function EmailThreadCard() {
               Questions for Coach · email thread with Andre
             </span>
           </div>
-          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
+          <a
+            href={`${import.meta.env.BASE_URL}email-thread-andre.pdf`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: FONT, fontSize: 9, fontWeight: 700,
+              background: INK, color: "#fff",
+              padding: "5px 12px", borderRadius: 99, letterSpacing: 1,
+              textTransform: "uppercase" as const, textDecoration: "none",
+              display: "inline-flex", alignItems: "center", gap: 6,
+            }}
+          >
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+              <path d="M9 1H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V6L9 1z" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round"/>
+              <path d="M9 1v5h5" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round"/>
+            </svg>
+            View full PDF
+          </a>
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, margin: "10px 0 4px", lineHeight: 1.55 }}>
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const, marginRight: 8 }}>
             Walk through with coach
           </span>
-        </div>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, margin: "0 0 4px", lineHeight: 1.55 }}>
-          5 messages · May 5–6, 2026 · <em>"Little Tree Ventures Hub — schema proposal + next steps from today's call"</em>
+          May 5–6, 2026 · <em>"Little Tree Ventures Hub — schema proposal + next steps from today's call"</em>
         </p>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "0 0 22px", lineHeight: 1.6 }}>
           Andre's two most recent emails (May 6, 6:34 AM and 7:07 AM) are what I want to walk through with the coach — credentials strategy, and his masterdash deployment plan with role search paths and the pgvector watch-item.
