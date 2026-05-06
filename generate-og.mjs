@@ -222,7 +222,7 @@ const html = `<!DOCTYPE html>
         </div>
         <div>
           <p class="eyebrow">From zero to Mike's AIOS in 5 weeks</p>
-          <h1 class="headline">Hi Valera!</h1>
+          <h1 class="headline">Hi AAA Coach</h1>
         </div>
         <div>
           <p class="project-label">Project</p>

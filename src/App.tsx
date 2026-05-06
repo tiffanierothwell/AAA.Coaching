@@ -1242,7 +1242,7 @@ export default function App() {
                 <h1 style={{
                   fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 44 : 68,
                   color: INK, letterSpacing: isMobile ? -1.5 : -3, lineHeight: 0.92, margin: 0,
-                }}>Hi Valera!</h1>
+                }}>Hi AAA Coach</h1>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
