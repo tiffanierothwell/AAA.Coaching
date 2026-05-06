@@ -1200,6 +1200,201 @@ function BuildCalendar() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// QUESTIONS FOR COACH — EMAIL THREAD WITH ANDRE
+// ════════════════════════════════════════════════════════════════
+type EmailMsg = {
+  from: string
+  fromShort: "Tiffanie" | "Andre"
+  to: string
+  date: string
+  subject?: string
+  body: React.ReactNode
+  askCoach?: boolean
+  highlight?: string
+}
+
+const EMAIL_THREAD: EmailMsg[] = [
+  {
+    from: "Tiffanie Rothwell <tiffanie@mjmventures.ai>",
+    fromShort: "Tiffanie",
+    to: "Andre Boudreault, Mike David",
+    date: "Tue, May 5 · 2:06 PM",
+    subject: "Little Tree Ventures Hub — schema proposal + next steps from today's call",
+    body: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>Hey Andre, first thank you. You stole a day and a half from yourself in the middle of a year-end audit to get the Supabase stack live and I don't take that lightly. Today's call with Valera was a real pivot point — way more clarity, much more honest plan.</p>
+        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>WHAT WE AGREED ON TODAY:</p>
+        <p style={{ margin: "0 0 8px" }}>1. Two databases — Littletree MySQL stays read-only, build a 2nd Supabase Postgres ("Little Tree Ventures") for everything outside the transactional layer. 2. Service-by-service schema (don't design upfront). 3. Drop Google SSO from Week 1. 4. No dev/test DB yet. 5. Timeline compressed 5 weeks → 3 weeks per Valera.</p>
+        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>SCHEMA PROPOSAL:</p>
+        <p style={{ margin: "0 0 8px" }}>Saved as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>mikes-world-schema.sql</code>. 25 tables in 7 service blocks (foundation, ingestion, workflow, intelligence, cross-venture, mentors/RAG, snapshots). 10 migration blocks M001–M010 to apply in clean steps via Supabase CLI. RLS via <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>has_company_access(company_id)</code> helper. Companies seeded with all 10 entities. pgvector(1536) for mentor PDF search.</p>
+        <p style={{ margin: "0 0 0" }}>Asked Andre to review M001 + M002 first — profiles, companies, company_access, auth_audit, activity_log.</p>
+      </>
+    ),
+  },
+  {
+    from: "andre.guy.b@gmail.com",
+    fromShort: "Andre",
+    to: "Tiffanie, Mike",
+    date: "Tue, May 5 · 2:10 PM",
+    body: <p style={{ margin: 0, fontStyle: "italic" }}>Hi, Missing this — Review mikes-world-schema.sql. — André</p>,
+  },
+  {
+    from: "Tiffanie Rothwell <tiffanie@mjmventures.ai>",
+    fromShort: "Tiffanie",
+    to: "Andre · cc Mike",
+    date: "Tue, May 5 · 2:20 PM",
+    body: (
+      <p style={{ margin: 0 }}>
+        Sent the Google Drive link + pasted the full SQL inline. 25 tables across the 7 service blocks, RLS scaffolding, 10-migration build order at the bottom for Andre.
+      </p>
+    ),
+  },
+  {
+    from: "andre.guy.b@gmail.com",
+    fromShort: "Andre",
+    to: "Tiffanie · cc Mike",
+    date: "Wed, May 6 · 6:34 AM",
+    askCoach: true,
+    highlight: "Credentials strategy",
+    body: (
+      <>
+        <p style={{ margin: "0 0 8px" }}><strong style={{ color: INK }}>"This looks good to me."</strong></p>
+        <p style={{ margin: "0 0 8px" }}>"We need to nail down database credentials such as User, Password for the application. <strong style={{ color: INK }}>I believe that we should use the same user and password for every database.</strong> In case that we need to have different database setup information, ask Valera what he thinks but it may be interesting to put database info in here:"</p>
+        <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
+          <li>Server</li>
+          <li>Database name</li>
+          <li>User</li>
+          <li>Password</li>
+        </ul>
+        <p style={{ margin: 0, fontStyle: "italic", color: INK3 }}>(Andre also re-pasted the companies CREATE TABLE + the 10 INSERT rows for the seed.)</p>
+      </>
+    ),
+  },
+  {
+    from: "andre.guy.b@gmail.com",
+    fromShort: "Andre",
+    to: "Tiffanie · cc Mike",
+    date: "Wed, May 6 · 7:07 AM",
+    askCoach: true,
+    highlight: "masterdash deployment plan",
+    body: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>"Based on what I know regarding the Supabase server, this is what Claude recommended we do. <strong style={{ color: INK }}>I have changed the 'Mike's World' to 'masterdash'.</strong>"</p>
+        <p style={{ margin: "0 0 8px" }}><strong style={{ color: INK }}>The plan:</strong> create the schema + grants, set role search paths so RLS policies can find <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>has_company_access()</code> unqualified, then run the script with a one-line search_path prefix on top so every table lands in <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> (not <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>public</code>).</p>
+        <p style={{ margin: "0 0 6px", fontWeight: 700, color: INK }}>4 steps:</p>
+        <ol style={{ margin: "0 0 8px", paddingLeft: 18 }}>
+          <li><code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>scp</code> the .sql file to the server.</li>
+          <li>Create schema, grants, role search paths (block to paste in SSH as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>supabase_admin</code>).</li>
+          <li>Run the schema script inside <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> with <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>-v ON_ERROR_STOP=1</code>.</li>
+          <li>Sanity check — list tables + companies seed.</li>
+        </ol>
+        <p style={{ margin: "0 0 8px" }}>"<strong style={{ color: INK }}>Watch-item:</strong> RLS policies call <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>has_company_access(company_id)</code> without a schema prefix. The setup block fixes that by adding <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> to the authenticated role's search path."</p>
+        <p style={{ margin: "0 0 8px" }}>"<strong style={{ color: INK }}>If pgvector complains</strong> (could not open extension control file), it isn't installed in this Supabase image — let me know and we'll either install it or comment out <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>mentor_resources</code> + <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>pdf_chunks</code> for now."</p>
+        <p style={{ margin: 0 }}><strong style={{ color: INK }}>Follow-up (not today):</strong> add <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> to <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>PGRST_DB_SCHEMAS</code> in <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/opt/supabase/supabase/docker/.env</code> and restart kong + rest containers — to expose <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> through the REST/GraphQL API.</p>
+      </>
+    ),
+  },
+]
+
+function EmailThreadCard() {
+  const isMobile = useIsMobile()
+  return (
+    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+      <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
+      <div style={{ padding: isMobile ? "20px 16px 22px" : "28px 32px 30px" }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              Questions for Coach · email thread with Andre
+            </span>
+          </div>
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
+            Walk through with coach
+          </span>
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, margin: "0 0 4px", lineHeight: 1.55 }}>
+          5 messages · May 5–6, 2026 · <em>"Little Tree Ventures Hub — schema proposal + next steps from today's call"</em>
+        </p>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "0 0 22px", lineHeight: 1.6 }}>
+          Andre's two most recent emails (May 6, 6:34 AM and 7:07 AM) are what I want to walk through with the coach — credentials strategy, and his masterdash deployment plan with role search paths and the pgvector watch-item.
+        </p>
+
+        {/* Thread */}
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
+          {EMAIL_THREAD.map((m, i) => {
+            const isAndre = m.fromShort === "Andre"
+            const last = i === EMAIL_THREAD.length - 1
+            return (
+              <div key={i} style={{
+                display: "flex", gap: isMobile ? 10 : 14,
+                padding: "14px 0",
+                borderBottom: last ? "none" : `1px solid ${RULE}`,
+                background: m.askCoach ? "rgba(255,20,147,0.03)" : "transparent",
+                marginLeft: m.askCoach ? -8 : 0, marginRight: m.askCoach ? -8 : 0,
+                paddingLeft: m.askCoach ? 8 : 0, paddingRight: m.askCoach ? 8 : 0,
+                borderRadius: m.askCoach ? 8 : 0,
+              }}>
+                {/* Avatar */}
+                <div style={{
+                  width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
+                  background: isAndre ? INK : "#FF1493",
+                  color: "#fff",
+                  fontFamily: FONT, fontWeight: 900, fontSize: 11,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  marginTop: 2, letterSpacing: 0.5,
+                }}>
+                  {isAndre ? "AB" : "TR"}
+                </div>
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {/* Header line */}
+                  <div style={{ display: "flex", flexWrap: "wrap" as const, alignItems: "center", gap: 6, marginBottom: 3 }}>
+                    <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12, color: INK, letterSpacing: -0.1 }}>
+                      {m.fromShort === "Andre" ? "André Boudreault" : "Tiffanie Rothwell"}
+                    </span>
+                    <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3 }}>
+                      → {m.to}
+                    </span>
+                    {m.askCoach && (
+                      <span style={{
+                        fontFamily: FONT, fontSize: 8, fontWeight: 800, letterSpacing: 1,
+                        textTransform: "uppercase" as const,
+                        background: "#FF1493", color: "#fff",
+                        padding: "2px 7px", borderRadius: 99,
+                      }}>Ask coach</span>
+                    )}
+                  </div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3, marginBottom: 8 }}>
+                    {m.date}
+                    {m.highlight && (
+                      <span style={{ marginLeft: 10, fontWeight: 700, color: "#FF1493", fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
+                        · {m.highlight}
+                      </span>
+                    )}
+                  </div>
+                  {m.subject && (
+                    <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12.5, color: INK, marginBottom: 8, lineHeight: 1.4 }}>
+                      {m.subject}
+                    </div>
+                  )}
+                  <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>
+                    {m.body}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // ════════════════════════════════════════════════════════════════
 export default function App() {
@@ -1296,66 +1491,9 @@ export default function App() {
         <ProgressTimeline />
 
 
-        {/* ════════════════════════════════════════ QUESTIONS FOR VALERA ════════════════════════════════════════ */}
-        <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
-          <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
-          <div style={{ padding: isMobile ? "20px 16px 22px" : "28px 32px 30px" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 20 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-                  Questions for Valera (next session · May 13)
-                </span>
-              </div>
-              <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
-                Building this week
-              </span>
-            </div>
+        {/* ════════════════════════════════════════ QUESTIONS FOR COACH — EMAIL THREAD WITH ANDRE ════════════════════════════════════════ */}
+        <EmailThreadCard />
 
-            <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
-              {[
-                {
-                  q: "Service-by-service schema — when I ask Claude to design tables for one automation, how do I keep it from re-designing the whole DB? What's the right prompt frame so the schema grows additively?",
-                  tag: "Schema strategy",
-                },
-                {
-                  q: "Dev workflow — local Git branch + sandbox Supabase + supabase migration push. Can you walk me through what a clean cycle looks like, end-to-end, including how I roll back if a migration breaks?",
-                  tag: "Migration loop",
-                },
-                {
-                  q: "Auth without Google SSO — for email/password + manual roles, what's the right RLS policy pattern per company? I want to get this right once so I don't have to rip it up later.",
-                  tag: "Auth + RLS",
-                },
-                {
-                  q: "You said Week 1 in my plan looks like 1–2 days of work, not a week. After I finish schema design, what should I actually plan for the rest of Week 1? What am I underestimating elsewhere?",
-                  tag: "Re-estimation",
-                },
-                {
-                  q: "Coaching cadence with Nick / Timo / Garrett — how do you want me to structure the daily check-ins so I'm not wasting your or their time? What format gets you up to speed fastest?",
-                  tag: "Working together",
-                },
-              ].map(({ q, tag }, i) => (
-                <div key={i} style={{
-                  display: "flex", gap: isMobile ? 12 : 18, alignItems: "flex-start",
-                  padding: "14px 0",
-                  borderBottom: i < 4 ? `1px solid ${RULE}` : "none",
-                }}>
-                  <div style={{
-                    width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
-                    background: INK, color: "#fff",
-                    fontFamily: FONT, fontWeight: 900, fontSize: 11,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    marginTop: 1,
-                  }}>{i + 1}</div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontFamily: FONT, fontWeight: 500, fontSize: isMobile ? 12 : 13, color: INK, lineHeight: 1.6, margin: "0 0 6px" }}>{q}</p>
-                    <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, color: INK3, background: CHIP, border: `1px solid ${RULE}`, padding: "2px 8px", borderRadius: 99 }}>{tag}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
 
         {/* ════════════════════════════════════════ PROJECT BRIEF + MAY CALENDAR ════════════════════════════════════════ */}
