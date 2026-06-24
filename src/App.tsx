@@ -2140,7 +2140,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), `Build Day · Week 1 · ${new Date().toLocaleDateString("en-US", { weekday: "short" })}`].map(b => (
+                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Build Week 1"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -2177,7 +2177,7 @@ export default function App() {
             }}>
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
-                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Build Day 1</div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Build Phase 1</div>
                 <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · 9–4</div>
               </div>
 
