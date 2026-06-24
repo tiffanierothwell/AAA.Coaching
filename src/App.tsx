@@ -344,51 +344,70 @@ function ProgressTimeline() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// MAY 2026 CALENDAR
+// PROJECT CALENDAR · JUNE–JULY 2026
 // ════════════════════════════════════════════════════════════════
-const MAY_MEETINGS: Record<number, { title: string; time?: string; who: string[] }> = {
-   5: { title: "Tech Systems set-up · Andre + Valera", time: "10:00 AM", who: ["Tiffanie Rothwell", "Mike David", "Andre B.", "Valera Tumash"] },
-   6: { title: "Build Day · Schema design with Claude", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   7: { title: "Build Day · Schema design", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   8: { title: "Coaching · Nick Voikin", time: "11:00 AM", who: ["Tiffanie Rothwell", "Nick Voikin"] },
-  11: { title: "Build Day · Supabase Auth + RLS", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  12: { title: "Build Day · Telegram bot scaffolding", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  13: { title: "Coaching · Valera", time: "10:00 AM", who: ["Tiffanie Rothwell", "Valera Tumash"] },
-  14: { title: "Build Day · LTV Hub hero + calendar", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  15: { title: "Build Day · Cross-venture JWT", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  18: { title: "Build Day · Meeting Prep + AI brief", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  19: { title: "Coaching · Timo", time: "10:00 AM", who: ["Tiffanie Rothwell", "Timo"] },
-  20: { title: "Build Day · Resources + pgvector", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  21: { title: "Build Day · Cmd+K semantic search", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  22: { title: "Build Day · Ask Your Mentor + Skills", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  25: { title: "Build Day · Skill rec engine", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  26: { title: "Coaching · Valera", time: "10:00 AM", who: ["Tiffanie Rothwell", "Valera Tumash"] },
-  27: { title: "Build Day · Weekly Snapshots PM row", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  28: { title: "Build Day · Leah row + win input", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  29: { title: "Demo to Mike · Sign-off", time: "11:00 AM", who: ["Tiffanie Rothwell", "Mike David"] },
+type Meeting = { title: string; time?: string; who: string[] }
+
+const JUNE_MEETINGS: Record<number, Meeting> = {
+  23: { title: "Kickoff · AAA Coach intro + onboarding", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
+  24: { title: "Build Day · Schema design with Claude", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  25: { title: "Build Day · Schema design", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  26: { title: "Coaching · Nick Voikin", time: "11:00 AM", who: ["Tiffanie Rothwell", "Nick Voikin"] },
+  29: { title: "Build Day · Supabase Auth + RLS", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  30: { title: "Build Day · Telegram bot scaffolding", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
 }
 
-// May 1, 2026 = Friday (index 5, Sun=0)
-const MAY_START_DAY = 5
-const MAY_DAYS      = 31
-const TODAY_DATE    = 6
+const JULY_MEETINGS: Record<number, Meeting> = {
+   1: { title: "Coaching · AAA Coach", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
+   2: { title: "Build Day · LTV Hub hero + calendar", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+   3: { title: "Build Day · Cross-venture JWT", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+   6: { title: "Build Day · Meeting Prep + AI brief", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+   7: { title: "Coaching · Timo", time: "10:00 AM", who: ["Tiffanie Rothwell", "Timo"] },
+   8: { title: "Build Day · Resources + pgvector", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+   9: { title: "Build Day · Cmd+K semantic search", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  10: { title: "Build Day · Ask Your Mentor + Skills", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  13: { title: "Build Day · Skill rec engine", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  14: { title: "Coaching · AAA Coach", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
+  15: { title: "Build Day · Weekly Snapshots PM row", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  16: { title: "Build Day · Leah row + win input", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
+  17: { title: "Demo to Mike · Sign-off", time: "11:00 AM", who: ["Tiffanie Rothwell", "Mike David"] },
+}
+
+// June 1, 2026 = Monday; July 1, 2026 = Wednesday.
+type MonthSpec = { name: string; monthIdx: number; year: number; startDay: number; days: number; meetings: Record<number, Meeting> }
+const PROJECT_MONTHS: MonthSpec[] = [
+  { name: "June 2026", monthIdx: 5, year: 2026, startDay: 1, days: 30, meetings: JUNE_MEETINGS },
+  { name: "July 2026", monthIdx: 6, year: 2026, startDay: 3, days: 31, meetings: JULY_MEETINGS },
+]
 
 function MayCalendar() {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" as const, gap: 14, width: "100%", height: "100%" }}>
+      {PROJECT_MONTHS.map(m => <MonthGrid key={m.name} spec={m} />)}
+    </div>
+  )
+}
+
+function MonthGrid({ spec }: { spec: MonthSpec }) {
   const isMobile = useIsMobile()
   const [hovered, setHovered] = useState<number | null>(null)
+  const now = new Date()
+  const isCurrentMonth = now.getFullYear() === spec.year && now.getMonth() === spec.monthIdx
+  const isPastMonth    = new Date(spec.year, spec.monthIdx + 1, 0) < now
+  const todayDate = isCurrentMonth ? now.getDate() : (isPastMonth ? spec.days + 1 : 0)
 
   const cells: (number | null)[] = [
-    ...Array(MAY_START_DAY).fill(null),
-    ...Array.from({ length: MAY_DAYS }, (_, i) => i + 1),
+    ...Array(spec.startDay).fill(null),
+    ...Array.from({ length: spec.days }, (_, i) => i + 1),
   ]
-  const meetingCount = Object.keys(MAY_MEETINGS).length
+  const meetingCount = Object.keys(spec.meetings).length
 
   return (
-    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const, width: "100%", height: "100%" }}>
+    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const, width: "100%" }}>
       <div style={{ marginBottom: 12 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
           <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-          <span style={{ fontFamily: FONT, fontSize: 8, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>May 2026</span>
+          <span style={{ fontFamily: FONT, fontSize: 8, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>{spec.name}</span>
         </div>
         <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 11, color: INK }}>
           {meetingCount} sessions
@@ -409,10 +428,10 @@ function MayCalendar() {
         {cells.map((day, i) => {
           if (!day) return <div key={`e${i}`} style={{ height: 28, borderRadius: 6 }} />
 
-          const hasMeeting = !!MAY_MEETINGS[day]
-          const isToday    = day === TODAY_DATE
-          const isPast     = day < TODAY_DATE
-          const isFuture   = day > TODAY_DATE
+          const hasMeeting = !!spec.meetings[day]
+          const isToday    = day === todayDate
+          const isPast     = day < todayDate
+          const isFuture   = day > todayDate
 
           return (
             <div
@@ -442,7 +461,7 @@ function MayCalendar() {
                 lineHeight: 1,
               }}>{day}</span>
 
-              {!isMobile && hovered === day && MAY_MEETINGS[day] && (
+              {!isMobile && hovered === day && spec.meetings[day] && (
                 <div style={{
                   position: "absolute" as const,
                   bottom: "calc(100% + 8px)",
@@ -458,13 +477,13 @@ function MayCalendar() {
                   pointerEvents: "none" as const,
                 }}>
                   <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 5 }}>
-                    May {day}, 2026{MAY_MEETINGS[day].time ? ` · ${MAY_MEETINGS[day].time}` : ""}
+                    {spec.name.split(" ")[0]} {day}, {spec.year}{spec.meetings[day].time ? ` · ${spec.meetings[day].time}` : ""}
                   </div>
                   <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: "#fff", marginBottom: 7, lineHeight: 1.3 }}>
-                    {MAY_MEETINGS[day].title}
+                    {spec.meetings[day].title}
                   </div>
                   <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
-                    {MAY_MEETINGS[day].who.map(name => (
+                    {spec.meetings[day].who.map(name => (
                       <div key={name} style={{ display: "flex", alignItems: "center", gap: 6 }}>
                         <div style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.35)", flexShrink: 0 }} />
                         <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.75)" }}>{name}</span>
@@ -1632,6 +1651,23 @@ const EMAIL_THREAD: EmailMsg[] = [
       </>
     ),
   },
+  {
+    from: "andre.guy.b@gmail.com",
+    fromShort: "Andre",
+    to: "Tiffanie · cc Mike",
+    date: "Mon, May 11 · 10:37 AM",
+    subject: "ITGen firewall",
+    askCoach: true,
+    highlight: "SSH access via firewall",
+    body: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>"Before using SSH, you need to do the following:"</p>
+        <p style={{ margin: "0 0 8px" }}><a href="https://login.itgeneration.ca" target="_blank" rel="noopener noreferrer" style={{ color: "#FF1493", fontWeight: 700, textDecoration: "underline" }}>https://login.itgeneration.ca</a></p>
+        <p style={{ margin: "0 0 8px" }}>User: <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree_user</code><br/>Password: <span style={{ fontStyle: "italic", color: INK3 }}>(sent privately — not stored on this page)</span></p>
+        <p style={{ margin: 0 }}>"This will get you thru the firewall. If it does not work as you have been blocked once, I will get you IP corrected."</p>
+      </>
+    ),
+  },
 ]
 
 function EmailThreadCard() {
@@ -1672,10 +1708,10 @@ function EmailThreadCard() {
           <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const, marginRight: 8 }}>
             Walk through with coach
           </span>
-          May 5–6, 2026 · <em>"Little Tree Ventures Hub — schema proposal + next steps from today's call"</em>
+          May 5–11, 2026 · <em>"Schema proposal + masterdash deployment + SSH access — picking back up today"</em>
         </p>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "0 0 22px", lineHeight: 1.6 }}>
-          Andre's two most recent emails (May 6, 6:34 AM and 7:07 AM) are what I want to walk through with the coach — credentials strategy, and his masterdash deployment plan with role search paths and the pgvector watch-item.
+          The project paused after the May 5–6 exchange. Andre followed up on May 11 with firewall + SSH credentials, and today (re-starting with the AAA Coach) I'm picking it back up. Andre's emails from May 6 and 11 are what I want to walk through — credentials strategy, the masterdash deployment plan with role search paths, the pgvector watch-item, and the SSH-via-firewall access path.
         </p>
 
         {/* Resources from coach */}
@@ -1825,7 +1861,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {["May 6, 2026", "Build Day · Week 1 · Mon"].map(b => (
+                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), `Build Day · Week 1 · ${new Date().toLocaleDateString("en-US", { weekday: "short" })}`].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -1863,7 +1899,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
                 <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Build Day 1</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>May 6, 2026 · 9–4</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · 9–4</div>
               </div>
 
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "20px 0" }} />
@@ -1977,7 +2013,7 @@ export default function App() {
                 ))}
               </div>
               <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For Valera · Week 1 · May 6, 2026</span>
+                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Week 1 · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
               </div>
             </div>
           </div>
@@ -2070,7 +2106,7 @@ export default function App() {
 
         {/* Footer */}
         <p style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "#BBBBBB", letterSpacing: 2, textTransform: "uppercase" as const, paddingTop: 4 }}>
-          LTV Hub — Mike's AIOS · /mike.html + /ltv/index.html · AAA Accelerator · May 2026
+          LTV Hub — Mike's AIOS · /mike.html + /ltv/index.html · AAA Accelerator · Summer 2026
         </p>
 
       </div>
