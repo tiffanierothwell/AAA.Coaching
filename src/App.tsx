@@ -1855,43 +1855,6 @@ function EmailThreadCard() {
           ))}
         </div>
 
-        {/* Background — resolved May thread */}
-        <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "18px 0 8px" }}>
-          Background · email thread with Andre (resolved)
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
-          {EMAIL_THREAD.map((m, i) => {
-            const isAndre = m.fromShort === "Andre"
-            return (
-              <button
-                key={i}
-                onClick={() => setOpen({ avatar: isAndre ? "AB" : "TR", avatarOnPink: !isAndre, name: isAndre ? "André Boudreault" : "Tiffanie Rothwell", meta: `→ ${m.to} · ${m.date}`, subject: m.subject || m.highlight, tag: "Resolved", body: m.body })}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%",
-                  padding: "9px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
-                  background: CHIP, border: `1px solid ${RULE}`, fontFamily: FONT, opacity: 0.85,
-                }}
-              >
-                <div style={{
-                  width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-                  background: isAndre ? INK : "#FF1493", color: "#fff",
-                  fontFamily: FONT, fontWeight: 900, fontSize: 8,
-                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
-                }}>{isAndre ? "AB" : "TR"}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {m.highlight || m.subject || (isAndre ? "André Boudreault" : "Tiffanie Rothwell")}
-                  </div>
-                  <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>
-                    {isAndre ? "André" : "Tiffanie"} · {m.date}
-                  </div>
-                </div>
-                <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#fff", color: INK3, border: `1px solid ${RULE}`, padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Resolved</span>
-                <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
-              </button>
-            )
-          })}
-        </div>
       </div>
 
       {/* Full-content popup */}
@@ -1952,9 +1915,9 @@ const RUNBOOK_STEPS: { title: string; detail: React.ReactNode }[] = [
     ),
   },
   {
-    title: "Get SSH access to the self-hosted server from Andre",
+    title: "Connect to the live self-hosted server",
     detail: (
-      <>To pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, updated daily)</strong> off Andre's self-hosted box, I need SSH access so Claude can interact with the server directly. Draft the request to Andre through Claude so it reuses the server details already shared. (Cloud sandbox above doesn't need this — only the live self-hosted pull does.)</>
+      <>I'm already through the firewall (Andre confirmed June 9 — <em>"you have access to everything"</em>), so <strong style={{ color: INK }}>no new request to Andre is needed</strong>. Point Claude at the self-hosted server to pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, updated daily)</strong>. The Cloud sandbox above doesn't need this — only the live pull does.</>
     ),
   },
   {
@@ -2009,6 +1972,145 @@ function CoachRunbookCard() {
           ))}
         </div>
       </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
+// RECORDINGS + EMAIL THREADS (bottom of page)
+// ════════════════════════════════════════════════════════════════
+const RECORDINGS: { title: string; sub: string; date: string; url?: string; pdf?: string }[] = [
+  {
+    title: "Andre + Tiffanie — Project Continuation",
+    sub:   "Firewall open · connect Supabase · next steps",
+    date:  "Jun 9, 2026",
+    url:   "https://app.fireflies.ai/view/Andre-Tiffanie-Project-Continuation::01KTKT6G7AF12R9FSCBMFCV71T",
+    pdf:   "fireflies-andre-tiffanie-jun9.pdf",
+  },
+  {
+    title: "Tiffanie + Coach (Teemu) — Firewall + Supabase prep",
+    sub:   "Diagnosed firewall block · CLI + MCP plan",
+    date:  "May 11, 2026",
+    pdf:   "fireflies-coach-teemu-may11.pdf",
+  },
+  {
+    title: "GM · Tech Systems set-up",
+    sub:   "Andre + Valera + Mike + Tiffanie",
+    date:  "May 5, 2026",
+  },
+  {
+    title: "Andre + Valera — Tech Q&A",
+    sub:   "Systems & tech stack discussion",
+    date:  "Apr 2026",
+  },
+]
+
+function RecordingsThreadsCard() {
+  const isMobile = useIsMobile()
+  const [open, setOpen] = useState<PopupContent | null>(null)
+
+  return (
+    <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
+      <SectionLabel label="Recordings & email threads" />
+
+      {/* Fireflies recordings */}
+      <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "4px 0 10px" }}>
+        Fireflies meeting recordings
+      </div>
+      {RECORDINGS.map(({ title, sub, date, url, pdf }) => (
+        <div key={title} style={{
+          display: "flex", alignItems: "center", gap: 14,
+          padding: "13px 14px", borderRadius: 12,
+          background: CHIP, border: `1px solid ${RULE}`, marginBottom: 10,
+        }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "#fff", border: `1px solid ${RULE}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: INK, marginBottom: 2, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{title}</div>
+            <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>{sub}</div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
+            <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3 }}>{date}</span>
+            {url && (
+              <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: "#FF1493", textDecoration: "none" }}>Watch ▸</a>
+            )}
+            {pdf && (
+              <a href={`${import.meta.env.BASE_URL}${pdf}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: INK2, textDecoration: "underline", textUnderlineOffset: 2 }}>Transcript PDF</a>
+            )}
+          </div>
+        </div>
+      ))}
+
+      {/* Email threads with Andre */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", margin: "18px 0 10px" }}>
+        <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>
+          Email threads with Andre (resolved)
+        </span>
+        <a href={`${import.meta.env.BASE_URL}email-thread-andre.pdf`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontSize: 8, fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" as const, color: INK2, textDecoration: "underline", textUnderlineOffset: 2 }}>Full PDF ↗</a>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
+        {EMAIL_THREAD.map((m, i) => {
+          const isAndre = m.fromShort === "Andre"
+          return (
+            <button
+              key={i}
+              onClick={() => setOpen({ avatar: isAndre ? "AB" : "TR", avatarOnPink: !isAndre, name: isAndre ? "André Boudreault" : "Tiffanie Rothwell", meta: `→ ${m.to} · ${m.date}`, subject: m.subject || m.highlight, tag: "Resolved", body: m.body })}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, width: "100%",
+                padding: "9px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
+                background: CHIP, border: `1px solid ${RULE}`, fontFamily: FONT, opacity: 0.9,
+              }}
+            >
+              <div style={{
+                width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                background: isAndre ? INK : "#FF1493", color: "#fff",
+                fontFamily: FONT, fontWeight: 900, fontSize: 8,
+                display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
+              }}>{isAndre ? "AB" : "TR"}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {m.highlight || m.subject || (isAndre ? "André Boudreault" : "Tiffanie Rothwell")}
+                </div>
+                <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>
+                  {isAndre ? "André" : "Tiffanie"} · {m.date}
+                </div>
+              </div>
+              <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#fff", color: INK3, border: `1px solid ${RULE}`, padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Resolved</span>
+              <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
+            </button>
+          )
+        })}
+      </div>
+
+      <Modal open={open !== null} onClose={() => setOpen(null)}>
+        {open && (
+          <div>
+            <div style={{ background: INK, padding: isMobile ? "22px 20px" : "26px 32px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <div style={{
+                  width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                  background: open.avatarOnPink ? "#FF1493" : "#fff",
+                  color: open.avatarOnPink ? "#fff" : INK,
+                  fontFamily: FONT, fontWeight: 900, fontSize: 10,
+                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
+                }}>{open.avatar}</div>
+                <div>
+                  <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: "#fff" }}>{open.name}</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.6)" }}>{open.meta}</div>
+                </div>
+              </div>
+              {open.subject && (
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: "#fff", lineHeight: 1.35 }}>{open.subject}</div>
+              )}
+              {open.tag && (
+                <span style={{ display: "inline-block", marginTop: 8, fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "rgba(255,255,255,0.15)", color: "#fff", padding: "3px 9px", borderRadius: 99 }}>{open.tag}</span>
+              )}
+            </div>
+            <div style={{ padding: isMobile ? "20px 20px 26px" : "26px 32px 32px", fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 12 : 13, color: INK2, lineHeight: 1.7 }}>
+              {open.body}
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
@@ -2153,13 +2255,13 @@ export default function App() {
                 </span>
               </div>
               <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                Design the supporting schema service-by-service with Claude — additive, not upfront. Confirm Littletree MySQL nightly read-only path. Stand up the second Supabase DB ("Mike's World") + sandbox.
+                Connect Claude to Supabase via CLI + MCP, then build the first module — data-gather → plain-English synopsis → one "Deeper Dive" page.
               </h2>
               <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                Andre's server, Supabase (13 containers), and the Littletree mirror are all live. The supporting schema doesn't exist yet — Week 1 is design + scoping. Drop Google SSO; use Supabase Auth (email/password) with manual role provisioning. Re-prompt the AI plan to reflect the corrected stack.
+                Firewall is open (Andre confirmed June 9 — I have access to everything) and the 34-table schema is in hand. With the coach today: stand up a Supabase Cloud sandbox to learn the flow, wire the Supabase MCP into Claude Code, then point Claude at the live Littletree data and build module-by-module (Andre's "chocolate-bar" method) rather than the whole hub at once.
               </p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                {["Schema design", "Mike's World DB", "Sandbox replica", "Drop SSO"].map(tag => (
+                {["Supabase CLI + MCP", "Cloud sandbox", "First module", "Live data pull"].map(tag => (
                   <span key={tag} style={{
                     fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
                     color: INK2, background: CHIP,
@@ -2178,9 +2280,10 @@ export default function App() {
               </div>
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                 {[
-                  "Andre: stand up second Supabase DB (Mike's World) + sandbox replica with on-demand 'replicate now' from Tiffanie's super-user login.",
-                  "Validate the Week-1 estimate after schema is defined — Valera flagged my plan as overestimated.",
-                  "Line up coaching rotation: Valera + Nick Voikin + Timo (and Garrett when onboarded). Bring blockers list each session.",
+                  "Confirm with the coach: does the Supabase Cloud sandbox setup transfer 1:1 to Andre's self-hosted instance? (We think yes.)",
+                  "Decide live-connect vs. data dump for the daily-changing Littletree retail data — lean toward connecting directly.",
+                  "Lock the safe setup: allow server commands 'once' not 'always', strong dev DB password, RLS on. Production hardening later.",
+                  "Pick the first 'chocolate-bar' module to build end-to-end so there's a working slice to show Mike.",
                 ].map((t, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
@@ -2208,89 +2311,38 @@ export default function App() {
         </div>
 
 
-        {/* ════════════════════════════════════════ AGREED ARCHITECTURE + FIREFLIES ════════════════════════════════════════ */}
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+        {/* ════════════════════════════════════════ AGREED ARCHITECTURE ════════════════════════════════════════ */}
+        <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
+          <SectionLabel label="Agreed architecture" />
+          <Row label="Server"        value="Andre's self-hosted server · Caddy + SSL · 5 subdomains live"   pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Automations"   value="Python + FastAPI · /opt/automations · Cron + Webhook services" pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Database"      value="Supabase self-hosted · Postgres 15 · 13 containers · Studio"   pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Littletree DB" value="MySQL transactional · read-only · ~400k rows · nightly refresh" pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Firewall"      value="ITGen login · IP allow-list · per-IP, per-day (login each move)" pill={<Pill label="Open"       kind="solid"   />} />
+          <Row label="Schema"        value="34-table masterdash schema · designed & in hand"               pill={<Pill label="Ready"      kind="solid"   />} />
+          <Row label="masterdash DB" value="2nd Supabase DB (was 'Mike's World') · loaded service-by-service" pill={<Pill label="Building"   kind="outline" />} />
+          <Row label="Supabase Cloud" value="Dev sandbox to learn the flow — setup transfers to self-hosted" pill={<Pill label="Now"        kind="outline" />} />
+          <Row label="Supabase MCP"  value="Wired to Claude Code · query + manage Supabase from the CLI"     pill={<Pill label="Connecting" kind="outline" />} />
+          <Row label="Auth"          value="Supabase Auth · email/password · manual roles · RLS per company" pill={<Pill label="Building"   kind="outline" />} />
+          <Row label="Storage"       value="Supabase Storage · PDFs · MP3 voice memos · pgvector embeddings" pill={<Pill label="Building"   kind="outline" />} />
+          <Row label="Bot"           value="Telegram · CommandOS · slash commands /idea /win /skill /prep"   pill={<Pill label="Later"      kind="outline" />} />
+          <Row label="Build approach" value="Modular 'chocolate-bar' — data-gather → synopsis → Deeper Dive, one topic at a time" pill={<Pill label="Agreed"  kind="solid"   />} />
+          <Row label="Migrations"    value="Local Git branch · Supabase CLI · push from dev → live"          pill={<Pill label="Standard"   kind="muted"   />} />
+          <Row label="Backups"       value="Daily DB + server backups via data center"                       pill={<Pill label="Confirmed"  kind="solid"   />} />
+          <Row label="Google SSO"    value="Dropped — paid feature on cloud, not in self-hosted package"     pill={<Pill label="Ruled out"  kind="muted"   />} />
+          <Row label="No-code tools" value="No n8n · No Make.com required · all Python + Claude"             pill={<Pill label="Out"        kind="muted"   />} />
 
-          {/* Agreed architecture */}
-          <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
-            <SectionLabel label="Agreed architecture" />
-            <Row label="Server"        value="Andre's self-hosted server · Caddy + SSL · 5 subdomains live"   pill={<Pill label="Live"      kind="solid"   />} />
-            <Row label="Automations"   value="Python + FastAPI · /opt/automations · Cron + Webhook services" pill={<Pill label="Live"      kind="solid"   />} />
-            <Row label="Database"      value="Supabase self-hosted · Postgres 15 · 13 containers · Studio"   pill={<Pill label="Live"      kind="solid"   />} />
-            <Row label="Littletree DB" value="MySQL transactional · read-only · nightly midnight refresh"    pill={<Pill label="Live"      kind="solid"   />} />
-            <Row label="Mike's World"  value="2nd Supabase DB · iterative schema · service-by-service"        pill={<Pill label="Building"  kind="outline" />} />
-            <Row label="Sandbox DB"    value="On-demand replica · super-user 'replicate now'"                 pill={<Pill label="Andre"     kind="outline" />} />
-            <Row label="Auth"          value="Supabase Auth · email/password · manual roles · RLS per company" pill={<Pill label="Building"  kind="outline" />} />
-            <Row label="Storage"       value="Supabase Storage · PDFs · MP3 voice memos · pgvector embeddings" pill={<Pill label="Building"  kind="outline" />} />
-            <Row label="Bot"           value="Telegram · CommandOS · slash commands /idea /win /skill /prep"   pill={<Pill label="Wk 1"      kind="outline" />} />
-            <Row label="Migrations"    value="Local Git branch · Supabase CLI · push from dev → live"          pill={<Pill label="Standard"  kind="muted"   />} />
-            <Row label="Backups"       value="Daily DB + server backups via data center"                       pill={<Pill label="Confirmed" kind="solid"   />} />
-            <Row label="Google SSO"    value="Dropped — paid feature on cloud, not in self-hosted package"     pill={<Pill label="Ruled out" kind="muted"   />} />
-            <Row label="No-code tools" value="No n8n · No Make.com required · all Python + Claude"             pill={<Pill label="Out"       kind="muted"   />} />
-
-            <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginTop: 16 }}>
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, margin: 0 }}>
-                <span style={{ fontWeight: 700, color: INK }}>Andre's rule — </span>
-                Self-hosted, not cloud. Data sovereignty over convenience. One service wired before the next begins.
-              </p>
-            </div>
-          </div>
-
-          {/* Fireflies */}
-          <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
-            <SectionLabel label="Fireflies meeting recordings" />
-            {([
-              {
-                title: "Andre + Tiffanie — Project Continuation",
-                sub:   "Restart plan · schema, credentials, next steps",
-                date:  "Jun 9, 2026",
-                url:   "https://app.fireflies.ai/view/Andre-Tiffanie-Project-Continuation::01KTKT6G7AF12R9FSCBMFCV71T",
-                pdf:   "fireflies-andre-tiffanie-jun9.pdf",
-              },
-              {
-                title: "GM · Tech Systems set-up",
-                sub:   "Andre + Valera + Mike + Tiffanie",
-                date:  "May 5, 2026",
-              },
-              {
-                title: "Andre + Valera — Tech Q&A",
-                sub:   "Systems & tech stack discussion",
-                date:  "Apr 2026",
-              },
-            ] as { title: string; sub: string; date: string; url?: string; pdf?: string }[]).map(({ title, sub, date, url, pdf }) => (
-              <div key={title} style={{
-                display: "flex", alignItems: "center", gap: 14,
-                padding: "13px 14px", borderRadius: 12,
-                background: CHIP,
-                border: `1px solid ${RULE}`, marginBottom: 10,
-              }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "#fff", border: `1px solid ${RULE}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>🔥</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: INK, marginBottom: 2, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{title}</div>
-                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3 }}>{sub}</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3 }}>{date}</span>
-                  {url && (
-                    <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: "#FF1493", textDecoration: "none" }}>Watch ▸</a>
-                  )}
-                  {pdf && (
-                    <a href={`${import.meta.env.BASE_URL}${pdf}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: INK2, textDecoration: "underline", textUnderlineOffset: 2 }}>Transcript PDF</a>
-                  )}
-                </div>
-              </div>
-            ))}
-            <div style={{ border: `1.5px dashed ${RULE}`, borderRadius: 12, padding: "12px 14px", display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: CHIP, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <line x1="8" y1="3" x2="8" y2="13" stroke="#C0C0C0" strokeWidth="1.8" strokeLinecap="round"/>
-                  <line x1="3" y1="8" x2="13" y2="8" stroke="#C0C0C0" strokeWidth="1.8" strokeLinecap="round"/>
-                </svg>
-              </div>
-              <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3 }}>Add next meeting link here</span>
-            </div>
+          <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginTop: 16 }}>
+            <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.7, margin: 0 }}>
+              <span style={{ fontWeight: 700, color: INK }}>Andre's rule — </span>
+              Self-hosted, not cloud. Data sovereignty over convenience. One service wired before the next begins. (Cloud sandbox is just a faster place to learn the flow — production stays on Andre's box.)
+            </p>
           </div>
         </div>
+
+
+        {/* ════════════════════════════════════════ RECORDINGS + EMAIL THREADS ════════════════════════════════════════ */}
+        <RecordingsThreadsCard />
 
 
         {/* ════════════════════════════════════════ PROJECT CALENDAR ════════════════════════════════════════ */}
