@@ -381,9 +381,14 @@ const PROJECT_MONTHS: MonthSpec[] = [
 ]
 
 function MayCalendar() {
+  const isMobile = useIsMobile()
   return (
-    <div style={{ display: "flex", flexDirection: "column" as const, gap: 14, width: "100%", height: "100%" }}>
-      {PROJECT_MONTHS.map(m => <MonthGrid key={m.name} spec={m} />)}
+    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, width: "100%", height: "100%" }}>
+      {PROJECT_MONTHS.map(m => (
+        <div key={m.name} style={{ flex: 1, display: "flex" }}>
+          <MonthGrid spec={m} />
+        </div>
+      ))}
     </div>
   )
 }
@@ -1920,12 +1925,7 @@ export default function App() {
         <ProgressTimeline />
 
 
-        {/* ════════════════════════════════════════ QUESTIONS FOR COACH — EMAIL THREAD WITH ANDRE ════════════════════════════════════════ */}
-        <EmailThreadCard />
-
-
-
-        {/* ════════════════════════════════════════ PROJECT BRIEF + MAY CALENDAR ════════════════════════════════════════ */}
+        {/* ════════════════════════════════════════ PROJECT BRIEF + QUESTIONS FOR COACH ════════════════════════════════════════ */}
         <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, alignItems: "stretch" }}>
           <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px", flex: 1 }}>
             <SectionLabel label="Project in one sentence" />
@@ -1934,8 +1934,8 @@ export default function App() {
               <span style={{ fontWeight: 700, color: INK }}> Built across /mike.html (auth wrapper) + /ltv/index.html (inner hub).</span>
             </p>
           </div>
-          <div style={{ flexShrink: 0, width: isMobile ? "auto" : 220, display: "flex" }}>
-            <MayCalendar />
+          <div style={{ flex: 1.3, display: "flex", flexDirection: "column" as const }}>
+            <EmailThreadCard />
           </div>
         </div>
 
@@ -2102,6 +2102,10 @@ export default function App() {
             </div>
           </div>
         </div>
+
+
+        {/* ════════════════════════════════════════ PROJECT CALENDAR ════════════════════════════════════════ */}
+        <MayCalendar />
 
 
         {/* Footer */}
