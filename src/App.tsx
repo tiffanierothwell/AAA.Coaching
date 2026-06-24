@@ -1884,9 +1884,9 @@ export default function App() {
 
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
                 <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>Project</span>
-                <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3 }}>
-                  LTV Hub — Mike's AIOS · /mike.html + /ltv/index.html
-                </span>
+                <a href="https://www.ltvdashboard.org/hub.html" target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3, textDecoration: "underline", textDecorationColor: "#FF1493", textUnderlineOffset: 3 }}>
+                  LTV Hub — Mike's AIOS · ltvdashboard.org/hub.html
+                </a>
               </div>
             </div>
 
@@ -2065,6 +2065,13 @@ export default function App() {
             <SectionLabel label="Fireflies meeting recordings" />
             {([
               {
+                title: "Andre + Tiffanie — Project Continuation",
+                sub:   "Restart plan · schema, credentials, next steps",
+                date:  "Jun 9, 2026",
+                url:   "https://app.fireflies.ai/view/Andre-Tiffanie-Project-Continuation::01KTKT6G7AF12R9FSCBMFCV71T",
+                pdf:   "fireflies-andre-tiffanie-jun9.pdf",
+              },
+              {
                 title: "GM · Tech Systems set-up",
                 sub:   "Andre + Valera + Mike + Tiffanie",
                 date:  "May 5, 2026",
@@ -2074,7 +2081,7 @@ export default function App() {
                 sub:   "Systems & tech stack discussion",
                 date:  "Apr 2026",
               },
-            ]).map(({ title, sub, date }) => (
+            ] as { title: string; sub: string; date: string; url?: string; pdf?: string }[]).map(({ title, sub, date, url, pdf }) => (
               <div key={title} style={{
                 display: "flex", alignItems: "center", gap: 14,
                 padding: "13px 14px", borderRadius: 12,
@@ -2088,6 +2095,12 @@ export default function App() {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "flex-end", gap: 4, flexShrink: 0 }}>
                   <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3 }}>{date}</span>
+                  {url && (
+                    <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: "#FF1493", textDecoration: "none" }}>Watch ▸</a>
+                  )}
+                  {pdf && (
+                    <a href={`${import.meta.env.BASE_URL}${pdf}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 0.5, textTransform: "uppercase" as const, color: INK2, textDecoration: "underline", textUnderlineOffset: 2 }}>Transcript PDF</a>
+                  )}
                 </div>
               </div>
             ))}
