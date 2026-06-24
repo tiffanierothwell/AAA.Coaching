@@ -2140,7 +2140,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Build Week 1"].map(b => (
+                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Phase 1 · Week 3"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
