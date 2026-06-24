@@ -1715,16 +1715,6 @@ const COACH_QUESTIONS: { q: string; topic: string; detail: React.ReactNode }[] =
     ),
   },
   {
-    q: "Exactly what do I ask Andre for to pull the live data?",
-    topic: "SSH access",
-    detail: (
-      <>
-        <p style={{ margin: "0 0 8px" }}>The firewall is open now (Andre confirmed June 9), so my IP gets through. To pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, refreshed daily)</strong> off his self-hosted server, I still need SSH access so Claude can interact with the box directly.</p>
-        <p style={{ margin: 0 }}>Help me word the exact request to Andre — just SSH credentials? — and have Claude draft it so it reuses the server details already shared.</p>
-      </>
-    ),
-  },
-  {
     q: "Connect live, or import a data dump?",
     topic: "Live vs. dump",
     detail: (
