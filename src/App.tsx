@@ -543,8 +543,8 @@ const SERVER_STRIP = [
 ]
 
 const INTEGRATIONS = [
-  "Fireflies", "QuickBooks", "Calendly", "Zoom", "Telegram", "Google Workspace",
-  "Gmail", "Stripe", "Square / POS", "Kolbe", "GitHub", "Twilio",
+  "Fireflies", "Calendly", "Zoom", "Telegram", "Google Workspace",
+  "Gmail", "GitHub",
   "OpenAI / Claude", "Whisper",
 ]
 
