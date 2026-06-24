@@ -1681,10 +1681,91 @@ const COACH_RESOURCES = [
   { title: "Self-host Supabase · Edge Functions", desc: "Next step — running serverless functions inside the self-hosted stack.", url: "https://supabase.com/docs/guides/self-hosting/self-hosted-functions", tag: "Next step" },
 ]
 
+// Today's live questions for the coach (June 24) — grounded in the
+// May 11 coach call + June 9 Andre call. These are the things I still
+// need a decision or a walkthrough on this session.
+const COACH_QUESTIONS: { q: string; topic: string; detail: React.ReactNode }[] = [
+  {
+    q: "Sandbox first — does Supabase Cloud transfer 1:1 to self-hosted?",
+    topic: "Cloud vs. self-hosted",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>You suggested I stand up a <strong style={{ color: INK }}>Supabase Cloud</strong> project first to learn the flow, even though Mike wants it self-hosted on Andre's box.</p>
+        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>Confirm for me:</p>
+        <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
+          <li>Does everything (MCP connect, schema import, RLS) carry over 1:1 when I move to the self-hosted instance?</li>
+          <li>Any gotchas in that migration I should design around now?</li>
+        </ul>
+        <p style={{ margin: 0, fontStyle: "italic", color: INK3 }}>You said setup is identical and the lesson transfers — I just want to be sure before I invest the time.</p>
+      </>
+    ),
+  },
+  {
+    q: "Walk me through connecting the Supabase MCP to Claude Code",
+    topic: "MCP connect",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>The plan is <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/mcp</code> → Enter → select the Supabase connector → grant access → restart Claude Code.</p>
+        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>What I need from you:</p>
+        <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
+          <li>Do this with me live so I see each step.</li>
+          <li>If it doesn't connect (like last time), what's the fallback? You mentioned having Claude write the exact connection message — show me that.</li>
+        </ul>
+      </>
+    ),
+  },
+  {
+    q: "Exactly what do I ask Andre for to pull the live data?",
+    topic: "SSH access",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>The firewall is open now (Andre confirmed June 9), so my IP gets through. To pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, refreshed daily)</strong> off his self-hosted server, I still need SSH access so Claude can interact with the box directly.</p>
+        <p style={{ margin: 0 }}>Help me word the exact request to Andre — just SSH credentials? — and have Claude draft it so it reuses the server details already shared.</p>
+      </>
+    ),
+  },
+  {
+    q: "Connect live, or import a data dump?",
+    topic: "Live vs. dump",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>The retail data changes every day. Do I connect Claude <strong style={{ color: INK }}>directly to the live DB</strong> so it's always current, or import a one-time dump?</p>
+        <p style={{ margin: 0, fontStyle: "italic", color: INK3 }}>You said if the live DB also holds all the historical data, just connect directly — confirm that's the move for a daily-changing retail dataset.</p>
+      </>
+    ),
+  },
+  {
+    q: "Confirm the safe security setup (dev vs production, allow-once)",
+    topic: "Security",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>You flagged a few safety things — let's lock them in:</p>
+        <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
+          <li>Allow server-interfacing commands <strong style={{ color: INK }}>"once," not "always"</strong> — they're riskier.</li>
+          <li>Treat the Cloud project as a <strong style={{ color: INK }}>dev version</strong> with a strong DB password, then make a more secure production one later.</li>
+          <li>Enable <strong style={{ color: INK }}>RLS</strong> on the tables.</li>
+        </ul>
+        <p style={{ margin: 0 }}>Anything else I should harden before I point Claude at real data?</p>
+      </>
+    ),
+  },
+  {
+    q: "Do you agree with Andre's modular \"chocolate-bar\" build approach?",
+    topic: "Build strategy",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>Andre thinks building the whole hub at once is too much. He wants me to build <strong style={{ color: INK }}>one module at a time</strong>: data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page → repeat per topic.</p>
+        <p style={{ margin: 0 }}>Do you agree that's the right path versus the bigger all-at-once build I was planning? Want your read before I commit the week to it.</p>
+      </>
+    ),
+  },
+]
+
+type PopupContent = { avatar: string; avatarOnPink: boolean; name: string; meta: string; subject?: string; tag?: string; body: React.ReactNode }
+
 function EmailThreadCard() {
   const isMobile = useIsMobile()
-  const [openIdx, setOpenIdx] = useState<number | null>(null)
-  const openMsg = openIdx !== null ? EMAIL_THREAD[openIdx] : null
+  const [open, setOpen] = useState<PopupContent | null>(null)
 
   return (
     <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
@@ -1696,7 +1777,7 @@ function EmailThreadCard() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Questions for Coach · email thread with Andre
+              Questions for Coach · today's session
             </span>
           </div>
           <a
@@ -1718,49 +1799,44 @@ function EmailThreadCard() {
             View full PDF
           </a>
         </div>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3, margin: "8px 0 16px", lineHeight: 1.5 }}>
-          Restarting today with the AAA Coach. Tap any item below to open the full email or resource.
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3, margin: "8px 0 14px", lineHeight: 1.5 }}>
+          What I actually need from the coach today — now that the firewall is open and the schema's in hand. Tap any question for the full context.
         </p>
 
-        {/* Compact bullet list — click to expand */}
+        {/* Today's questions — primary */}
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
-          {EMAIL_THREAD.map((m, i) => {
-            const isAndre = m.fromShort === "Andre"
-            return (
-              <button
-                key={i}
-                onClick={() => setOpenIdx(i)}
-                style={{
-                  display: "flex", alignItems: "center", gap: 10, width: "100%",
-                  padding: "9px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
-                  background: m.askCoach ? "rgba(255,20,147,0.05)" : CHIP,
-                  border: `1px solid ${m.askCoach ? "rgba(255,20,147,0.25)" : RULE}`,
-                  fontFamily: FONT,
-                }}
-              >
-                <div style={{
-                  width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
-                  background: isAndre ? INK : "#FF1493", color: "#fff",
-                  fontFamily: FONT, fontWeight: 900, fontSize: 8,
-                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
-                }}>{isAndre ? "AB" : "TR"}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {m.highlight || m.subject || (isAndre ? "André Boudreault" : "Tiffanie Rothwell")}
-                  </div>
-                  <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>
-                    {isAndre ? "André" : "Tiffanie"} · {m.date}
-                  </div>
-                </div>
-                {m.askCoach && (
-                  <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Ask coach</span>
-                )}
-                <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
-              </button>
-            )
-          })}
+          {COACH_QUESTIONS.map((item, i) => (
+            <button
+              key={i}
+              onClick={() => setOpen({ avatar: `Q${i + 1}`, avatarOnPink: true, name: "Question for coach", meta: `${item.topic} · today`, subject: item.q, tag: "Ask coach", body: item.detail })}
+              style={{
+                display: "flex", alignItems: "center", gap: 10, width: "100%",
+                padding: "10px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
+                background: "rgba(255,20,147,0.05)", border: "1px solid rgba(255,20,147,0.25)",
+                fontFamily: FONT,
+              }}
+            >
+              <div style={{
+                width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                background: "#FF1493", color: "#fff",
+                fontFamily: FONT, fontWeight: 900, fontSize: 8.5,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>{i + 1}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{item.q}</div>
+                <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>{item.topic}</div>
+              </div>
+              <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Ask coach</span>
+              <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
+            </button>
+          ))}
+        </div>
 
-          {/* Resources — compact bullets, open in new tab */}
+        {/* Resources from coach */}
+        <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "18px 0 8px" }}>
+          Resources to read
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
           {COACH_RESOURCES.map(r => (
             <a
               key={r.url}
@@ -1788,39 +1864,73 @@ function EmailThreadCard() {
             </a>
           ))}
         </div>
+
+        {/* Background — resolved May thread */}
+        <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "18px 0 8px" }}>
+          Background · email thread with Andre (resolved)
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
+          {EMAIL_THREAD.map((m, i) => {
+            const isAndre = m.fromShort === "Andre"
+            return (
+              <button
+                key={i}
+                onClick={() => setOpen({ avatar: isAndre ? "AB" : "TR", avatarOnPink: !isAndre, name: isAndre ? "André Boudreault" : "Tiffanie Rothwell", meta: `→ ${m.to} · ${m.date}`, subject: m.subject || m.highlight, tag: "Resolved", body: m.body })}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, width: "100%",
+                  padding: "9px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
+                  background: CHIP, border: `1px solid ${RULE}`, fontFamily: FONT, opacity: 0.85,
+                }}
+              >
+                <div style={{
+                  width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                  background: isAndre ? INK : "#FF1493", color: "#fff",
+                  fontFamily: FONT, fontWeight: 900, fontSize: 8,
+                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
+                }}>{isAndre ? "AB" : "TR"}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {m.highlight || m.subject || (isAndre ? "André Boudreault" : "Tiffanie Rothwell")}
+                  </div>
+                  <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>
+                    {isAndre ? "André" : "Tiffanie"} · {m.date}
+                  </div>
+                </div>
+                <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#fff", color: INK3, border: `1px solid ${RULE}`, padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Resolved</span>
+                <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Full-content popup */}
-      <Modal open={openIdx !== null} onClose={() => setOpenIdx(null)}>
-        {openMsg && (
+      <Modal open={open !== null} onClose={() => setOpen(null)}>
+        {open && (
           <div>
             <div style={{ background: INK, padding: isMobile ? "22px 20px" : "26px 32px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
-                  background: openMsg.fromShort === "Andre" ? "#fff" : "#FF1493",
-                  color: openMsg.fromShort === "Andre" ? INK : "#fff",
+                  background: open.avatarOnPink ? "#FF1493" : "#fff",
+                  color: open.avatarOnPink ? "#fff" : INK,
                   fontFamily: FONT, fontWeight: 900, fontSize: 10,
                   display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
-                }}>{openMsg.fromShort === "Andre" ? "AB" : "TR"}</div>
+                }}>{open.avatar}</div>
                 <div>
-                  <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: "#fff" }}>
-                    {openMsg.fromShort === "Andre" ? "André Boudreault" : "Tiffanie Rothwell"}
-                  </div>
-                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.6)" }}>
-                    → {openMsg.to} · {openMsg.date}
-                  </div>
+                  <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: "#fff" }}>{open.name}</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.6)" }}>{open.meta}</div>
                 </div>
               </div>
-              {openMsg.subject && (
-                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: "#fff", lineHeight: 1.35 }}>{openMsg.subject}</div>
+              {open.subject && (
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: "#fff", lineHeight: 1.35 }}>{open.subject}</div>
               )}
-              {openMsg.highlight && (
-                <span style={{ display: "inline-block", marginTop: 8, fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "3px 9px", borderRadius: 99 }}>{openMsg.highlight}</span>
+              {open.tag && (
+                <span style={{ display: "inline-block", marginTop: 8, fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: open.tag === "Resolved" ? "rgba(255,255,255,0.15)" : "#FF1493", color: "#fff", padding: "3px 9px", borderRadius: 99 }}>{open.tag}</span>
               )}
             </div>
             <div style={{ padding: isMobile ? "20px 20px 26px" : "26px 32px 32px", fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 12 : 13, color: INK2, lineHeight: 1.7 }}>
-              {openMsg.body}
+              {open.body}
             </div>
           </div>
         )}
