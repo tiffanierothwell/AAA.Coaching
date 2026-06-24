@@ -1979,6 +1979,13 @@ function CoachRunbookCard() {
 // ════════════════════════════════════════════════════════════════
 const RECORDINGS: { title: string; sub: string; date: string; url?: string; pdf?: string }[] = [
   {
+    title: "Tiffanie + Coach (Nik Volynkin) — Connect Supabase MCP",
+    sub:   "Coach session · wiring the CLI + Supabase MCP",
+    date:  "Jun 24, 2026",
+    url:   "https://app.fireflies.ai/view/Tiffanie-Rothwell-and-Nik-Volynkin::01KVBA1XY7M109JCMYZJAYBQ3S",
+    pdf:   "fireflies-nik-volynkin.pdf",
+  },
+  {
     title: "Andre + Tiffanie — Project Continuation",
     sub:   "Firewall open · connect Supabase · next steps",
     date:  "Jun 9, 2026",
