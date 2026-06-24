@@ -1670,15 +1670,23 @@ const EMAIL_THREAD: EmailMsg[] = [
   },
 ]
 
+const COACH_RESOURCES = [
+  { title: "Self-host Supabase · Enable MCP", desc: "Reading now — relevant to wiring Claude/Cursor straight into the self-hosted Supabase instance.", url: "https://supabase.com/docs/guides/self-hosting/enable-mcp", tag: "Read now" },
+  { title: "Self-host Supabase · Edge Functions", desc: "Next step — running serverless functions inside the self-hosted stack.", url: "https://supabase.com/docs/guides/self-hosting/self-hosted-functions", tag: "Next step" },
+]
+
 function EmailThreadCard() {
   const isMobile = useIsMobile()
+  const [openIdx, setOpenIdx] = useState<number | null>(null)
+  const openMsg = openIdx !== null ? EMAIL_THREAD[openIdx] : null
+
   return (
     <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
       <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
       <div style={{ padding: isMobile ? "20px 16px 22px" : "28px 32px 30px" }}>
 
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 6 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
@@ -1704,134 +1712,113 @@ function EmailThreadCard() {
             View full PDF
           </a>
         </div>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, margin: "10px 0 4px", lineHeight: 1.55 }}>
-          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, background: "#FF1493", color: "#fff", padding: "3px 10px", borderRadius: 99, letterSpacing: 0.5, textTransform: "uppercase" as const, marginRight: 8 }}>
-            Walk through with coach
-          </span>
-          May 5–11, 2026 · <em>"Schema proposal + masterdash deployment + SSH access — picking back up today"</em>
-        </p>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "0 0 22px", lineHeight: 1.6 }}>
-          The project paused after the May 5–6 exchange. Andre followed up on May 11 with firewall + SSH credentials, and today (re-starting with the AAA Coach) I'm picking it back up. Andre's emails from May 6 and 11 are what I want to walk through — credentials strategy, the masterdash deployment plan with role search paths, the pgvector watch-item, and the SSH-via-firewall access path.
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3, margin: "8px 0 16px", lineHeight: 1.5 }}>
+          Restarting today with the AAA Coach. Tap any item below to open the full email or resource.
         </p>
 
-        {/* Resources from coach */}
-        <div style={{ background: CHIP, borderRadius: 12, padding: "14px 16px", marginBottom: 22 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <span style={{
-              fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1,
-              padding: "2px 8px", borderRadius: 99,
-              background: "#FF1493", color: "#fff", textTransform: "uppercase" as const,
-            }}>From coach</span>
-            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Resources to read
-            </span>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
-            {[
-              { title: "Self-host Supabase · Enable MCP", desc: "Reading now — relevant to wiring Claude/Cursor straight into the self-hosted Supabase instance.", url: "https://supabase.com/docs/guides/self-hosting/enable-mcp", tag: "Read now" },
-              { title: "Self-host Supabase · Edge Functions", desc: "Next step — running serverless functions inside the self-hosted stack.", url: "https://supabase.com/docs/guides/self-hosting/self-hosted-functions", tag: "Next step" },
-            ].map(r => (
-              <a key={r.url} href={r.url} target="_blank" rel="noopener noreferrer" style={{
-                display: "flex", alignItems: "center", gap: 12,
-                padding: "10px 12px", borderRadius: 10,
-                background: "#fff", border: `1px solid ${RULE}`,
-                textDecoration: "none",
-              }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: 8, flexShrink: 0,
-                  background: "#3ECF8E", color: "#fff",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontFamily: FONT, fontWeight: 900, fontSize: 14,
-                }}>S</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12, color: INK, marginBottom: 2 }}>
-                    {r.title}
-                  </div>
-                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3, lineHeight: 1.4 }}>
-                    {r.desc}
-                  </div>
-                </div>
-                <span style={{
-                  fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 0.5,
-                  padding: "2px 8px", borderRadius: 99,
-                  background: r.tag === "Read now" ? INK : CHIP,
-                  color: r.tag === "Read now" ? "#fff" : INK3,
-                  border: r.tag === "Read now" ? `1px solid ${INK}` : `1px solid ${RULE}`,
-                  textTransform: "uppercase" as const, flexShrink: 0,
-                }}>{r.tag}</span>
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Thread */}
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
+        {/* Compact bullet list — click to expand */}
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
           {EMAIL_THREAD.map((m, i) => {
             const isAndre = m.fromShort === "Andre"
-            const last = i === EMAIL_THREAD.length - 1
             return (
-              <div key={i} style={{
-                display: "flex", gap: isMobile ? 10 : 14,
-                padding: "14px 0",
-                borderBottom: last ? "none" : `1px solid ${RULE}`,
-                background: m.askCoach ? "rgba(255,20,147,0.03)" : "transparent",
-                marginLeft: m.askCoach ? -8 : 0, marginRight: m.askCoach ? -8 : 0,
-                paddingLeft: m.askCoach ? 8 : 0, paddingRight: m.askCoach ? 8 : 0,
-                borderRadius: m.askCoach ? 8 : 0,
-              }}>
-                {/* Avatar */}
+              <button
+                key={i}
+                onClick={() => setOpenIdx(i)}
+                style={{
+                  display: "flex", alignItems: "center", gap: 10, width: "100%",
+                  padding: "9px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
+                  background: m.askCoach ? "rgba(255,20,147,0.05)" : CHIP,
+                  border: `1px solid ${m.askCoach ? "rgba(255,20,147,0.25)" : RULE}`,
+                  fontFamily: FONT,
+                }}
+              >
                 <div style={{
-                  width: 32, height: 32, borderRadius: "50%", flexShrink: 0,
-                  background: isAndre ? INK : "#FF1493",
-                  color: "#fff",
-                  fontFamily: FONT, fontWeight: 900, fontSize: 11,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  marginTop: 2, letterSpacing: 0.5,
-                }}>
-                  {isAndre ? "AB" : "TR"}
-                </div>
-
+                  width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                  background: isAndre ? INK : "#FF1493", color: "#fff",
+                  fontFamily: FONT, fontWeight: 900, fontSize: 8,
+                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
+                }}>{isAndre ? "AB" : "TR"}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  {/* Header line */}
-                  <div style={{ display: "flex", flexWrap: "wrap" as const, alignItems: "center", gap: 6, marginBottom: 3 }}>
-                    <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12, color: INK, letterSpacing: -0.1 }}>
-                      {m.fromShort === "Andre" ? "André Boudreault" : "Tiffanie Rothwell"}
-                    </span>
-                    <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3 }}>
-                      → {m.to}
-                    </span>
-                    {m.askCoach && (
-                      <span style={{
-                        fontFamily: FONT, fontSize: 8, fontWeight: 800, letterSpacing: 1,
-                        textTransform: "uppercase" as const,
-                        background: "#FF1493", color: "#fff",
-                        padding: "2px 7px", borderRadius: 99,
-                      }}>Ask coach</span>
-                    )}
+                  <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {m.highlight || m.subject || (isAndre ? "André Boudreault" : "Tiffanie Rothwell")}
                   </div>
-                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3, marginBottom: 8 }}>
-                    {m.date}
-                    {m.highlight && (
-                      <span style={{ marginLeft: 10, fontWeight: 700, color: "#FF1493", fontSize: 10, letterSpacing: 0.5, textTransform: "uppercase" as const }}>
-                        · {m.highlight}
-                      </span>
-                    )}
+                  <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>
+                    {isAndre ? "André" : "Tiffanie"} · {m.date}
                   </div>
-                  {m.subject && (
-                    <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 12.5, color: INK, marginBottom: 8, lineHeight: 1.4 }}>
-                      {m.subject}
-                    </div>
-                  )}
-                  <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>
-                    {m.body}
+                </div>
+                {m.askCoach && (
+                  <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Ask coach</span>
+                )}
+                <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
+              </button>
+            )
+          })}
+
+          {/* Resources — compact bullets, open in new tab */}
+          {COACH_RESOURCES.map(r => (
+            <a
+              key={r.url}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex", alignItems: "center", gap: 10, width: "100%",
+                padding: "9px 12px", borderRadius: 10, textDecoration: "none",
+                background: CHIP, border: `1px solid ${RULE}`, fontFamily: FONT,
+              }}
+            >
+              <div style={{
+                width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                background: "#3ECF8E", color: "#fff",
+                fontFamily: FONT, fontWeight: 900, fontSize: 11,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>S</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{r.title}</div>
+                <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>Resource from coach</div>
+              </div>
+              <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: r.tag === "Read now" ? INK : "#fff", color: r.tag === "Read now" ? "#fff" : INK3, border: `1px solid ${r.tag === "Read now" ? INK : RULE}`, padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>{r.tag}</span>
+              <span style={{ fontSize: 12, color: INK3, flexShrink: 0, fontWeight: 300 }}>↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* Full-content popup */}
+      <Modal open={openIdx !== null} onClose={() => setOpenIdx(null)}>
+        {openMsg && (
+          <div>
+            <div style={{ background: INK, padding: isMobile ? "22px 20px" : "26px 32px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                <div style={{
+                  width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+                  background: openMsg.fromShort === "Andre" ? "#fff" : "#FF1493",
+                  color: openMsg.fromShort === "Andre" ? INK : "#fff",
+                  fontFamily: FONT, fontWeight: 900, fontSize: 10,
+                  display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3,
+                }}>{openMsg.fromShort === "Andre" ? "AB" : "TR"}</div>
+                <div>
+                  <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: "#fff" }}>
+                    {openMsg.fromShort === "Andre" ? "André Boudreault" : "Tiffanie Rothwell"}
+                  </div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.6)" }}>
+                    → {openMsg.to} · {openMsg.date}
                   </div>
                 </div>
               </div>
-            )
-          })}
-        </div>
-
-      </div>
+              {openMsg.subject && (
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: "#fff", lineHeight: 1.35 }}>{openMsg.subject}</div>
+              )}
+              {openMsg.highlight && (
+                <span style={{ display: "inline-block", marginTop: 8, fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "3px 9px", borderRadius: 99 }}>{openMsg.highlight}</span>
+              )}
+            </div>
+            <div style={{ padding: isMobile ? "20px 20px 26px" : "26px 32px 32px", fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 12 : 13, color: INK2, lineHeight: 1.7 }}>
+              {openMsg.body}
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
