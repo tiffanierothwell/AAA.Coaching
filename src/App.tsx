@@ -228,8 +228,9 @@ const MILESTONES: { label: string; sub: string; status: MS }[] = [
   { label: "Supabase up",    sub: "13 containers",        status: "done"  },
   { label: "Littletree DB",  sub: "Read-only · nightly",  status: "done"  },
   { label: "Tech meeting",   sub: "Andre · Mike · Valera",status: "done"  },
-  { label: "Schema design",  sub: "TODAY · service by service", status: "now"   },
-  { label: "Mike's World",   sub: "2nd Supabase DB",      status: "later" },
+  { label: "Schema ready",   sub: "34 tables in hand",    status: "done"  },
+  { label: "Firewall open",  sub: "ITGen · IP allow-list", status: "done"  },
+  { label: "Connect Supabase", sub: "TODAY · CLI + MCP",   status: "now"   },
   { label: "Auth + roles",   sub: "Email/password",       status: "later" },
   { label: "Telegram bot",   sub: "CommandOS",            status: "later" },
   { label: "Hub + calendar", sub: "Hero + GCal pull",     status: "later" },
@@ -1829,6 +1830,90 @@ function EmailThreadCard() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// NEXT STEP · CONNECT SUPABASE (30-MIN COACH RUNBOOK)
+// ════════════════════════════════════════════════════════════════
+const RUNBOOK_STEPS: { title: string; detail: React.ReactNode }[] = [
+  {
+    title: "Confirm I'm through the firewall",
+    detail: (
+      <>Go to <a href="https://login.itgeneration.ca" target="_blank" rel="noopener noreferrer" style={{ color: "#FF1493", fontWeight: 700 }}>login.itgeneration.ca</a> and log in as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree_user</code> (password sent privately — not on this page). This allow-lists my current IP. <strong style={{ color: INK }}>It's per-IP and per-day</strong> — if I move locations or switch computers, log in again first or I'll be blocked.</>
+    ),
+  },
+  {
+    title: "Create a Supabase Cloud project (our sandbox)",
+    detail: (
+      <>Spin up a free Supabase Cloud project to learn the flow first — the coach said the setup is identical to the self-hosted one and the lesson carries over (and is far faster to iterate on). Set a <strong style={{ color: INK }}>strong DB password</strong> and <strong style={{ color: INK }}>enable RLS</strong> on the tables. Name can be changed later.</>
+    ),
+  },
+  {
+    title: "Connect the Supabase MCP to Claude Code",
+    detail: (
+      <>In Claude Code run <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/mcp</code> → Enter → select the <strong style={{ color: INK }}>Supabase</strong> connector → grant access, then restart Claude Code. After this I can query and manage Supabase straight from the CLI. <strong style={{ color: INK }}>Allow server-interfacing commands "once," not "always"</strong> — they're riskier.</>
+    ),
+  },
+  {
+    title: "Get SSH access to the self-hosted server from Andre",
+    detail: (
+      <>To pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, updated daily)</strong> off Andre's self-hosted box, I need SSH access so Claude can interact with the server directly. Draft the request to Andre through Claude so it reuses the server details already shared. (Cloud sandbox above doesn't need this — only the live self-hosted pull does.)</>
+    ),
+  },
+  {
+    title: "Test the connection",
+    detail: (
+      <>Ask Claude to connect and <strong style={{ color: INK }}>list the tables / pull one sample row</strong>. If it's blocked, re-check the firewall login (step 1) — last time every port timed out at the same hop, which was the firewall dropping the IP, not the server being down.</>
+    ),
+  },
+  {
+    title: "Build the first module (Andre's \"chocolate-bar\" method)",
+    detail: (
+      <>Don't build the whole hub at once. Pick <strong style={{ color: INK }}>one topic</strong> → data-gather from Supabase → have Claude write a plain-English synopsis → build that single "Deeper Dive" page. Then rinse and repeat per topic. Schema's already in hand (34 tables), so this starts the moment the connection works.</>
+    ),
+  },
+]
+
+function CoachRunbookCard() {
+  const isMobile = useIsMobile()
+  return (
+    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+      <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
+      <div style={{ padding: isMobile ? "20px 16px 22px" : "28px 32px 30px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 8 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              Next step · connect Supabase via CLI + MCP
+            </span>
+          </div>
+          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
+            30-min coach session
+          </span>
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "8px 0 18px", lineHeight: 1.6 }}>
+          The firewall is open (Andre confirmed June 9). Now the goal is to wire Claude to Supabase so I can pull the data and start building. Walk me through these six steps. <strong style={{ color: INK }}>Two databases exist:</strong> the Little Tree retail DB (self-hosted, read-only, ~400k rows, refreshed daily) and the new <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> / "Mike's World" Supabase for everything else.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+          {RUNBOOK_STEPS.map((s, i) => (
+            <div key={i} style={{ display: "flex", gap: 14, padding: "14px 16px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
+              <div style={{
+                width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                background: INK, color: "#fff",
+                fontFamily: FONT, fontWeight: 800, fontSize: 12,
+                display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1,
+              }}>{i + 1}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: INK, marginBottom: 4, lineHeight: 1.35 }}>{s.title}</div>
+                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>{s.detail}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // ════════════════════════════════════════════════════════════════
 export default function App() {
@@ -1899,12 +1984,12 @@ export default function App() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Milestones</span>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>5 / 12</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>7 / 13</span>
                 </div>
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
-                  <div style={{ height: "100%", width: "42%", background: "#fff", borderRadius: 99 }} />
+                  <div style={{ height: "100%", width: "54%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>42% complete · Week 1 of 5</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>54% complete · Week 1 of 5</div>
               </div>
 
               <div style={{ flex: 1 }} />
@@ -1913,7 +1998,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
                 <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>
-                  Schema design with Claude — service by service
+                  Connect Supabase via CLI + MCP
                 </div>
               </div>
             </div>
@@ -1938,6 +2023,10 @@ export default function App() {
             <EmailThreadCard />
           </div>
         </div>
+
+
+        {/* ════════════════════════════════════════ NEXT STEP · CONNECT SUPABASE ════════════════════════════════════════ */}
+        <CoachRunbookCard />
 
 
         {/* ════════════════════════════════════════ THE STACK ════════════════════════════════════════ */}
