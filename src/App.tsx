@@ -228,10 +228,11 @@ const MILESTONES: { label: string; sub: string; status: MS }[] = [
   { label: "Supabase up",    sub: "13 containers",        status: "done"  },
   { label: "Littletree DB",  sub: "Read-only · nightly",  status: "done"  },
   { label: "Tech meeting",   sub: "Andre · Mike · Valera",status: "done"  },
-  { label: "Schema ready",   sub: "34 tables in hand",    status: "done"  },
+  { label: "Schema built",   sub: "masterdash · 25 tables", status: "done"  },
   { label: "Firewall open",  sub: "ITGen · IP allow-list", status: "done"  },
-  { label: "Connect Supabase", sub: "TODAY · CLI + MCP",   status: "now"   },
-  { label: "Auth + roles",   sub: "Email/password",       status: "later" },
+  { label: "Supabase MCP",   sub: "Connected · CLI + apps", status: "done"  },
+  { label: "Next.js app",    sub: "TODAY · convert mockup", status: "now"   },
+  { label: "Auth + roles",   sub: "Supabase Auth · RLS",  status: "later" },
   { label: "Telegram bot",   sub: "CommandOS",            status: "later" },
   { label: "Hub + calendar", sub: "Hero + GCal pull",     status: "later" },
   { label: "AI prep docs",   sub: "Meeting briefs",       status: "later" },
@@ -1686,66 +1687,52 @@ const COACH_RESOURCES = [
 // need a decision or a walkthrough on this session.
 const COACH_QUESTIONS: { q: string; topic: string; detail: React.ReactNode }[] = [
   {
-    q: "Sandbox first — does Supabase Cloud transfer 1:1 to self-hosted?",
-    topic: "Cloud vs. self-hosted",
+    q: "How should I scope the \"turn this mockup into a Next.js app\" session?",
+    topic: "Next.js conversion",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>You suggested I stand up a <strong style={{ color: INK }}>Supabase Cloud</strong> project first to learn the flow, even though Mike wants it self-hosted on Andre's box.</p>
-        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>Confirm for me:</p>
+        <p style={{ margin: "0 0 8px" }}>Supabase is connected, so the next move is a <strong style={{ color: INK }}>fresh Claude session</strong> with one task: convert this static mockup into a real Next.js app.</p>
+        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>Help me decide:</p>
         <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
-          <li>Does everything (MCP connect, schema import, RLS) carry over 1:1 when I move to the self-hosted instance?</li>
-          <li>Any gotchas in that migration I should design around now?</li>
-        </ul>
-        <p style={{ margin: 0, fontStyle: "italic", color: INK3 }}>You said setup is identical and the lesson transfers — I just want to be sure before I invest the time.</p>
-      </>
-    ),
-  },
-  {
-    q: "Walk me through connecting the Supabase MCP to Claude Code",
-    topic: "MCP connect",
-    detail: (
-      <>
-        <p style={{ margin: "0 0 8px" }}>The plan is <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/mcp</code> → Enter → select the Supabase connector → grant access → restart Claude Code.</p>
-        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>What I need from you:</p>
-        <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
-          <li>Do this with me live so I see each step.</li>
-          <li>If it doesn't connect (like last time), what's the fallback? You mentioned having Claude write the exact connection message — show me that.</li>
+          <li>App Router (recommended) and where Supabase reads should live — server components vs. route handlers?</li>
+          <li>Keep the exact look of this mockup, just on a framework that can read live from Supabase?</li>
+          <li>How tight should I keep the task so the session doesn't sprawl?</li>
         </ul>
       </>
     ),
   },
   {
-    q: "Connect live, or import a data dump?",
-    topic: "Live vs. dump",
+    q: "Auth right after — what's the cleanest order?",
+    topic: "Authentication",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>The retail data changes every day. Do I connect Claude <strong style={{ color: INK }}>directly to the live DB</strong> so it's always current, or import a one-time dump?</p>
-        <p style={{ margin: 0, fontStyle: "italic", color: INK3 }}>You said if the live DB also holds all the historical data, just connect directly — confirm that's the move for a daily-changing retail dataset.</p>
+        <p style={{ margin: "0 0 8px" }}>The task after the Next.js app is <strong style={{ color: INK }}>authentication</strong>: Supabase Auth (email/password), manual role provisioning, and RLS per company — replacing the localStorage gate.</p>
+        <p style={{ margin: 0 }}>Do I add auth before or after wiring the first live data view? And how do you suggest I provision the first few users/roles?</p>
       </>
     ),
   },
   {
-    q: "Confirm the safe security setup (dev vs production, allow-once)",
+    q: "Security for the Next.js app pointing at real data",
     topic: "Security",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>You flagged a few safety things — let's lock them in:</p>
+        <p style={{ margin: "0 0 8px" }}>Now that Claude can reach the live DB, lock in the safe pattern for the app:</p>
         <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
-          <li>Allow server-interfacing commands <strong style={{ color: INK }}>"once," not "always"</strong> — they're riskier.</li>
-          <li>Treat the Cloud project as a <strong style={{ color: INK }}>dev version</strong> with a strong DB password, then make a more secure production one later.</li>
-          <li>Enable <strong style={{ color: INK }}>RLS</strong> on the tables.</li>
+          <li>Keep the <strong style={{ color: INK }}>service-role key server-side only</strong> — never in client bundles.</li>
+          <li><strong style={{ color: INK }}>RLS per company</strong> enforced, anon/auth keys for the browser.</li>
+          <li>Allow server-interfacing commands <strong style={{ color: INK }}>"once," not "always."</strong></li>
         </ul>
-        <p style={{ margin: 0 }}>Anything else I should harden before I point Claude at real data?</p>
+        <p style={{ margin: 0 }}>Anything else to harden before this is anywhere near production?</p>
       </>
     ),
   },
   {
-    q: "Do you agree with Andre's modular \"chocolate-bar\" build approach?",
+    q: "Confirm the modular \"chocolate-bar\" build order",
     topic: "Build strategy",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>Andre thinks building the whole hub at once is too much. He wants me to build <strong style={{ color: INK }}>one module at a time</strong>: data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page → repeat per topic.</p>
-        <p style={{ margin: 0 }}>Do you agree that's the right path versus the bigger all-at-once build I was planning? Want your read before I commit the week to it.</p>
+        <p style={{ margin: "0 0 8px" }}>After Next.js + auth, build <strong style={{ color: INK }}>one module at a time</strong> (Andre's method): data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page → repeat.</p>
+        <p style={{ margin: 0 }}>Agree that's the right order? And which module should be first — something off the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code> retail data so there's a real slice to show Mike?</p>
       </>
     ),
   },
@@ -1895,41 +1882,33 @@ function EmailThreadCard() {
 // ════════════════════════════════════════════════════════════════
 // NEXT STEP · CONNECT SUPABASE (30-MIN COACH RUNBOOK)
 // ════════════════════════════════════════════════════════════════
-const RUNBOOK_STEPS: { title: string; detail: React.ReactNode }[] = [
+const RUNBOOK_STEPS: { title: string; detail: React.ReactNode; status: "done" | "now" | "next" }[] = [
   {
-    title: "Confirm I'm through the firewall",
+    status: "done",
+    title: "Connect Supabase via CLI + MCP",
     detail: (
-      <>Go to <a href="https://login.itgeneration.ca" target="_blank" rel="noopener noreferrer" style={{ color: "#FF1493", fontWeight: 700 }}>login.itgeneration.ca</a> and log in as <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree_user</code> (password sent privately — not on this page). This allow-lists my current IP. <strong style={{ color: INK }}>It's per-IP and per-day</strong> — if I move locations or switch computers, log in again first or I'll be blocked.</>
+      <>Done today. Enabled the self-hosted MCP in Kong (gateway IP allow-listed), set up an SSH tunnel + dedicated key, and connected the Supabase MCP in <strong style={{ color: INK }}>both Claude Code and Claude Desktop</strong>. Verified live against the real DB: <strong style={{ color: INK }}>pgvector is installed</strong>, <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> (25 tables) is built, and the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code> retail data (~789k rows) is queryable.</>
     ),
   },
   {
-    title: "Create a Supabase Cloud project (our sandbox)",
+    status: "now",
+    title: "Turn this mockup into a Next.js app",
     detail: (
-      <>Spin up a free Supabase Cloud project to learn the flow first — the coach said the setup is identical to the self-hosted one and the lesson carries over (and is far faster to iterate on). Set a <strong style={{ color: INK }}>strong DB password</strong> and <strong style={{ color: INK }}>enable RLS</strong> on the tables. Name can be changed later.</>
+      <>Start a <strong style={{ color: INK }}>brand-new Claude session</strong> and give it one focused task: convert this static mockup (the page you're reading) into a real <strong style={{ color: INK }}>Next.js app</strong> — same look, but a proper framework that can read live from Supabase. Keep the session to just this one task so it stays clean.</>
     ),
   },
   {
-    title: "Connect the Supabase MCP to Claude Code",
+    status: "next",
+    title: "Authentication",
     detail: (
-      <>In Claude Code run <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/mcp</code> → Enter → select the <strong style={{ color: INK }}>Supabase</strong> connector → grant access, then restart Claude Code. After this I can query and manage Supabase straight from the CLI. <strong style={{ color: INK }}>Allow server-interfacing commands "once," not "always"</strong> — they're riskier.</>
+      <>The task right after the Next.js app: wire <strong style={{ color: INK }}>Supabase Auth</strong> (email/password) with manual role provisioning and <strong style={{ color: INK }}>RLS per company</strong>, replacing the localStorage gate. New session, one task again.</>
     ),
   },
   {
-    title: "Connect to the live self-hosted server",
+    status: "next",
+    title: "Build modules (Andre's \"chocolate-bar\" method)",
     detail: (
-      <>I'm already through the firewall (Andre confirmed June 9 — <em>"you have access to everything"</em>), so <strong style={{ color: INK }}>no new request to Andre is needed</strong>. Point Claude at the self-hosted server to pull the <strong style={{ color: INK }}>live Little Tree retail data (~400k rows, updated daily)</strong>. The Cloud sandbox above doesn't need this — only the live pull does.</>
-    ),
-  },
-  {
-    title: "Test the connection",
-    detail: (
-      <>Ask Claude to connect and <strong style={{ color: INK }}>list the tables / pull one sample row</strong>. If it's blocked, re-check the firewall login (step 1) — last time every port timed out at the same hop, which was the firewall dropping the IP, not the server being down.</>
-    ),
-  },
-  {
-    title: "Build the first module (Andre's \"chocolate-bar\" method)",
-    detail: (
-      <>Don't build the whole hub at once. Pick <strong style={{ color: INK }}>one topic</strong> → data-gather from Supabase → have Claude write a plain-English synopsis → build that single "Deeper Dive" page. Then rinse and repeat per topic. Schema's already in hand (34 tables), so this starts the moment the connection works.</>
+      <>Then build one topic at a time — data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page. Rinse and repeat. Schema's already live (<code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code>, 25 tables), so each module is just wiring data in.</>
     ),
   },
 ]
@@ -1944,32 +1923,51 @@ function CoachRunbookCard() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Next step · connect Supabase via CLI + MCP
+              Build sequence · coach plan
             </span>
           </div>
           <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
-            30-min coach session
+            Updated today
           </span>
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "8px 0 18px", lineHeight: 1.6 }}>
-          The firewall is open (Andre confirmed June 9). Now the goal is to wire Claude to Supabase so I can pull the data and start building. Walk me through these six steps. <strong style={{ color: INK }}>Two databases exist:</strong> the Little Tree retail DB (self-hosted, read-only, ~400k rows, refreshed daily) and the new <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> / "Mike's World" Supabase for everything else.
+          Supabase is connected and verified, so the build order the coach mapped out is: <strong style={{ color: INK }}>convert this mockup into a Next.js app first, then authentication</strong>, then build modules one at a time. Each is its own fresh Claude session with a single task.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
-          {RUNBOOK_STEPS.map((s, i) => (
-            <div key={i} style={{ display: "flex", gap: 14, padding: "14px 16px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
+          {RUNBOOK_STEPS.map((s, i) => {
+            const done = s.status === "done"
+            const now  = s.status === "now"
+            return (
+            <div key={i} style={{
+              display: "flex", gap: 14, padding: "14px 16px", borderRadius: 12,
+              background: now ? "rgba(255,20,147,0.05)" : CHIP,
+              border: `1px solid ${now ? "rgba(255,20,147,0.25)" : RULE}`,
+              opacity: done ? 0.8 : 1,
+            }}>
               <div style={{
                 width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
-                background: INK, color: "#fff",
+                background: done ? INK : now ? "#FF1493" : "#fff",
+                border: now || done ? "none" : `1.5px solid ${RULE}`,
+                color: done || now ? "#fff" : INK3,
                 fontFamily: FONT, fontWeight: 800, fontSize: 12,
                 display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1,
-              }}>{i + 1}</div>
+              }}>{done ? "✓" : i + 1}</div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: INK, marginBottom: 4, lineHeight: 1.35 }}>{s.title}</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" as const }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 13, color: INK, lineHeight: 1.35 }}>{s.title}</span>
+                  <span style={{
+                    fontFamily: FONT, fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const,
+                    padding: "2px 6px", borderRadius: 99,
+                    background: done ? "#fff" : now ? "#FF1493" : "#fff",
+                    color: done ? INK3 : now ? "#fff" : INK3,
+                    border: `1px solid ${now ? "#FF1493" : RULE}`,
+                  }}>{done ? "Done" : now ? "Now" : "Next"}</span>
+                </div>
                 <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>{s.detail}</div>
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </div>
     </div>
@@ -2186,12 +2184,12 @@ export default function App() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Milestones</span>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>7 / 13</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>8 / 14</span>
                 </div>
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
-                  <div style={{ height: "100%", width: "54%", background: "#fff", borderRadius: 99 }} />
+                  <div style={{ height: "100%", width: "57%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>54% complete · Week 1 of 5</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>57% complete · Week 3</div>
               </div>
 
               <div style={{ flex: 1 }} />
@@ -2200,7 +2198,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
                 <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>
-                  Connect Supabase via CLI + MCP
+                  Turn this mockup into a Next.js app
                 </div>
               </div>
             </div>
@@ -2255,13 +2253,13 @@ export default function App() {
                 </span>
               </div>
               <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                Connect Claude to Supabase via CLI + MCP, then build the first module — data-gather → plain-English synopsis → one "Deeper Dive" page.
+                Supabase is connected ✓ — next, turn this mockup into a real Next.js app, then add authentication.
               </h2>
               <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                Firewall is open (Andre confirmed June 9 — I have access to everything) and the 34-table schema is in hand. With the coach today: stand up a Supabase Cloud sandbox to learn the flow, wire the Supabase MCP into Claude Code, then point Claude at the live Littletree data and build module-by-module (Andre's "chocolate-bar" method) rather than the whole hub at once.
+                Today the Supabase MCP went live in both Claude apps. Verified against the real DB: pgvector installed, <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> (25 tables) built, and the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>littletree</code> retail data (~789k rows) is queryable. Per the coach's plan, the next move is a fresh Claude session to convert this mockup into a Next.js app, then a separate session for authentication, then build modules one at a time.
               </p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                {["Supabase CLI + MCP", "Cloud sandbox", "First module", "Live data pull"].map(tag => (
+                {["MCP connected ✓", "Next.js app", "Auth", "Chocolate-bar modules"].map(tag => (
                   <span key={tag} style={{
                     fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
                     color: INK2, background: CHIP,
@@ -2280,10 +2278,10 @@ export default function App() {
               </div>
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                 {[
-                  "Confirm with the coach: does the Supabase Cloud sandbox setup transfer 1:1 to Andre's self-hosted instance? (We think yes.)",
-                  "Decide live-connect vs. data dump for the daily-changing Littletree retail data — lean toward connecting directly.",
-                  "Lock the safe setup: allow server commands 'once' not 'always', strong dev DB password, RLS on. Production hardening later.",
-                  "Pick the first 'chocolate-bar' module to build end-to-end so there's a working slice to show Mike.",
+                  "Next.js conversion: start a fresh Claude session with the single task of turning this mockup into a Next.js app (same layout, real framework, reads from Supabase).",
+                  "Then a separate session for authentication — Supabase Auth (email/password) + manual roles + RLS per company, replacing the localStorage gate.",
+                  "Keep the SSH tunnel + MCP healthy; rotate the server password with Andre and give him a heads-up that the Kong /mcp route is now open to the tunnel.",
+                  "Pick the first 'chocolate-bar' module to build end-to-end (e.g. a sales synopsis from littletree) so there's a working slice to show Mike.",
                 ].map((t, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
@@ -2317,12 +2315,13 @@ export default function App() {
           <Row label="Server"        value="Andre's self-hosted server · Caddy + SSL · 5 subdomains live"   pill={<Pill label="Live"       kind="solid"   />} />
           <Row label="Automations"   value="Python + FastAPI · /opt/automations · Cron + Webhook services" pill={<Pill label="Live"       kind="solid"   />} />
           <Row label="Database"      value="Supabase self-hosted · Postgres 15 · 13 containers · Studio"   pill={<Pill label="Live"       kind="solid"   />} />
-          <Row label="Littletree DB" value="MySQL transactional · read-only · ~400k rows · nightly refresh" pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Littletree DB" value="Read-only · mirrored into Postgres (littletree schema) · ~789k rows" pill={<Pill label="Live"       kind="solid"   />} />
           <Row label="Firewall"      value="ITGen login · IP allow-list · per-IP, per-day (login each move)" pill={<Pill label="Open"       kind="solid"   />} />
-          <Row label="Schema"        value="34-table masterdash schema · designed & in hand"               pill={<Pill label="Ready"      kind="solid"   />} />
-          <Row label="masterdash DB" value="2nd Supabase DB (was 'Mike's World') · loaded service-by-service" pill={<Pill label="Building"   kind="outline" />} />
-          <Row label="Supabase Cloud" value="Dev sandbox to learn the flow — setup transfers to self-hosted" pill={<Pill label="Now"        kind="outline" />} />
-          <Row label="Supabase MCP"  value="Wired to Claude Code · query + manage Supabase from the CLI"     pill={<Pill label="Connecting" kind="outline" />} />
+          <Row label="Schema"        value="masterdash · 25 tables · built & live in Postgres"              pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="masterdash DB" value="2nd Supabase DB (was 'Mike's World') · 25 tables · seed data, automations next" pill={<Pill label="Building"   kind="outline" />} />
+          <Row label="pgvector"      value="Installed & ready · mentor PDF embeddings (Andre's watch-item cleared)" pill={<Pill label="Live"       kind="solid"   />} />
+          <Row label="Supabase MCP"  value="Connected · Claude Code + Desktop · Kong /mcp over SSH tunnel"   pill={<Pill label="Connected"  kind="solid"   />} />
+          <Row label="Next.js app"   value="Converting this mockup → production Next.js app"                pill={<Pill label="Now"        kind="outline" />} />
           <Row label="Auth"          value="Supabase Auth · email/password · manual roles · RLS per company" pill={<Pill label="Building"   kind="outline" />} />
           <Row label="Storage"       value="Supabase Storage · PDFs · MP3 voice memos · pgvector embeddings" pill={<Pill label="Building"   kind="outline" />} />
           <Row label="Bot"           value="Telegram · CommandOS · slash commands /idea /win /skill /prep"   pill={<Pill label="Later"      kind="outline" />} />
