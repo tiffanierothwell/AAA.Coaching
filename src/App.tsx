@@ -2096,6 +2096,22 @@ export default function App() {
     <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 16px 60px" : "40px 28px 80px", fontFamily: FONT }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
+        {/* ════════════════════════════════════════ LOG OUT ════════════════════════════════════════ */}
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: -6 }}>
+          <a href="/logout" style={{
+            fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" as const,
+            color: INK2, background: "#fff", border: `1px solid ${RULE}`,
+            padding: "6px 14px", borderRadius: 99, textDecoration: "none",
+            display: "inline-flex", alignItems: "center", gap: 6,
+          }}>
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
+              <path d="M6 14H3.5A1.5 1.5 0 0 1 2 12.5v-9A1.5 1.5 0 0 1 3.5 2H6" stroke={INK2} strokeWidth="1.6" strokeLinecap="round"/>
+              <path d="M10.5 11 14 8l-3.5-3M14 8H6" stroke={INK2} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Log out
+          </a>
+        </div>
+
 
         {/* ════════════════════════════════════════ HERO ════════════════════════════════════════ */}
         <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>

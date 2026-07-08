@@ -95,6 +95,15 @@ export default async function middleware(request) {
   const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico']);
   if (OPEN_PATHS.has(url.pathname) || url.pathname.startsWith('/apple-touch-icon')) return;
 
+  // Log out — clear the auth cookie and send back to the login page.
+  if (url.pathname === '/logout') {
+    const headers = new Headers();
+    headers.set('Set-Cookie', `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);
+    headers.set('Location', '/');
+    headers.set('Cache-Control', 'no-store');
+    return new Response(null, { status: 303, headers });
+  }
+
   const wanted = `${COOKIE}=${encodeURIComponent(pass)}`;
   const cookie = request.headers.get('cookie') || '';
   const authed = cookie.split(';').some(c => c.trim() === wanted);
