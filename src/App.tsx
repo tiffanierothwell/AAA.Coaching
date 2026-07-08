@@ -1636,7 +1636,7 @@ function CoachRunbookCard() {
           The full sequence for the MJM Command Center engagement — from today's demo through needs analysis, proposal, the phased build, and into training and ongoing improvement. Would love your coaching on how we sequence it.
         </p>
 
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10, alignItems: "start" }}>
           {RUNBOOK_STEPS.map((s, i) => {
             const done = s.status === "done"
             const now  = s.status === "now"
