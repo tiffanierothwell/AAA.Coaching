@@ -249,21 +249,20 @@ const PHASES: Phase[] = [
   {
     num: 2, name: "MJM Command Center", note: "In progress · demo day today",
     milestones: [
-      { label: "Demo prep",       sub: "Deck · data · dry run",    status: "done"  },
-      { label: "Demo Day",        sub: "TODAY · MJM Group",        status: "now"   },
-      { label: "Role snapshots",  sub: "Matt&Julie · Mike · Angie · Leah", status: "later" },
-      { label: "CEO Cmd Center",  sub: "8 KPI cards live",         status: "later" },
-      { label: "5 company dashes", sub: "MedBox · Le Roi · KCF · Moccasin · LT", status: "later" },
-      { label: "Morning & Prep",  sub: "Daily briefs per role",    status: "later" },
-      { label: "Decision queue",  sub: "Needs your attention",     status: "later" },
-      { label: "Knowledge Vault", sub: "Resources · PDF search",   status: "later" },
-      { label: "Auth + roles",    sub: "Supabase Auth · RLS",      status: "later" },
+      { label: "Demo Prep",              sub: "Deck · data · dry run",   status: "done"  },
+      { label: "Demo Day",               sub: "TODAY · MJM Group",       status: "now"   },
+      { label: "Needs Analysis Prep",    sub: "Questions for the team",  status: "later" },
+      { label: "Needs Analysis Received", sub: "Requirements in",        status: "later" },
+      { label: "Plan Proposal",          sub: "Scope · phases · cost",   status: "later" },
+      { label: "Proposal Day",           sub: "Present to MJM",          status: "later" },
+      { label: "Phase 1 execution build", sub: "Build sprint 1",         status: "later" },
+      { label: "Phase 1 Approval & testing", sub: "Sign-off + QA",       status: "later" },
+      { label: "Phase 2 execution build", sub: "Build sprint 2",         status: "later" },
+      { label: "Phase 2 Approval & testing", sub: "Sign-off + QA",       status: "later" },
+      { label: "Phase 3 AIOS",           sub: "Full AIOS rollout",       status: "later" },
+      { label: "Phase 4 Training",       sub: "Team onboarding",         status: "later" },
+      { label: "Phase 5 Evolve & Improve", sub: "Iterate + optimize",    status: "later" },
     ],
-  },
-  {
-    num: 3, name: "AIOS Hand-over", note: "To be scoped",
-    milestones: [],
-    emptyNote: "Milestones to be scoped after Phase 2.",
   },
 ]
 
@@ -2182,7 +2181,7 @@ export default function App() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Phases</span>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>Phase 2 of 3</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>Phase 2 · active</span>
                 </div>
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
                   <div style={{ height: "100%", width: "45%", background: "#fff", borderRadius: 99 }} />
