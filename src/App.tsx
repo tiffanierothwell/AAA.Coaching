@@ -1998,7 +1998,7 @@ export default function App() {
 
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
                 <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>Project</span>
-                <a href="https://mjmdashboard.org" target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3, textDecoration: "underline", textDecorationColor: "#FF1493", textUnderlineOffset: 3 }}>
+                <a href="https://mjmdashboard.org/login.html" target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3, textDecoration: "underline", textDecorationColor: "#FF1493", textUnderlineOffset: 3 }}>
                   MJM 360 Command Center · mjmdashboard.org
                 </a>
               </div>
