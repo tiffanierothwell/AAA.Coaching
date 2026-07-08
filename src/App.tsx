@@ -1678,7 +1678,9 @@ function CoachRunbookCard() {
 
 // ════════════════════════════════════════════════════════════════
 // RECORDINGS + EMAIL THREADS (bottom of page)
+// Hidden from the site (set to true to show again). Data kept below.
 // ════════════════════════════════════════════════════════════════
+const SHOW_RECORDINGS = false
 const RECORDINGS: { title: string; sub: string; date: string; url?: string; pdf?: string }[] = [
   {
     title: "Tiffanie + Coach (Nik Volynkin) — Connect Supabase MCP",
@@ -2180,7 +2182,8 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════ RECORDINGS + EMAIL THREADS ════════════════════════════════════════ */}
-        <RecordingsThreadsCard />
+        {/* Hidden from the site for now — data + component kept below. Flip to true to show again. */}
+        {SHOW_RECORDINGS && <RecordingsThreadsCard />}
 
 
         {/* Footer */}
