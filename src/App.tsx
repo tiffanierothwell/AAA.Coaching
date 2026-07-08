@@ -1,7 +1,6 @@
 import './App.css'
 import { useState, useEffect } from 'react'
 import { PM_DETAILS } from './data/pmDetails'
-import { BUILD_DAYS } from './data/buildDays'
 
 function useIsMobile(bp = 640) {
   const [mobile, setMobile] = useState(() => window.innerWidth < bp)
@@ -1155,299 +1154,152 @@ function _DeepDiveSection() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// BUILD CALENDAR · 5 WEEKS
+// BUILD CALENDAR · THE REAL 7-WEEK HISTORY
 // ════════════════════════════════════════════════════════════════
-type DayKind = "foundation" | "med" | "high" | "low" | "test"
-type Day = { day: string; kind: DayKind; title: string; desc: string; tags: string[]; key?: string }
-type Week = { num: number; theme: string; days: Day[] }
-
-const DAY_ACCENT: Record<DayKind, string> = {
-  foundation: "#FF1493",
-  med:        SEV_MED,
-  high:       SEV_HIGH,
-  low:        SEV_LOW,
-  test:       INK,
+type BuildWeek = {
+  num: number
+  theme: string
+  dates: string
+  did: React.ReactNode
+  trialError?: React.ReactNode[]
+  stack: string
 }
 
-const TOOLKIT = [
-  "Claude Code", "AIOS", "Cursor", "Terminal", "Supabase Studio",
-  "Telegram", "Wispr Flow", "GitHub", "Claude API", "OpenAI / Whisper", "GCal · Fireflies",
+const BUILD_WEEKS: BuildWeek[] = [
+  {
+    num: 1, theme: "Research & planning", dates: "late April → May 5",
+    did: (
+      <>Decided to <strong style={{ color: INK }}>build</strong> an AI Operating System for Mike's portfolio instead of buying off-the-shelf tools. Made the foundational calls: <strong style={{ color: INK }}>Python + FastAPI</strong> for automations, <strong style={{ color: INK }}>self-hosted Supabase</strong> on Andre's own server (not the paid cloud — zero per-operation cost and full control), and <strong style={{ color: INK }}>Telegram</strong> as the primary notification channel, email as backup. Andre and Valera ran a tech Q&amp;A to pressure-test the approach; a GM tech-systems setup session locked it in. The repo was created May 5 — “Initial commit, MJM Dashboard / Little Tree Ventures AI Operating System.”</>
+    ),
+    stack: "Planning + coaching calls (recorded in Fireflies), Claude for strategy, Git for the first commit.",
+  },
+  {
+    num: 2, theme: "Andre's server + self-hosted Supabase", dates: "early–mid May",
+    did: (
+      <>Andre stood up the foundation on his Linux server (<strong style={{ color: INK }}>mjmspace.com</strong>): <strong style={{ color: INK }}>Caddy</strong> as the reverse proxy with SSL on every subdomain, <strong style={{ color: INK }}>Docker</strong> running the full Supabase stack, and Postgres exposed for direct reads. Supabase came alive at <strong style={{ color: INK }}>supabase.mjmspace.com</strong> (Studio at studio.mjmspace.com). A coaching call with Teemu on May 11 walked through firewall setup and Supabase prep. Andre shared the full server credential set (the “Server Info” file, dated May 6).</>
+    ),
+    stack: "Andre's Linux server over SSH/terminal, Docker, Caddy, self-hosted Supabase, Postgres.",
+  },
+  {
+    num: 3, theme: "Little Tree data migration + the hard server corrections", dates: "mid–late May",
+    did: (
+      <>Migrated roughly <strong style={{ color: INK }}>ten years of Little Tree Gas POS data</strong> from Andre's existing MySQL into Supabase Postgres — schema <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code>, 36 tables, ~2.1M transaction headers back to 2017 and 8M+ line items, on a nightly sync.</>
+    ),
+    trialError: [
+      <>The sync crashed on May 2 with <em>“number of parameters must be between 0 and 65535”</em> — Postgres's hard limit on a very wide table. Andre patched it with a batch-size cap, but the cap then made the nightly sync drain only one batch at a time, so <strong style={{ color: INK }}>~80% of line-item rows were being skipped</strong> (lines-per-sale fell to ~1.5 instead of ~7.5). That quietly broke anything computed from line items.</>,
+      <>The server got locked behind an <strong style={{ color: INK }}>IP firewall</strong> — the database can't be reached from a laptop or from Claude Code at all (every port times out). Only allowlisted machines connect. This is why real numbers can only be produced by code we deploy, never by querying locally.</>,
+      <>Several feeds “froze” around the migration (customer signups, referrals), which we had to design around later.</>,
+    ],
+    stack: "MySQL, Postgres, Andre's Python migration scripts, nightly cron on the server.",
+  },
+  {
+    num: 4, theme: "Re-engaging & connecting the brain", dates: "June 9 → June 24",
+    did: (
+      <>A June 9 project-continuation call with Andre re-scoped the work and planned the actual dashboard. A June 24 coaching call with Nik Volynkin connected the <strong style={{ color: INK }}>Supabase MCP to Claude</strong> so Claude Code could see the schema directly. This is the point where the backend foundation was solid enough to start building on top of.</>
+    ),
+    stack: "Supabase MCP, Claude Code, Fireflies (call capture).",
+  },
+  {
+    num: 5, theme: "The LTV Hub Command Center sprint", dates: "June 25 → July 1",
+    did: (
+      <>The build exploded here (~44 commits on June 25 alone). We shipped the site on <strong style={{ color: INK }}>Vercel</strong>, auto-deploying from the private GitHub repo, on <strong style={{ color: INK }}>mjmdashboard.org</strong> (Namecheap DNS), behind a single Basic Auth password gate (middleware.js). Built the <strong style={{ color: INK }}>Little Tree Gas CEO Pulse dashboard</strong>: today's sales with deltas and YoY, month-to-date, 14-day trend, hourly curve, busiest days, cashier leaderboard, top customers, cash position, purchasing, loyalty, margin-by-department, supplier spend, a fuel section, inventory, and a self-printing monthly report — all reading through a secure <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/api</code> proxy so the service key never touches the browser (the DB has aggregates disabled and a 1,000-row cap, so the proxy paginates and aggregates server-side). Stood up the first <strong style={{ color: INK }}>Telegram automations</strong> — team briefs (Monday week-ahead, daily brief, 5 PM recap) plus an inbound task-bot that turns a group message into a dashboard task (parsed by Claude). Scoped everything to Store 1 and fixed “today” to mean the last complete business day.</>
+    ),
+    trialError: [
+      <>The old per-user Supabase email login had auto-paused on the free tier and was throwing <em>“Failed to fetch,”</em> so we retired it for one site password.</>,
+      <>The first Telegram briefs ran on GitHub Actions' built-in cron. Google blocked service-account keys at the org level, so the calendar had to read a secret <strong style={{ color: INK }}>iCal link</strong> instead of the Google API.</>,
+    ],
+    stack: "Claude Code + terminal, Vercel serverless functions (Node + one Python), self-hosted Supabase via the proxy, GitHub + GitHub Actions, Telegram Bot API, Anthropic Claude API (Opus 4.8), Namecheap, and the Claude for Chrome extension for the Vercel/Namecheap setup.",
+  },
+  {
+    num: 6, theme: "Reliability & AI intelligence — the EasyCron switch", dates: "July 2 → July 5",
+    did: (
+      <>Shipped the <strong style={{ color: INK }}>Leah shift bot</strong> (asks Leah at 4 PM what she worked on, feeds her weekly card) and added Mike as a task-board profile. Andre ran a <strong style={{ color: INK }}>parity audit</strong> confirming MySQL and Supabase matched month-by-month (8.2M rows, zero missing), so we unpinned the dashboard from its April-only fallback and made it fully live and self-maintaining. Built the <strong style={{ color: INK }}>“What Claude Sees Today”</strong> AI intelligence layer (<code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>/api/lt-intel</code>, cached daily): an executive read, signal chips, and the top three highest-leverage moves, generated by Claude from the live numbers. Made Mike's calendar auto-update from the iCal feed, and built the customer-behavior deep dive (the bag-sales decline analysis plus an AI action plan and promo ideas).</>
+    ),
+    trialError: [
+      <><strong style={{ color: INK }}>The big one:</strong> GitHub Actions' cron turned out to be unreliable for timed sends — it dropped the very first scheduled run, and top-of-hour timing drifted. Since these briefs have to land at 8 AM and 5 PM, we switched the scheduler to <strong style={{ color: INK }}>EasyCron</strong> (a paid, DST-safe timer with email-on-failure). EasyCron now fires three jobs at the right local times and calls GitHub to run each workflow. Verified working July 2.</>,
+    ],
+    stack: "EasyCron, GitHub Actions (now just the executor), Vercel serverless (Node + Python api/calendar.py), self-hosted Supabase (cloud Supabase for the small cache tables), Anthropic Claude API, Telegram Bot API.",
+  },
+  {
+    num: 7, theme: "Mike's AIOS demo · the MJM 360 Command Center", dates: "July 6 → now (July 8)",
+    did: (
+      <>The two biggest days in the whole project (78 commits July 6, 48 July 7). Built the full <strong style={{ color: INK }}>“Mike's AIOS” demo</strong> — the multi-page experience that pitches the MJM 360 Command Center: One Dashboard, Daily Brief &amp; Meeting Prep, Reports, Categories of Improvement, the Project &amp; Task board, Social Media, “Other Possibilities,” Next Steps, and The Architecture. Added the <strong style={{ color: INK }}>AI-Employee capabilities library</strong> (expanded to the full four-layer roster), the cinematic “The Org, Amplified” walkthrough with the AIOS sentinel finale, clean URLs per section, and a full pass to the collaborative “our/we” voice. This is the demo that stands on everything built in Weeks 1–6.</>
+    ),
+    stack: "Claude Code + terminal, static HTML/CSS/vanilla JS, Vercel, Git, plus curl/PIL for imagery and headless Chrome for the PDFs.",
+  },
 ]
-
-const WEEKS: Week[] = [
-  {
-    num: 1, theme: "Foundation, Auth & Core Pages",
-    days: [
-      { day: "MON", kind: "foundation", title: "Supabase init + iterative schema kickoff", desc: "Run /prime · spin up Supabase project on Andre's server · enable RLS · schema is built iteratively service-by-service (no upfront full-schema dump — add tables as each automation is wired). Confirm Littletree MySQL nightly read-only refresh path.", tags: ["Claude Code", "Supabase Studio", "Terminal"] },
-      { day: "TUE", kind: "foundation", title: "Supabase Auth (email/password) + RLS + mike.html wrapper", desc: "Wire Supabase Auth with email/password · manual user provisioning · RLS policies per company · replace localStorage gate · render hero · embed /ltv/index.html iframe · test login → /mike.html.", tags: ["Claude Code", "Supabase", "Cursor"] },
-      { day: "WED", kind: "foundation", title: "Telegram bot scaffolding + integrations sync", desc: "Create bot via BotFather · wire FastAPI webhook on Andre's server · 'hello Mike' round-trip · add API keys (GCal · Fireflies · Calendly) · build sync collectors · land first overnight pull.", tags: ["Claude Code", "Telegram", "Terminal"] },
-      { day: "THU", kind: "med", title: "Little Tree Ventures Hub hero + weekly calendar pull + 4 venture iframes", desc: "Build hero card · Python cron to pull Mike's GCal weekly view · render in-page calendar · scaffold 4 venture iframe wrappers + folder cards + external dashboard links.", tags: ["Claude Code", "Supabase", "GCal API"] },
-      { day: "FRI", kind: "high", title: "HIGH #137 Cross-venture JWT + HIGH #138 activity ticker", desc: "JWT signer service · publish public key · coordinate verifier with each venture dashboard · venture_activity table · hover-debounce JS · 200ms tooltip with last 5 events.", tags: ["Claude Code", "JWT lib", "Supabase"] },
-    ],
-  },
-  {
-    num: 2, theme: "Meeting Prep, Resources & Mentors",
-    days: [
-      { day: "MON", kind: "high", title: "Meeting Prep page + HIGH #130 pre-meeting brief", desc: "Build Meeting Prep section · Supabase query for next 7 days · click → modal · hourly cron · context-gather agent · Claude composer · CommandOS deliver · brief_sent flag.", tags: ["Claude Code", "Claude API", "Telegram"] },
-      { day: "TUE", kind: "high", title: "HIGH #141 AI prep doc generator + Meeting Prep MED batch", desc: "Multi-table read · structured Claude prompt · meeting_prep table · modal renderer · 8 medium automations: long-form meeting modal · attendee history · linked tasks · transcript link · etc.", tags: ["Claude Code", "Claude API", "Supabase"] },
-      { day: "WED", kind: "med", title: "Resources page + 5 mentor tabs + PDF embeddings + pgvector", desc: "Tabbed resources page (Tony, Jay, Strategic Coach, A360, AI Bali) · upload component · enable pgvector · chunker script · OpenAI embeddings · backfill all mentor PDFs.", tags: ["Claude Code", "OpenAI API", "pgvector"] },
-      { day: "THU", kind: "high", title: "HIGH #155 Cmd+K semantic search palette", desc: "Cmd+K UI · embed-query → pgvector top-10 → Claude rerank · deep-link to PDF page · result preview pane.", tags: ["Claude Code", "OpenAI API", "pgvector"] },
-      { day: "FRI", kind: "high", title: "HIGH #160 Ask Your Mentor (Telegram) + Skills page", desc: "Telegram inbound · mentor router · pgvector retrieve · voice-emulation prompt · reply · build skill grid · Supabase storage upload · download counter · install instructions.", tags: ["Claude Code", "Claude API", "Telegram"] },
-    ],
-  },
-  {
-    num: 3, theme: "Skills, Snapshots, Polish & Demo",
-    days: [
-      { day: "MON", kind: "high", title: "HIGH #168 Skill recommendation engine + Resources/Skills MED batch", desc: "Activity aggregator · embed Mike's last 14 days · pgvector match skills · Claude rerank top-5 · 12 medium automations across resources + skills (downloads, tracking, related-skill links).", tags: ["Claude Code", "Claude API", "pgvector"] },
-      { day: "TUE", kind: "high", title: "Weekly Snapshots PM row + HIGH #173 PM weekly synthesis", desc: "3-col layout: Watch · Building · Next · Mike's Ideas · Blockers · wire to Supabase · Monday cron · pull last week's activity · Claude narrative writer · save to tiffanie_snapshots.", tags: ["Claude Code", "Claude API", "Cursor"] },
-      { day: "WED", kind: "med", title: "Weekly Snapshots Leah row + win input", desc: "5 day cards · win capture form · Claude categorize · Friday digest cron · Telegram delivery hook.", tags: ["Claude Code", "Cursor", "Claude API"] },
-      { day: "THU", kind: "low", title: "Remaining MED + LOW automations sweep", desc: "Sweep through the long tail · per-page beacons · click logs · navigation polish · theme persistence · audit logs.", tags: ["Claude Code", "Cursor"] },
-      { day: "FRI", kind: "test", title: "End-to-end test + demo to Mike + sign-off", desc: "Real-data dry run · fix tickets · screen-share walk-through · capture feedback for v2.", tags: ["Claude Code", "Telegram", "Mike's calendar"] },
-    ],
-  },
-  {
-    num: 4, theme: "Buffer, v2 Tickets & Mike's Onboarding",
-    days: [
-      { day: "MON", kind: "med", title: "v2 ticket triage + critical fixes", desc: "Walk through Mike's demo feedback · classify P0/P1/P2 · ship the P0 fixes immediately · re-deploy · re-test on Mike's profile.", tags: ["Claude Code", "Supabase", "Cursor"] },
-      { day: "TUE", kind: "med", title: "Mike onboarding · live walkthrough", desc: "Screen-share with Mike · walk every section · capture confusion points · take voice notes via Whisper · file follow-up tasks.", tags: ["Claude Code", "Whisper", "Telegram"] },
-      { day: "WED", kind: "med", title: "Telegram CommandOS polish + slash commands", desc: "Add /idea, /win, /skill, /prep slash commands · wire each to its Supabase write path · test from Mike's phone · document in skills page.", tags: ["Claude Code", "Telegram", "Supabase"] },
-      { day: "THU", kind: "low", title: "Audit logs + per-user activity feed", desc: "activity_log read view · filter by user · last 14 days · export CSV · used as the input to weekly synthesis.", tags: ["Claude Code", "Supabase"] },
-      { day: "FRI", kind: "test", title: "Coaching session · Valera + retro", desc: "Walk Valera through what shipped Week 1–4 · review architecture decisions · capture gaps · plan Week 5 leftovers.", tags: ["Claude Code", "Fireflies", "Valera"] },
-    ],
-  },
-  {
-    num: 5, theme: "Leah Onboarding, Hardening & Hand-off",
-    days: [
-      { day: "MON", kind: "med", title: "Leah row · onboarding + 5-day grid live", desc: "Add Leah's user · email/password · roles · wire her Telegram · deliver first daily card · confirm Friday digest path to Mike.", tags: ["Claude Code", "Supabase", "Telegram"] },
-      { day: "TUE", kind: "med", title: "Backups + restore drill", desc: "Verify daily DB backup · run a test restore into the sandbox DB · document the runbook · share with Andre.", tags: ["Claude Code", "Supabase", "Andre"] },
-      { day: "WED", kind: "low", title: "Performance + monitoring sweep", desc: "Add per-route timing · Supabase slow query log · cron heartbeat · Telegram alert when a job misses its window.", tags: ["Claude Code", "Supabase", "Telegram"] },
-      { day: "THU", kind: "med", title: "Documentation + handoff package", desc: "README · architecture diagram · runbook for Andre · skill modules for the 5 most-used flows · video walk-through.", tags: ["Claude Code", "Loom", "Cursor"] },
-      { day: "FRI", kind: "test", title: "Final sign-off · Mike + Andre + Valera", desc: "Live demo · production-data dry run · sign-off form · feedback recorded · v2 backlog handed to Tiffanie.", tags: ["Claude Code", "Mike", "Valera"] },
-    ],
-  },
-]
-
-function DayCard({ d, dayKey, onOpen }: { d: Day; dayKey: string; onOpen: (k: string) => void }) {
-  const isMobile = useIsMobile()
-  const hasDetail = !!BUILD_DAYS[dayKey]
-  return (
-    <div
-      onClick={() => hasDetail && onOpen(dayKey)}
-      style={{
-        ...CARD, padding: isMobile ? "16px 16px 18px" : "18px 18px 20px",
-        display: "flex", flexDirection: "column" as const, gap: 10,
-        borderLeft: `4px solid ${DAY_ACCENT[d.kind]}`,
-        minHeight: 0,
-        cursor: hasDetail ? "pointer" : "default",
-        transition: "transform 0.15s, box-shadow 0.15s",
-      }}
-      onMouseEnter={e => { if (hasDetail) { (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 28px rgba(0,0,0,0.10)" } }}
-      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = ""; (e.currentTarget as HTMLElement).style.boxShadow = SH }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 10, letterSpacing: 1.6, color: INK3 }}>{d.day}</span>
-        <span style={{ fontFamily: FONT, fontWeight: 600, fontSize: 9, color: INK3 }}>9–4</span>
-      </div>
-      <h4 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: INK, lineHeight: 1.35, letterSpacing: -0.2, margin: 0 }}>
-        {d.title}
-      </h4>
-      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3, lineHeight: 1.6, margin: 0 }}>
-        {d.desc}
-      </p>
-      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, marginTop: "auto" }}>
-        {d.tags.map(t => <TagChip key={t} label={t} />)}
-      </div>
-      {hasDetail && (
-        <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 0.5, color: INK3, marginTop: 2 }}>
-          Click for full plan →
-        </div>
-      )}
-    </div>
-  )
-}
-
-// ── Day modal content ─────────────────────────────────────────
-function DayModalContent({ k }: { k: string }) {
-  const d = BUILD_DAYS[k]
-  if (!d) return null
-  return (
-    <div>
-      {/* Dark header */}
-      <div style={{ background: INK, padding: "30px 36px 28px", color: "#fff" }}>
-        <div style={{ fontFamily: FONT, fontSize: 10, fontWeight: 800, letterSpacing: 2, color: "rgba(255,255,255,0.5)", marginBottom: 10 }}>
-          {d.eyebrow}
-        </div>
-        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 28, color: "#fff", letterSpacing: -1, lineHeight: 1.15, margin: "0 0 14px", paddingRight: 36 }}>
-          {decodeEntities(d.title)}
-        </h2>
-        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-          {d.chips.map((c, i) => {
-            const lvl = c.c === "lvl-low" ? SEV_LOW : c.c === "lvl-med" ? SEV_MED : c.c === "lvl-high" ? SEV_HIGH : null
-            return (
-              <span key={i} style={{
-                fontFamily: FONT, fontWeight: 800, fontSize: 9.5, letterSpacing: 1,
-                padding: "3px 10px", borderRadius: 99,
-                border: lvl ? `1.5px solid ${lvl}` : "1px solid rgba(255,255,255,0.2)",
-                color: lvl ?? "rgba(255,255,255,0.85)",
-                background: lvl ? "transparent" : "rgba(255,255,255,0.08)",
-                display: "inline-flex", alignItems: "center", gap: 5,
-              }}>
-                {lvl && <span style={{ width: 6, height: 6, borderRadius: "50%", background: lvl }}/>}
-                {c.l}
-              </span>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Body */}
-      <div style={{ padding: "28px 36px 32px" }}>
-        {/* Workflow pipeline */}
-        <div style={{ background: INK, borderRadius: 14, padding: "18px 20px", marginBottom: 26 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14, flexWrap: "wrap" as const, gap: 6 }}>
-            <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 800, letterSpacing: 1.5, color: "#fff" }}>◆ DAY WORKFLOW</span>
-            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 600, letterSpacing: 1.2, color: "rgba(255,255,255,0.45)" }}>INPUTS · PROCESS · DELIVER</span>
-          </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, alignItems: "stretch" }}>
-            {d.workflow.map((step, i) => (
-              <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 8, flex: "1 1 0", minWidth: 140 }}>
-                <span style={{
-                  display: "inline-flex", flexDirection: "column" as const,
-                  background: "rgba(255,255,255,0.06)",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  borderRadius: 10, padding: "10px 12px",
-                  flex: 1,
-                }}>
-                  <span style={{
-                    fontFamily: FONT, fontSize: 8, fontWeight: 800,
-                    letterSpacing: 1.5, textTransform: "uppercase" as const,
-                    color: step.kind === "trigger" ? "#fff"
-                         : step.kind === "service" ? "#22D3EE"
-                         : step.kind === "storage" ? SEV_LIVE
-                         : step.kind === "ui"      ? "#FFB347"
-                         : "#FF1493",
-                    marginBottom: 4,
-                  }}>{step.kind}</span>
-                  <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 700, color: "#fff", lineHeight: 1.3 }}>
-                    {decodeEntities(step.name)}
-                  </span>
-                </span>
-                {i < d.workflow.length - 1 && <span style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, fontWeight: 700 }}>▸</span>}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <ModalSection label="What this day delivers">
-          <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.what }} />
-        </ModalSection>
-
-        <ModalSection label="How it gets done · with time estimates">
-          <ol style={{ margin: 0, paddingLeft: 22 }}>
-            {d.how.map((h, i) => <li key={i} style={{ marginBottom: 8 }} dangerouslySetInnerHTML={{ __html: h }} />)}
-          </ol>
-        </ModalSection>
-
-        <ModalSection label="Modules & services">
-          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-            {d.modules.map(m => <CodeChip key={m}>{decodeEntities(m)}</CodeChip>)}
-          </div>
-        </ModalSection>
-
-        <ModalSection label="Tables / storage">
-          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-            {d.tables.map(t => <CodeChip key={t}>{decodeEntities(t)}</CodeChip>)}
-          </div>
-        </ModalSection>
-
-        <ModalSection label="Acceptance criteria">
-          <ul style={{ margin: 0, paddingLeft: 22 }}>
-            {d.accept.map((a, i) => <li key={i} style={{ marginBottom: 4 }} dangerouslySetInnerHTML={{ __html: a }} />)}
-          </ul>
-        </ModalSection>
-
-        <ModalSection label="Notes">
-          <p style={{ margin: 0 }} dangerouslySetInnerHTML={{ __html: d.notes }} />
-        </ModalSection>
-
-        <ModalSection label="Detailed explanation">
-          <div className="long-explain" dangerouslySetInnerHTML={{ __html: d.longExplain }} />
-        </ModalSection>
-      </div>
-    </div>
-  )
-}
 
 function BuildCalendar() {
   const isMobile = useIsMobile()
-  const [openKey, setOpenKey] = useState<string | null>(null)
   return (
     <div style={{ ...CARD, padding: isMobile ? "22px 18px" : "32px 36px" }}>
       {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 18, marginBottom: 22, alignItems: "flex-start" }}>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Build Calendar · 4 hours per day · Mon–Fri
-            </span>
-          </div>
-          <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 38, color: INK, letterSpacing: -1.3, lineHeight: 1.05, margin: "0 0 8px" }}>
-            From zero to a live command center.
-          </h2>
-          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12.5, color: INK2, lineHeight: 1.6, margin: 0, maxWidth: 560 }}>
-            Driven by Claude Code (you in the chair, AIOS executing) — not by hand-coding. Each block is a focused 4-hour work session.
-          </p>
+      <div style={{ marginBottom: 22 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+            The real build calendar
+          </span>
         </div>
-        <div style={{ flexShrink: 0 }}>
-          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3, marginBottom: 8 }}>
-            Toolkit
-          </div>
-          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 5, maxWidth: 320 }}>
-            {TOOLKIT.map(t => (
-              <span key={t} style={{
-                fontFamily: FONT, fontWeight: 700, fontSize: 9.5,
-                padding: "3px 10px", borderRadius: 99,
-                background: INK, color: "#fff",
-              }}>{t}</span>
-            ))}
-          </div>
-        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 27 : 38, color: INK, letterSpacing: -1.3, lineHeight: 1.05, margin: "0 0 8px" }}>
+          LTV Hub <span style={{ color: INK3 }}>→</span> MJM Command Center.
+        </h2>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12.5, color: INK2, lineHeight: 1.6, margin: 0, maxWidth: 620 }}>
+          Seven weeks, week by week — what we built, what broke, and what we learned. The honest version, trial and error included.
+        </p>
       </div>
 
-      <div style={{ height: 1, background: RULE, marginBottom: 22 }} />
+      <div style={{ height: 1, background: RULE, marginBottom: 4 }} />
 
       {/* Weeks */}
-      <div style={{ display: "flex", flexDirection: "column" as const, gap: 26 }}>
-        {WEEKS.map(w => (
-          <div key={w.num}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12, flexWrap: "wrap" as const }}>
+      <div style={{ display: "flex", flexDirection: "column" as const }}>
+        {BUILD_WEEKS.map((w, i) => (
+          <div key={w.num} style={{ padding: "22px 0", borderBottom: i < BUILD_WEEKS.length - 1 ? `1px solid ${RULE}` : "none" }}>
+            {/* Week header */}
+            <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 10, flexWrap: "wrap" as const }}>
               <span style={{
                 fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2,
                 padding: "4px 10px", borderRadius: 4,
-                background: INK, color: "#fff", textTransform: "uppercase" as const,
+                background: INK, color: "#fff", textTransform: "uppercase" as const, flexShrink: 0,
               }}>Week {w.num}</span>
-              <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" as const, color: INK3 }}>
+              <span style={{ fontFamily: FONT, fontSize: isMobile ? 14 : 16, fontWeight: 800, letterSpacing: -0.3, color: INK, flex: 1, minWidth: 0 }}>
                 {w.theme}
               </span>
+              <span style={{ fontFamily: FONT, fontSize: 10, fontWeight: 400, color: INK3, letterSpacing: 0.3, flexShrink: 0 }}>
+                {w.dates}
+              </span>
             </div>
-            <div style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "repeat(5, 1fr)",
-              gap: 10,
-            }}>
-              {w.days.map(d => {
-                const k = `w${w.num}-${d.day.toLowerCase()}`
-                return <DayCard key={d.day} d={d} dayKey={k} onOpen={setOpenKey} />
-              })}
+
+            {/* What we did */}
+            <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 12.5, color: INK2, lineHeight: 1.7, margin: 0 }}>
+              {w.did}
+            </p>
+
+            {/* Trial & error */}
+            {w.trialError && (
+              <div style={{ background: "rgba(255,20,147,0.05)", border: "1px solid rgba(255,20,147,0.22)", borderRadius: 10, padding: "12px 14px", marginTop: 14 }}>
+                <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase" as const, color: "#FF1493", marginBottom: 8 }}>
+                  Trial &amp; error
+                </div>
+                <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+                  {w.trialError.map((t, j) => (
+                    <div key={j} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                      <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11, lineHeight: 1.6, flexShrink: 0 }}>•</span>
+                      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11 : 11.5, color: INK2, lineHeight: 1.65, margin: 0 }}>{t}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Stack */}
+            <div style={{ marginTop: 14, display: "flex", gap: 8, alignItems: "baseline", flexWrap: "wrap" as const }}>
+              <span style={{ fontFamily: FONT, fontSize: 8, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase" as const, color: INK3, flexShrink: 0 }}>Stack</span>
+              <span style={{ fontFamily: FONT, fontWeight: 400, fontSize: 10.5, color: INK3, lineHeight: 1.55 }}>{w.stack}</span>
             </div>
           </div>
         ))}
       </div>
-
-      <Modal open={!!openKey} onClose={() => setOpenKey(null)}>
-        {openKey && <DayModalContent k={openKey} />}
-      </Modal>
     </div>
   )
 }
