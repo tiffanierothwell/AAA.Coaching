@@ -1944,83 +1944,13 @@ function TaskBotSection() {
 }
 
 // ════════════════════════════════════════════════════════════════
-// PASSWORD GATE
-// ════════════════════════════════════════════════════════════════
-const SITE_PASSWORD = "LittleTree2026"
-const AUTH_KEY = "mjm_aaa_authed_v1"
-
-function PasswordGate({ children }: { children: React.ReactNode }) {
-  const [authed, setAuthed] = useState(() => {
-    try { return localStorage.getItem(AUTH_KEY) === "1" } catch { return false }
-  })
-  const [pw, setPw] = useState("")
-  const [err, setErr] = useState(false)
-
-  if (authed) return <>{children}</>
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (pw.trim() === SITE_PASSWORD) {
-      try { localStorage.setItem(AUTH_KEY, "1") } catch { /* ignore */ }
-      setAuthed(true)
-    } else {
-      setErr(true)
-    }
-  }
-
-  return (
-    <div style={{ minHeight: "100vh", background: "#F2F2F2", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px", fontFamily: FONT }}>
-      <div style={{ ...CARD, padding: "40px 34px", width: "100%", maxWidth: 380, textAlign: "center" as const }}>
-        <div style={{ height: 4, background: INK, width: 40, borderRadius: 99, margin: "0 auto 22px" }} />
-        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3, marginBottom: 6 }}>
-          MJM Ventures · AIOS
-        </div>
-        <h1 style={{ fontFamily: FONT, fontWeight: 900, fontSize: 26, color: INK, letterSpacing: -1, margin: "0 0 8px", lineHeight: 1.05 }}>
-          MJM 360 Command Center
-        </h1>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12.5, color: INK3, lineHeight: 1.55, margin: "0 0 24px" }}>
-          This page is private. Enter the password to continue.
-        </p>
-        <form onSubmit={submit} style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
-          <input
-            type="password"
-            value={pw}
-            autoFocus
-            onChange={(e) => { setPw(e.target.value); setErr(false) }}
-            placeholder="Password"
-            style={{
-              fontFamily: FONT, fontSize: 14, fontWeight: 500,
-              padding: "12px 14px", borderRadius: 10,
-              border: `1.5px solid ${err ? "#FF1493" : RULE}`,
-              outline: "none", color: INK, background: "#fff", width: "100%", boxSizing: "border-box" as const,
-            }}
-          />
-          {err && (
-            <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 11, color: "#FF1493", textAlign: "left" as const }}>
-              Incorrect password. Try again.
-            </div>
-          )}
-          <button
-            type="submit"
-            style={{
-              fontFamily: FONT, fontSize: 12, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const,
-              background: INK, color: "#fff", border: "none", borderRadius: 10,
-              padding: "12px 14px", cursor: "pointer", marginTop: 2,
-            }}
-          >Enter</button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
-// ════════════════════════════════════════════════════════════════
 // APP
+// (Site access is enforced server-side: Vercel Edge middleware.js does
+//  HTTP Basic Auth before any file is served — same as mjmdashboard.org.)
 // ════════════════════════════════════════════════════════════════
 export default function App() {
   const isMobile = useIsMobile()
   return (
-    <PasswordGate>
     <div style={{ minHeight: "100vh", background: "#F2F2F2", padding: isMobile ? "20px 16px 60px" : "40px 28px 80px", fontFamily: FONT }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column" as const, gap: 14 }}>
 
@@ -2260,7 +2190,6 @@ export default function App() {
 
       </div>
     </div>
-    </PasswordGate>
   )
 }
 
