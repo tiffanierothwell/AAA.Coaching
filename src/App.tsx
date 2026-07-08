@@ -223,20 +223,19 @@ function SevPill({ count, kind }: { count: number; kind: "low" | "med" | "high" 
 // ════════════════════════════════════════════════════════════════
 type MS = "done" | "now" | "later"
 const MILESTONES: { label: string; sub: string; status: MS }[] = [
-  { label: "Stack chosen",   sub: "Python · FastAPI",     status: "done"  },
-  { label: "Server live",    sub: "Andre · Caddy + SSL",  status: "done"  },
-  { label: "Supabase up",    sub: "13 containers",        status: "done"  },
-  { label: "Littletree DB",  sub: "Read-only · nightly",  status: "done"  },
-  { label: "Tech meeting",   sub: "Andre · Mike · Valera",status: "done"  },
-  { label: "Schema built",   sub: "masterdash · 25 tables", status: "done"  },
-  { label: "Firewall open",  sub: "ITGen · IP allow-list", status: "done"  },
-  { label: "Supabase MCP",   sub: "Connected · CLI + apps", status: "done"  },
-  { label: "Next.js app",    sub: "TODAY · convert mockup", status: "now"   },
-  { label: "Auth + roles",   sub: "Supabase Auth · RLS",  status: "later" },
-  { label: "Telegram bot",   sub: "CommandOS",            status: "later" },
-  { label: "Hub + calendar", sub: "Hero + GCal pull",     status: "later" },
-  { label: "AI prep docs",   sub: "Meeting briefs",       status: "later" },
-  { label: "Demo to Mike",   sub: "End-to-end",           status: "later" },
+  { label: "Stack chosen",    sub: "Python · FastAPI",       status: "done"  },
+  { label: "Server live",     sub: "Andre · Caddy + SSL",    status: "done"  },
+  { label: "Supabase",        sub: "supabase.mjmspace.com",  status: "done"  },
+  { label: "Littletree data", sub: "~789k rows · read-only", status: "done"  },
+  { label: "Schema built",    sub: "masterdash · 25 tables", status: "done"  },
+  { label: "Supabase MCP",    sub: "Connected · Claude",     status: "done"  },
+  { label: "Daily AI intel",  sub: "GitHub Action + Claude", status: "done"  },
+  { label: "CEO Cmd Center",  sub: "8 KPI cards · realtime", status: "done"  },
+  { label: "Demo · MJM Group", sub: "TODAY · Phase 1 wrap",  status: "now"   },
+  { label: "Phase 2 · 360",   sub: "All 5 companies",        status: "later" },
+  { label: "Auth + roles",    sub: "Supabase Auth · RLS",    status: "later" },
+  { label: "Telegram CmdOS",  sub: "/idea /win /prep",       status: "later" },
+  { label: "KCF site + app",  sub: "Phase 3",                status: "later" },
 ]
 
 function ProgressTimeline() {
@@ -334,11 +333,11 @@ function ProgressTimeline() {
           <div style={{ height: "100%", width: `${(doneCount / total) * 100}%`, background: INK, borderRadius: 99 }}/>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Project start</span>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Phase 1 start</span>
           <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9, color: INK3 }}>
-            {total - doneCount - 1} steps remaining after today
+            Demo day · {total - doneCount - 1} on the Phase 2 roadmap
           </span>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Demo to Mike</span>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Phase 2+</span>
         </div>
       </div>
     </div>
@@ -540,19 +539,18 @@ const STACK_CARDS = [
 ]
 
 const SERVER_STRIP = [
-  "System updated",
   "Python 3.14 + /opt/automations",
   "PHP 8.5 + FPM + Composer",
-  "Docker + Supabase (13 containers)",
-  "Cron timer + Webhook service",
-  "Caddy + SSL · 5/5 certs issued",
-  "All subdomains live",
+  "Docker + Supabase · supabase.mjmspace.com",
+  "GitHub Actions · daily AI intelligence",
+  "EasyCron · scheduled server jobs",
+  "Caddy + SSL · all subdomains live",
 ]
 
 const INTEGRATIONS = [
-  "Fireflies", "Calendly", "Zoom", "Telegram", "Google Workspace",
-  "Gmail", "GitHub",
-  "OpenAI / Claude", "Whisper",
+  "Claude API · Opus 4.8", "GitHub Actions", "EasyCron", "Supabase Realtime",
+  "Telegram", "Fireflies", "Calendly", "Zoom",
+  "Google Workspace", "Gmail", "Whisper",
 ]
 
 function StackSection() {
@@ -564,14 +562,14 @@ function StackSection() {
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
           <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
           <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-            Foundation · 01 · Server is live
+            Foundation · Phase 1 · Live in production
           </span>
         </div>
         <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 38 : 56, color: INK, letterSpacing: -2, lineHeight: 1, margin: "0 0 18px" }}>
           The <span style={{ color: INK3 }}>Stack.</span>
         </h2>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" as const, marginBottom: 18 }}>
-          {["Python", "FastAPI", "Supabase", "Andre's Server"].map(t => (
+          {["Python + FastAPI", "Supabase", "GitHub Actions", "EasyCron", "Claude API · Opus 4.8", "Telegram CommandOS"].map(t => (
             <span key={t} style={{
               fontFamily: FONT, fontWeight: 700, fontSize: 10,
               padding: "5px 12px", borderRadius: 99,
@@ -584,10 +582,11 @@ function StackSection() {
           ))}
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 13 : 14, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 720 }}>
-          Every automation in this document is a Python script. FastAPI serves the webhook endpoints. Supabase
-          (self-hosted via Docker on Andre's server) is the database of record. Third-party services post webhooks
-          to FastAPI endpoints or are polled by cron jobs — all results land in Supabase tables that the dashboard
-          reads in real time. Built and maintained in Claude Code + Cursor. No n8n.
+          Automations are Python scripts; FastAPI serves the webhook endpoints. Supabase (self-hosted via Docker on Andre's
+          server, at <strong style={{ color: INK }}>supabase.mjmspace.com</strong>) is the database of record. Schedules run two ways: a
+          nightly <strong style={{ color: INK }}>GitHub Action</strong> that calls the <strong style={{ color: INK }}>Claude API (Opus 4.8)</strong> to generate the daily
+          AI intelligence (executive read + signal chips), and <strong style={{ color: INK }}>EasyCron</strong> for the server-side jobs. Results land in
+          Supabase tables the dashboards read in real time via Supabase Realtime. Built and maintained in Claude Code. No n8n.
         </p>
       </div>
 
@@ -1522,7 +1521,7 @@ function BuildCalendar() {
             </span>
           </div>
           <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 38, color: INK, letterSpacing: -1.3, lineHeight: 1.05, margin: "0 0 8px" }}>
-            From zero to Mike's AIOS in 5 weeks.
+            From zero to a live command center.
           </h2>
           <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12.5, color: INK2, lineHeight: 1.6, margin: 0, maxWidth: 560 }}>
             Driven by Claude Code (you in the chair, AIOS executing) — not by hand-coding. Each block is a focused 4-hour work session.
@@ -1687,52 +1686,61 @@ const COACH_RESOURCES = [
 // need a decision or a walkthrough on this session.
 const COACH_QUESTIONS: { q: string; topic: string; detail: React.ReactNode }[] = [
   {
-    q: "How should I scope the \"turn this mockup into a Next.js app\" session?",
-    topic: "Next.js conversion",
+    q: "Self-hosted Supabase + masterdash schema",
+    topic: "Data foundation",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>Supabase is connected, so the next move is a <strong style={{ color: INK }}>fresh Claude session</strong> with one task: convert this static mockup into a real Next.js app.</p>
-        <p style={{ margin: "0 0 8px", fontWeight: 700, color: INK }}>Help me decide:</p>
+        <p style={{ margin: "0 0 8px" }}>Andre's self-hosted Supabase (Postgres 15, Docker) is live at <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>supabase.mjmspace.com</code>.</p>
         <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
-          <li>App Router (recommended) and where Supabase reads should live — server components vs. route handlers?</li>
-          <li>Keep the exact look of this mockup, just on a framework that can read live from Supabase?</li>
-          <li>How tight should I keep the task so the session doesn't sprawl?</li>
+          <li><strong style={{ color: INK }}>masterdash</strong> schema — 25 tables — built and live.</li>
+          <li><code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code> retail data (~789k rows) mirrored in, read-only.</li>
+          <li>pgvector installed for mentor-PDF embeddings.</li>
         </ul>
       </>
     ),
   },
   {
-    q: "Auth right after — what's the cleanest order?",
-    topic: "Authentication",
+    q: "Claude ↔ Supabase MCP connected",
+    topic: "AI access",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>The task after the Next.js app is <strong style={{ color: INK }}>authentication</strong>: Supabase Auth (email/password), manual role provisioning, and RLS per company — replacing the localStorage gate.</p>
-        <p style={{ margin: 0 }}>Do I add auth before or after wiring the first live data view? And how do you suggest I provision the first few users/roles?</p>
+        <p style={{ margin: "0 0 8px" }}>The Supabase MCP is enabled through Kong over an SSH tunnel and connected in <strong style={{ color: INK }}>both Claude Code and Claude Desktop</strong>.</p>
+        <p style={{ margin: 0 }}>Claude can now query and manage the database directly — the backbone for every automation and the daily intelligence.</p>
       </>
     ),
   },
   {
-    q: "Security for the Next.js app pointing at real data",
-    topic: "Security",
+    q: "Daily AI intelligence — GitHub Action → Claude",
+    topic: "Automation",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>Now that Claude can reach the live DB, lock in the safe pattern for the app:</p>
+        <p style={{ margin: "0 0 8px" }}>A <strong style={{ color: INK }}>GitHub Action</strong> runs every morning (7 AM ET), calls the <strong style={{ color: INK }}>Claude API (Opus 4.8)</strong>, and publishes a structured read to the dashboard:</p>
         <ul style={{ margin: "0 0 8px", paddingLeft: 18 }}>
-          <li>Keep the <strong style={{ color: INK }}>service-role key server-side only</strong> — never in client bundles.</li>
-          <li><strong style={{ color: INK }}>RLS per company</strong> enforced, anon/auth keys for the browser.</li>
-          <li>Allow server-interfacing commands <strong style={{ color: INK }}>"once," not "always."</strong></li>
+          <li>An executive summary in plain English</li>
+          <li>Four signal chips (e.g. month-to-date, margin, loyalty)</li>
+          <li>The top-3 highest-leverage moves that week</li>
         </ul>
-        <p style={{ margin: 0 }}>Anything else to harden before this is anywhere near production?</p>
+        <p style={{ margin: 0 }}><strong style={{ color: INK }}>EasyCron</strong> handles the server-side scheduled jobs.</p>
       </>
     ),
   },
   {
-    q: "Confirm the modular \"chocolate-bar\" build order",
-    topic: "Build strategy",
+    q: "CEO Command Center — 8 live KPI cards",
+    topic: "CEO view",
     detail: (
       <>
-        <p style={{ margin: "0 0 8px" }}>After Next.js + auth, build <strong style={{ color: INK }}>one module at a time</strong> (Andre's method): data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page → repeat.</p>
-        <p style={{ margin: 0 }}>Agree that's the right order? And which module should be first — something off the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code> retail data so there's a real slice to show Mike?</p>
+        <p style={{ margin: "0 0 8px" }}>Angie's CEO Command Center across all five MJM companies — eight strategic KPI cards (Net Cash, Costs, CFO, Innovation, Marketing, Sales, Raving Fan, Value Chain), Tony Robbins' RPM method.</p>
+        <p style={{ margin: 0 }}>Refreshed via <strong style={{ color: INK }}>Supabase Realtime</strong>; each card drills down to its source data. (Phase 2 wires them to live per-company numbers.)</p>
+      </>
+    ),
+  },
+  {
+    q: "Company dashboards + secure-by-design",
+    topic: "Dashboards",
+    detail: (
+      <>
+        <p style={{ margin: "0 0 8px" }}>Per-company dashboards scaffolded under the command center — <strong style={{ color: INK }}>MedBox · Le Roi · KCF · Moccasin Joe · Little Tree</strong> — with a login gate. Little Tree is the deepest (live retail intelligence).</p>
+        <p style={{ margin: 0 }}>Security: the browser ships the <strong style={{ color: INK }}>anon key only</strong> with RLS protecting per-company data; the service-role key stays server-side. Firewall + SSH key for admin.</p>
       </>
     ),
   },
@@ -1754,38 +1762,23 @@ function EmailThreadCard() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Questions for Coach · today's session
+              Phase 1 · what we shipped
             </span>
           </div>
-          <a
-            href={`${import.meta.env.BASE_URL}email-thread-andre.pdf`}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              fontFamily: FONT, fontSize: 9, fontWeight: 700,
-              background: INK, color: "#fff",
-              padding: "5px 12px", borderRadius: 99, letterSpacing: 1,
-              textTransform: "uppercase" as const, textDecoration: "none",
-              display: "inline-flex", alignItems: "center", gap: 6,
-            }}
-          >
-            <svg width="11" height="11" viewBox="0 0 16 16" fill="none">
-              <path d="M9 1H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V6L9 1z" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round"/>
-              <path d="M9 1v5h5" stroke="#fff" strokeWidth="1.5" strokeLinejoin="round"/>
-            </svg>
-            View full PDF
-          </a>
+          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
+            Demoing today
+          </span>
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3, margin: "8px 0 14px", lineHeight: 1.5 }}>
-          What I actually need from the coach today — now that the firewall is open and the schema's in hand. Tap any question for the full context.
+          The foundation that's live and going in front of the MJM Group today. Tap any item for the detail — this is the base Phase 2 builds on.
         </p>
 
-        {/* Today's questions — primary */}
+        {/* What shipped in Phase 1 */}
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 6 }}>
           {COACH_QUESTIONS.map((item, i) => (
             <button
               key={i}
-              onClick={() => setOpen({ avatar: `Q${i + 1}`, avatarOnPink: true, name: "Question for coach", meta: `${item.topic} · today`, subject: item.q, tag: "Ask coach", body: item.detail })}
+              onClick={() => setOpen({ avatar: "✓", avatarOnPink: true, name: item.q, meta: `${item.topic} · Phase 1`, subject: item.q, tag: "Shipped", body: item.detail })}
               style={{
                 display: "flex", alignItems: "center", gap: 10, width: "100%",
                 padding: "10px 12px", borderRadius: 10, textAlign: "left" as const, cursor: "pointer",
@@ -1796,14 +1789,14 @@ function EmailThreadCard() {
               <div style={{
                 width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
                 background: "#FF1493", color: "#fff",
-                fontFamily: FONT, fontWeight: 900, fontSize: 8.5,
+                fontFamily: FONT, fontWeight: 900, fontSize: 11,
                 display: "flex", alignItems: "center", justifyContent: "center",
-              }}>{i + 1}</div>
+              }}>✓</div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: 11.5, color: INK, whiteSpace: "nowrap" as const, overflow: "hidden", textOverflow: "ellipsis" }}>{item.q}</div>
                 <div style={{ fontWeight: 300, fontSize: 9.5, color: INK3 }}>{item.topic}</div>
               </div>
-              <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Ask coach</span>
+              <span style={{ fontSize: 7.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "2px 6px", borderRadius: 99, flexShrink: 0 }}>Shipped</span>
               <span style={{ fontSize: 13, color: INK3, flexShrink: 0, fontWeight: 300 }}>›</span>
             </button>
           ))}
@@ -1885,30 +1878,30 @@ function EmailThreadCard() {
 const RUNBOOK_STEPS: { title: string; detail: React.ReactNode; status: "done" | "now" | "next" }[] = [
   {
     status: "done",
-    title: "Connect Supabase via CLI + MCP",
+    title: "Phase 1 · Foundation + Little Tree intelligence",
     detail: (
-      <>Done today. Enabled the self-hosted MCP in Kong (gateway IP allow-listed), set up an SSH tunnel + dedicated key, and connected the Supabase MCP in <strong style={{ color: INK }}>both Claude Code and Claude Desktop</strong>. Verified live against the real DB: <strong style={{ color: INK }}>pgvector is installed</strong>, <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> (25 tables) is built, and the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>littletree</code> retail data (~789k rows) is queryable.</>
+      <>What we're demoing today. Self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a nightly <strong style={{ color: INK }}>GitHub Action → Claude</strong> loop that publishes the daily AI intelligence (executive read + signal chips), and the <strong style={{ color: INK }}>CEO Command Center</strong> with 8 KPI cards. Live at mjmdashboard.org.</>
     ),
   },
   {
     status: "now",
-    title: "Turn this mockup into a Next.js app",
+    title: "Phase 2 · MJM Ventures 360 Command Center",
     detail: (
-      <>Start a <strong style={{ color: INK }}>brand-new Claude session</strong> and give it one focused task: convert this static mockup (the page you're reading) into a real <strong style={{ color: INK }}>Next.js app</strong> — same look, but a proper framework that can read live from Supabase. Keep the session to just this one task so it stays clean.</>
+      <>Build out all <strong style={{ color: INK }}>five company dashboards</strong> (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under Angie's CEO Command Center, wire the 8 KPI cards to <strong style={{ color: INK }}>live Supabase Realtime data</strong> per company, and add <strong style={{ color: INK }}>Supabase Auth</strong> (email/password) + roles + RLS per company. This is what I want your read on.</>
     ),
   },
   {
     status: "next",
-    title: "Authentication",
+    title: "Extend the daily AI intelligence to every company",
     detail: (
-      <>The task right after the Next.js app: wire <strong style={{ color: INK }}>Supabase Auth</strong> (email/password) with manual role provisioning and <strong style={{ color: INK }}>RLS per company</strong>, replacing the localStorage gate. New session, one task again.</>
+      <>The GitHub Action + Claude loop that writes today's Little Tree intelligence — replicate it per company so each dashboard gets its own executive read, signals, and top-3 levers every morning.</>
     ),
   },
   {
     status: "next",
-    title: "Build modules (Andre's \"chocolate-bar\" method)",
+    title: "Phase 3 · KCF Website + App",
     detail: (
-      <>Then build one topic at a time — data-gather from Supabase → Claude writes a plain-English synopsis → build that single "Deeper Dive" page. Rinse and repeat. Schema's already live (<code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code>, 25 tables), so each module is just wiring data in.</>
+      <>The KCF public website and companion app, scoped separately from the command-center work — the last big block on the roadmap.</>
     ),
   },
 ]
@@ -1923,15 +1916,15 @@ function CoachRunbookCard() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Build sequence · coach plan
+              Phase roadmap
             </span>
           </div>
           <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
-            Updated today
+            Demo day
           </span>
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "8px 0 18px", lineHeight: 1.6 }}>
-          Supabase is connected and verified, so the build order the coach mapped out is: <strong style={{ color: INK }}>convert this mockup into a Next.js app first, then authentication</strong>, then build modules one at a time. Each is its own fresh Claude session with a single task.
+          Phase 1 is live and being demoed to the MJM Group today. Here's the roadmap — <strong style={{ color: INK }}>Phase 2 is the full 360 Command Center across all five companies</strong>, then extending the daily AI intelligence, then the Phase 3 KCF build. Would love your coaching on the Phase 2 sequencing.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
@@ -2145,7 +2138,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Phase 1 · Week 3"].map(b => (
+                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Phase 1 · Demo Day"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -2159,17 +2152,20 @@ export default function App() {
                   fontFamily: FONT, fontWeight: 200, fontSize: 12,
                   color: INK3, letterSpacing: 2.5, textTransform: "uppercase" as const,
                   margin: "0 0 10px",
-                }}>From zero to Mike's AIOS in 5 weeks</p>
+                }}>MJM Ventures · AI Operating System</p>
                 <h1 style={{
                   fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 44 : 68,
                   color: INK, letterSpacing: isMobile ? -1.5 : -3, lineHeight: 0.92, margin: 0,
                 }}>Hi AAA Coach</h1>
+                <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 13 : 15, color: INK2, lineHeight: 1.5, margin: "12px 0 0", maxWidth: 520 }}>
+                  Phase 1 of the <strong style={{ color: INK }}>MJM 360 Command Center</strong> is wrapping up — today's the demo to the MJM Group. Here's where the build stands and what I'd love your read on next.
+                </p>
               </div>
 
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
                 <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 10, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>Project</span>
-                <a href="https://www.ltvdashboard.org/hub.html" target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3, textDecoration: "underline", textDecorationColor: "#FF1493", textUnderlineOffset: 3 }}>
-                  LTV Hub — Mike's AIOS · ltvdashboard.org/hub.html
+                <a href="https://mjmdashboard.org" target="_blank" rel="noopener noreferrer" style={{ fontFamily: FONT, fontWeight: 700, fontSize: 15, color: INK, letterSpacing: -0.3, textDecoration: "underline", textDecorationColor: "#FF1493", textUnderlineOffset: 3 }}>
+                  MJM 360 Command Center · mjmdashboard.org
                 </a>
               </div>
             </div>
@@ -2182,8 +2178,8 @@ export default function App() {
             }}>
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
-                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Build Phase 1</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · 9–4</div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Demo Day · MJM Group</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · Phase 1 wrap-up</div>
               </div>
 
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "20px 0" }} />
@@ -2191,12 +2187,12 @@ export default function App() {
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                   <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Milestones</span>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>8 / 14</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>8 / 13</span>
                 </div>
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
-                  <div style={{ height: "100%", width: "57%", background: "#fff", borderRadius: 99 }} />
+                  <div style={{ height: "100%", width: "62%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>57% complete · Week 3</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>Phase 1 complete · demoing today</div>
               </div>
 
               <div style={{ flex: 1 }} />
@@ -2205,7 +2201,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
                 <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>
-                  Turn this mockup into a Next.js app
+                  Phase 2 · MJM Ventures 360 Command Center
                 </div>
               </div>
             </div>
@@ -2222,8 +2218,8 @@ export default function App() {
           <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px", flex: 1 }}>
             <SectionLabel label="Project in one sentence" />
             <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 13, color: INK2, lineHeight: 1.8, margin: 0 }}>
-              An AI Operating System that wraps Mike David's daily work across Little Tree Ventures (LT Capital · LT Fuel · Jayi · AAA) so he stops being the bottleneck — calendar, meetings, mentor library, weekly snapshots, and a Telegram bot called CommandOS — built on Andre's self-hosted Supabase, Python + FastAPI, and Claude as the brain.
-              <span style={{ fontWeight: 700, color: INK }}> Built across /mike.html (auth wrapper) + /ltv/index.html (inner hub).</span>
+              The <strong style={{ color: INK }}>MJM 360 Command Center</strong> is an AI Operating System across all five MJM companies (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) — a CEO command center with live KPI cards, per-company dashboards, and daily AI intelligence so Mike and the team stop being the bottleneck. Built on Andre's self-hosted Supabase, Python + FastAPI, and Claude as the brain, with a Telegram bot called CommandOS.
+              <span style={{ fontWeight: 700, color: INK }}> Live at mjmdashboard.org.</span>
             </p>
           </div>
           <div style={{ flex: 1.3, display: "flex", flexDirection: "column" as const }}>
@@ -2260,13 +2256,13 @@ export default function App() {
                 </span>
               </div>
               <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                Supabase is connected ✓ — next, turn this mockup into a real Next.js app, then add authentication.
+                Phase 1 is wrapping up — today I'm demoing the MJM 360 Command Center to the MJM Group.
               </h2>
               <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                Today the Supabase MCP went live in both Claude apps. Verified against the real DB: pgvector installed, <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> (25 tables) built, and the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>littletree</code> retail data (~789k rows) is queryable. Per the coach's plan, the next move is a fresh Claude session to convert this mockup into a Next.js app, then a separate session for authentication, then build modules one at a time.
+                The foundation is live: self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a daily GitHub Action that generates AI intelligence with Claude, and the CEO Command Center with live KPI cards. After the demo I want your read on the Phase 2 plan — the full MJM Ventures 360 Command Center across all five companies.
               </p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                {["MCP connected ✓", "Next.js app", "Auth", "Chocolate-bar modules"].map(tag => (
+                {["Phase 1 shipped ✓", "Demo day", "CEO Command Center", "Phase 2 next"].map(tag => (
                   <span key={tag} style={{
                     fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
                     color: INK2, background: CHIP,
@@ -2285,10 +2281,10 @@ export default function App() {
               </div>
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                 {[
-                  "Next.js conversion: start a fresh Claude session with the single task of turning this mockup into a Next.js app (same layout, real framework, reads from Supabase).",
-                  "Then a separate session for authentication — Supabase Auth (email/password) + manual roles + RLS per company, replacing the localStorage gate.",
-                  "Keep the SSH tunnel + MCP healthy; rotate the server password with Andre and give him a heads-up that the Kong /mcp route is now open to the tunnel.",
-                  "Pick the first 'chocolate-bar' module to build end-to-end (e.g. a sales synopsis from littletree) so there's a working slice to show Mike.",
+                  "Phase 2 scope: build out all five company dashboards (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under the CEO Command Center — want your read on sequencing.",
+                  "Wire the 8 KPI cards to live data via Supabase Realtime instead of the current seed values, per company.",
+                  "Authentication next: Supabase Auth (email/password) + roles + RLS per company, replacing the localStorage gate.",
+                  "Keep the daily AI-intelligence loop healthy (GitHub Action + Claude) and extend it beyond Little Tree to the other companies.",
                 ].map((t, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
@@ -2297,7 +2293,7 @@ export default function App() {
                 ))}
               </div>
               <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Week 1 · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Phase 1 wrap-up · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
               </div>
             </div>
           </div>
@@ -2357,7 +2353,7 @@ export default function App() {
 
         {/* Footer */}
         <p style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "#BBBBBB", letterSpacing: 2, textTransform: "uppercase" as const, paddingTop: 4 }}>
-          LTV Hub — Mike's AIOS · /mike.html + /ltv/index.html · AAA Accelerator · Summer 2026
+          MJM 360 Command Center · mjmdashboard.org · Phase 1 · Demo Day · Summer 2026
         </p>
 
       </div>
