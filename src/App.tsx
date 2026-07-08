@@ -1826,13 +1826,12 @@ function RecordingsThreadsCard() {
 // TASK BOT · TELEGRAM TASK-MANAGEMENT WORKFLOW
 // ════════════════════════════════════════════════════════════════
 const TASKBOT_STAGES: { n: number; sys: string; title: string; body: string }[] = [
-  { n: 1, sys: "Telegram",   title: "Capture",        body: "Anyone texts or sends a voice memo to the CommandOS bot — “Assign Leah the LTC invoices, due Friday, high priority.”" },
-  { n: 2, sys: "Whisper",    title: "Transcribe",     body: "Voice memos are transcribed to text by Whisper. Typed messages pass straight through." },
-  { n: 3, sys: "Claude",     title: "Route the intent", body: "Claude reads the message and parses it — task, decision, idea, or note — plus who, what, priority, and due date." },
-  { n: 4, sys: "Supabase",   title: "Create + assign", body: "A row lands in the tasks table: assignee, company, priority, due date, and source tagged telegram or voice." },
-  { n: 5, sys: "Notion",     title: "Sync both ways", body: "Tasks sync bidirectionally with the Notion board — edit in either place and both stay in step." },
-  { n: 6, sys: "Dashboards", title: "Surface it",     body: "Open tasks (and anything awaiting Mike) show up in the morning brief, the decision queue, and each company dashboard." },
-  { n: 7, sys: "Telegram",   title: "Close the loop", body: "Mark it done from the bot or Notion — completed_at is set and it clears everywhere at once." },
+  { n: 1, sys: "Telegram",   title: "Capture",         body: "Someone posts in the team group starting with a trigger phrase, e.g. “New task for Leah, due Friday: send the LTC PR invoices.” Only messages that start with ‘new task’, ‘add task’, ‘task for’, or ‘/task’ wake the bot; normal chatter is left alone." },
+  { n: 2, sys: "Claude",     title: "Parse it",        body: "Claude (Opus 4.8) reads the message and pulls out three things: who it’s for, what to do, and the due date. Date phrases like ‘Friday’ or ‘end of month’ resolve to a real date." },
+  { n: 3, sys: "Supabase",   title: "Match the person", body: "The first name is matched to a teammate in the profiles table: exact first name, then a partial match, then email." },
+  { n: 4, sys: "Supabase",   title: "Create the task", body: "A row lands in the tasks table with the title, assignee, due date, who sent it, source ‘team_board’, and status ‘open’." },
+  { n: 5, sys: "Telegram",   title: "Confirm",         body: "The bot replies in the thread: “✅ Task Added”. If it can’t tell who or what, it asks a quick follow-up instead of guessing." },
+  { n: 6, sys: "Dashboards", title: "Surface it",      body: "The task shows on the task board and in the next morning brief. Mark it done on the board and it clears from both." },
 ]
 
 function TaskBotSection() {
@@ -1852,7 +1851,7 @@ function TaskBotSection() {
           Say it once. <span style={{ color: INK3 }}>It gets done.</span>
         </h2>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 640 }}>
-          Task management runs through the same Telegram bot as the morning brief. A message or voice note becomes a routed, assigned, tracked task — synced to Notion and surfaced across the dashboards — without anyone opening a project tool.
+          Task capture runs through a CommandOS bot in the same team Telegram group as the morning brief (its own bot, same group). A quick text becomes an assigned, due-dated task on the board and in the next brief, without anyone opening a project tool.
         </p>
 
         <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 20 : 32, marginTop: 24, alignItems: "flex-start" }}>
@@ -1903,31 +1902,31 @@ function TaskBotSection() {
             <div style={{ display: "flex", flexDirection: "column" as const, gap: 8, paddingTop: 14 }}>
               {/* inbound */}
               <div style={{ alignSelf: "flex-end", maxWidth: "88%", background: "#FF1493", color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "8px 11px" }}>
-                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>🎙 “Assign Leah — send the LTC PR invoices, due Friday, high priority.”</div>
+                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>New task for Leah, due Friday: send the LTC PR invoices.</div>
               </div>
               {/* outbound */}
               <div style={{ alignSelf: "flex-start", maxWidth: "92%", background: "rgba(255,255,255,0.07)", color: "#fff", borderRadius: "12px 12px 12px 3px", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 5 }}>✓ Task created</div>
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 5 }}>✅ Task Added</div>
                 <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.55 }}>
-                  <strong style={{ color: "#fff" }}>Leah</strong> · Send LTC PR invoices<br/>
-                  Little Tree Capital · <strong style={{ color: "#fff" }}>High</strong> · due Fri<br/>
-                  Synced to Notion · in tomorrow’s brief.
+                  <strong style={{ color: "#fff" }}>Leah</strong> · Send the LTC PR invoices<br/>
+                  due Fri · on the board + in tomorrow’s brief
                 </div>
               </div>
               {/* inbound 2 */}
               <div style={{ alignSelf: "flex-end", maxWidth: "88%", background: "#FF1493", color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "8px 11px", marginTop: 4 }}>
-                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>/done MedBox API integration</div>
+                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>Task for Andre: finish the MedBox API integration by end of month</div>
               </div>
               {/* outbound 2 */}
               <div style={{ alignSelf: "flex-start", maxWidth: "92%", background: "rgba(255,255,255,0.07)", color: "#fff", borderRadius: "12px 12px 12px 3px", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.08)" }}>
-                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 4 }}>✓ Marked done</div>
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 4 }}>✅ Task Added</div>
                 <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.55 }}>
-                  <strong style={{ color: "#fff" }}>Andre</strong> · MedBox API integration — cleared from the board and today’s brief.
+                  <strong style={{ color: "#fff" }}>Andre</strong> · Finish the MedBox API integration<br/>
+                  due Jul 31 · on the board + in tomorrow’s brief
                 </div>
               </div>
             </div>
             <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.08)", fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 0.5 }}>
-              Voice or text · captured → routed → assigned → tracked
+              Text in the team group · parsed by Claude · assigned + due-dated · tracked on the board
             </div>
           </div>
         </div>
@@ -1935,7 +1934,7 @@ function TaskBotSection() {
         {/* Data trail */}
         <div style={{ marginTop: 22, paddingTop: 16, borderTop: `1px solid ${RULE}`, display: "flex", flexWrap: "wrap" as const, gap: 8, alignItems: "center" }}>
           <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" as const, color: INK3, marginRight: 4 }}>Tables it touches</span>
-          {["telegram_messages", "capture_inbox", "tasks", "decision_queue", "voice_memos"].map(t => (
+          {["profiles", "tasks"].map(t => (
             <span key={t} style={{ fontFamily: FONT, fontWeight: 700, fontSize: 10, background: CHIP, color: INK2, border: `1px solid ${RULE}`, padding: "3px 9px", borderRadius: 6 }}>{t}</span>
           ))}
         </div>
