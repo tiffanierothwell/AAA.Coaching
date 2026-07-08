@@ -1600,34 +1600,19 @@ function EmailThreadCard() {
 // NEXT STEP · CONNECT SUPABASE (30-MIN COACH RUNBOOK)
 // ════════════════════════════════════════════════════════════════
 const RUNBOOK_STEPS: { title: string; detail: React.ReactNode; status: "done" | "now" | "next" }[] = [
-  {
-    status: "done",
-    title: "Phase 1 · Foundation + Little Tree intelligence",
-    detail: (
-      <>What we're demoing today. Self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 5px", borderRadius: 3, fontSize: 11 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a nightly <strong style={{ color: INK }}>GitHub Action → Claude</strong> loop that publishes the daily AI intelligence (executive read + signal chips), and the <strong style={{ color: INK }}>CEO Command Center</strong> with 8 KPI cards. Live at mjmdashboard.org.</>
-    ),
-  },
-  {
-    status: "now",
-    title: "Phase 2 · MJM Ventures 360 Command Center",
-    detail: (
-      <>Build out all <strong style={{ color: INK }}>five company dashboards</strong> (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under Angie's CEO Command Center, wire the 8 KPI cards to <strong style={{ color: INK }}>live Supabase Realtime data</strong> per company, and add <strong style={{ color: INK }}>Supabase Auth</strong> (email/password) + roles + RLS per company. This is what I want your read on.</>
-    ),
-  },
-  {
-    status: "next",
-    title: "Extend the daily AI intelligence to every company",
-    detail: (
-      <>The GitHub Action + Claude loop that writes today's Little Tree intelligence — replicate it per company so each dashboard gets its own executive read, signals, and top-3 levers every morning.</>
-    ),
-  },
-  {
-    status: "next",
-    title: "Phase 3 · KCF Website + App",
-    detail: (
-      <>The KCF public website and companion app, scoped separately from the command-center work — the last big block on the roadmap.</>
-    ),
-  },
+  { status: "done", title: "Demo Prep",                 detail: <>Deck, data, and dry run pulled together for the MJM Group.</> },
+  { status: "now",  title: "Demo Day",                  detail: <>Today — walking the MJM Group through the MJM 360 Command Center.</> },
+  { status: "next", title: "Needs Analysis Prep",       detail: <>Prep the discovery questions for each company and role.</> },
+  { status: "next", title: "Needs Analysis Received",   detail: <>Requirements back from the team, captured and organized.</> },
+  { status: "next", title: "Plan Proposal",             detail: <>Scope, phases, timeline, and cost written up.</> },
+  { status: "next", title: "Proposal Day",              detail: <>Present the plan to MJM for the go-ahead.</> },
+  { status: "next", title: "Phase 1 execution build",   detail: <>First build sprint of the approved scope.</> },
+  { status: "next", title: "Phase 1 Approval & testing", detail: <>Sign-off + QA before moving on.</> },
+  { status: "next", title: "Phase 2 execution build",   detail: <>Second build sprint.</> },
+  { status: "next", title: "Phase 2 Approval & testing", detail: <>Sign-off + QA.</> },
+  { status: "next", title: "Phase 3 AIOS",              detail: <>Full AIOS rollout across the portfolio.</> },
+  { status: "next", title: "Phase 4 Training",          detail: <>Team onboarding and enablement.</> },
+  { status: "next", title: "Phase 5 Evolve and Improve", detail: <>Ongoing iteration and optimization.</> },
 ]
 
 function CoachRunbookCard() {
@@ -1640,7 +1625,7 @@ function CoachRunbookCard() {
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
             <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              Phase roadmap
+              Phase 2 roadmap · MJM Command Center
             </span>
           </div>
           <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
@@ -1648,7 +1633,7 @@ function CoachRunbookCard() {
           </span>
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "8px 0 18px", lineHeight: 1.6 }}>
-          Phase 1 is live and being demoed to the MJM Group today. Here's the roadmap — <strong style={{ color: INK }}>Phase 2 is the full 360 Command Center across all five companies</strong>, then extending the daily AI intelligence, then the Phase 3 KCF build. Would love your coaching on the Phase 2 sequencing.
+          The full sequence for the MJM Command Center engagement — from today's demo through needs analysis, proposal, the phased build, and into training and ongoing improvement. Would love your coaching on how we sequence it.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
