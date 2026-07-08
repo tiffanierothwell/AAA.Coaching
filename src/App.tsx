@@ -2114,6 +2114,128 @@ function RecordingsThreadsCard() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// TASK BOT · TELEGRAM TASK-MANAGEMENT WORKFLOW
+// ════════════════════════════════════════════════════════════════
+const TASKBOT_STAGES: { n: number; sys: string; title: string; body: string }[] = [
+  { n: 1, sys: "Telegram",   title: "Capture",        body: "Anyone texts or sends a voice memo to the CommandOS bot — “Assign Leah the LTC invoices, due Friday, high priority.”" },
+  { n: 2, sys: "Whisper",    title: "Transcribe",     body: "Voice memos are transcribed to text by Whisper. Typed messages pass straight through." },
+  { n: 3, sys: "Claude",     title: "Route the intent", body: "Claude reads the message and parses it — task, decision, idea, or note — plus who, what, priority, and due date." },
+  { n: 4, sys: "Supabase",   title: "Create + assign", body: "A row lands in the tasks table: assignee, company, priority, due date, and source tagged telegram or voice." },
+  { n: 5, sys: "Notion",     title: "Sync both ways", body: "Tasks sync bidirectionally with the Notion board — edit in either place and both stay in step." },
+  { n: 6, sys: "Dashboards", title: "Surface it",     body: "Open tasks (and anything awaiting Mike) show up in the morning brief, the decision queue, and each company dashboard." },
+  { n: 7, sys: "Telegram",   title: "Close the loop", body: "Mark it done from the bot or Notion — completed_at is set and it clears everywhere at once." },
+]
+
+function TaskBotSection() {
+  const isMobile = useIsMobile()
+  return (
+    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+      <div style={{ height: 4, background: INK, width: "100%" }} />
+      <div style={{ padding: isMobile ? "22px 18px 24px" : "34px 40px 38px" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+            Task Bot · CommandOS on Telegram
+          </span>
+        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 30 : 44, color: INK, letterSpacing: -1.6, lineHeight: 1.02, margin: "0 0 10px" }}>
+          Say it once. <span style={{ color: INK3 }}>It gets done.</span>
+        </h2>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 640 }}>
+          Task management runs through the same Telegram bot as the morning brief. A message or voice note becomes a routed, assigned, tracked task — synced to Notion and surfaced across the dashboards — without anyone opening a project tool.
+        </p>
+
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? 20 : 32, marginTop: 24, alignItems: "flex-start" }}>
+          {/* Workflow flow */}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column" as const, gap: 0, width: "100%" }}>
+            {TASKBOT_STAGES.map((s, i) => (
+              <div key={s.n} style={{ display: "flex", gap: 14, position: "relative" as const }}>
+                {/* Rail + node */}
+                <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", flexShrink: 0 }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: "50%", flexShrink: 0,
+                    background: INK, color: "#fff",
+                    fontFamily: FONT, fontWeight: 800, fontSize: 12,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}>{s.n}</div>
+                  {i < TASKBOT_STAGES.length - 1 && (
+                    <div style={{ width: 2, flex: 1, minHeight: 22, background: RULE }} />
+                  )}
+                </div>
+                {/* Content */}
+                <div style={{ flex: 1, minWidth: 0, paddingBottom: i < TASKBOT_STAGES.length - 1 ? 16 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" as const, marginBottom: 3 }}>
+                    <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13.5, color: INK, letterSpacing: -0.2 }}>{s.title}</span>
+                    <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, background: CHIP, color: INK2, border: `1px solid ${RULE}`, padding: "2px 7px", borderRadius: 99 }}>{s.sys}</span>
+                  </div>
+                  <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK2, lineHeight: 1.6, margin: 0 }}>{s.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Telegram mockup */}
+          <div style={{
+            width: isMobile ? "100%" : 300, flexShrink: 0,
+            background: INK, borderRadius: 20, padding: isMobile ? "18px 16px 20px" : "22px 20px 24px",
+            display: "flex", flexDirection: "column" as const,
+          }}>
+            {/* Bot header */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, paddingBottom: 12, borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#FF1493", color: "#fff", fontFamily: FONT, fontWeight: 900, fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>OS</div>
+              <div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: "#fff" }}>CommandOS</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 9.5, color: "rgba(255,255,255,0.45)" }}>online · task routing</div>
+              </div>
+            </div>
+
+            {/* Chat */}
+            <div style={{ display: "flex", flexDirection: "column" as const, gap: 8, paddingTop: 14 }}>
+              {/* inbound */}
+              <div style={{ alignSelf: "flex-end", maxWidth: "88%", background: "#FF1493", color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "8px 11px" }}>
+                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>🎙 “Assign Leah — send the LTC PR invoices, due Friday, high priority.”</div>
+              </div>
+              {/* outbound */}
+              <div style={{ alignSelf: "flex-start", maxWidth: "92%", background: "rgba(255,255,255,0.07)", color: "#fff", borderRadius: "12px 12px 12px 3px", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 5 }}>✓ Task created</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.55 }}>
+                  <strong style={{ color: "#fff" }}>Leah</strong> · Send LTC PR invoices<br/>
+                  Little Tree Capital · <strong style={{ color: "#fff" }}>High</strong> · due Fri<br/>
+                  Synced to Notion · in tomorrow’s brief.
+                </div>
+              </div>
+              {/* inbound 2 */}
+              <div style={{ alignSelf: "flex-end", maxWidth: "88%", background: "#FF1493", color: "#fff", borderRadius: "12px 12px 3px 12px", padding: "8px 11px", marginTop: 4 }}>
+                <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.45 }}>/done MedBox API integration</div>
+              </div>
+              {/* outbound 2 */}
+              <div style={{ alignSelf: "flex-start", maxWidth: "92%", background: "rgba(255,255,255,0.07)", color: "#fff", borderRadius: "12px 12px 12px 3px", padding: "10px 12px", border: "1px solid rgba(255,255,255,0.08)" }}>
+                <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11.5, marginBottom: 4 }}>✓ Marked done</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: "rgba(255,255,255,0.75)", lineHeight: 1.55 }}>
+                  <strong style={{ color: "#fff" }}>Andre</strong> · MedBox API integration — cleared from the board and today’s brief.
+                </div>
+              </div>
+            </div>
+            <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.08)", fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 0.5 }}>
+              Voice or text · captured → routed → assigned → tracked
+            </div>
+          </div>
+        </div>
+
+        {/* Data trail */}
+        <div style={{ marginTop: 22, paddingTop: 16, borderTop: `1px solid ${RULE}`, display: "flex", flexWrap: "wrap" as const, gap: 8, alignItems: "center" }}>
+          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 700, letterSpacing: 1.5, textTransform: "uppercase" as const, color: INK3, marginRight: 4 }}>Tables it touches</span>
+          {["telegram_messages", "capture_inbox", "tasks", "decision_queue", "voice_memos"].map(t => (
+            <span key={t} style={{ fontFamily: FONT, fontWeight: 700, fontSize: 10, background: CHIP, color: INK2, border: `1px solid ${RULE}`, padding: "3px 9px", borderRadius: 6 }}>{t}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // ════════════════════════════════════════════════════════════════
 export default function App() {
@@ -2234,6 +2356,10 @@ export default function App() {
 
         {/* ════════════════════════════════════════ THE STACK ════════════════════════════════════════ */}
         <StackSection />
+
+
+        {/* ════════════════════════════════════════ TASK BOT WORKFLOW ════════════════════════════════════════ */}
+        <TaskBotSection />
 
 
         {/* DEEP DIVE — removed per request */}
