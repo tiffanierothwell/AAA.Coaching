@@ -1946,6 +1946,146 @@ function TaskBotSection() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// COACHING SESSIONS CALENDAR
+// ════════════════════════════════════════════════════════════════
+type Coach = "Valera Tumash" | "Teemu Lahdenpera" | "Nik Volynkin" | "Gareth Davies" | "James Latos"
+const COACH_COLOR: Record<Coach, string> = {
+  "Valera Tumash":    "#111111",
+  "Teemu Lahdenpera": "#FF1493",
+  "Nik Volynkin":     "#2563EB",
+  "Gareth Davies":    "#059669",
+  "James Latos":      "#D97706",
+}
+type CoachSession = { date: string; coach: Coach; time: string }
+const COACHING_SESSIONS: CoachSession[] = [
+  { date: "2026-04-07", coach: "Valera Tumash", time: "7:30 AM" },
+  { date: "2026-04-09", coach: "Valera Tumash", time: "7:00 AM" },
+  { date: "2026-04-14", coach: "Valera Tumash", time: "8:00 AM" },
+  { date: "2026-04-15", coach: "Valera Tumash", time: "8:15 AM" },
+  { date: "2026-04-16", coach: "Valera Tumash", time: "8:30 AM" },
+  { date: "2026-04-20", coach: "Valera Tumash", time: "9:00 AM" },
+  { date: "2026-04-23", coach: "Valera Tumash", time: "9:00 AM" },
+  { date: "2026-04-27", coach: "Valera Tumash", time: "9:45 AM" },
+  { date: "2026-05-05", coach: "Valera Tumash", time: "10:00 AM" },
+  { date: "2026-05-06", coach: "Nik Volynkin",  time: "9:15 AM" },
+  { date: "2026-05-08", coach: "Teemu Lahdenpera", time: "9:15 AM" },
+  { date: "2026-05-11", coach: "Teemu Lahdenpera", time: "10:00 AM" },
+  { date: "2026-05-13", coach: "Teemu Lahdenpera", time: "11:30 AM" },
+  { date: "2026-05-14", coach: "Teemu Lahdenpera", time: "8:00 AM" },
+  { date: "2026-06-16", coach: "Gareth Davies", time: "3:30 PM" },
+  { date: "2026-06-24", coach: "Nik Volynkin",  time: "9:15 AM" },
+  { date: "2026-06-30", coach: "Teemu Lahdenpera", time: "11:00 AM" },
+  { date: "2026-07-08", coach: "James Latos",   time: "9:00 AM" },
+  { date: "2026-07-13", coach: "Teemu Lahdenpera", time: "9:00 AM" },
+]
+const COACHING_MONTHS = [
+  { name: "April 2026", y: 2026, m: 3 },
+  { name: "May 2026",   y: 2026, m: 4 },
+  { name: "June 2026",  y: 2026, m: 5 },
+  { name: "July 2026",  y: 2026, m: 6 },
+]
+
+function CoachingCalendar() {
+  const isMobile = useIsMobile()
+  const [hover, setHover] = useState<string | null>(null)
+  const byDate: Record<string, CoachSession> = {}
+  COACHING_SESSIONS.forEach(s => { byDate[s.date] = s })
+
+  const coaches = Object.keys(COACH_COLOR) as Coach[]
+  const counts = coaches.map(c => ({ coach: c, n: COACHING_SESSIONS.filter(s => s.coach === c).length }))
+  const total = COACHING_SESSIONS.length
+  const WD = ["S", "M", "T", "W", "T", "F", "S"]
+
+  return (
+    <div style={{ ...CARD, padding: isMobile ? "22px 18px" : "32px 36px" }}>
+      {/* Header */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap" as const, gap: 12, marginBottom: 6 }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              Coaching sessions
+            </span>
+          </div>
+          <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 38, color: INK, letterSpacing: -1.3, lineHeight: 1.05, margin: 0 }}>
+            {total} coaching sessions.
+          </h2>
+        </div>
+      </div>
+
+      {/* Legend + counts */}
+      <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 8, margin: "16px 0 22px" }}>
+        {counts.map(({ coach, n }) => (
+          <span key={coach} style={{
+            display: "inline-flex", alignItems: "center", gap: 7,
+            fontFamily: FONT, fontWeight: 600, fontSize: 10.5, color: INK2,
+            background: CHIP, border: `1px solid ${RULE}`, padding: "5px 11px", borderRadius: 99,
+          }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: COACH_COLOR[coach], flexShrink: 0 }} />
+            {coach} <span style={{ fontWeight: 800, color: INK }}>· {n}</span>
+          </span>
+        ))}
+      </div>
+
+      {/* Month grids */}
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: isMobile ? 14 : 18 }}>
+        {COACHING_MONTHS.map(mo => {
+          const first = new Date(mo.y, mo.m, 1).getDay()
+          const days = new Date(mo.y, mo.m + 1, 0).getDate()
+          const cells: (number | null)[] = [...Array(first).fill(null), ...Array.from({ length: days }, (_, i) => i + 1)]
+          return (
+            <div key={mo.name}>
+              <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1.5, textTransform: "uppercase" as const, color: INK3, marginBottom: 8 }}>
+                {mo.name}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 3 }}>
+                {WD.map((d, i) => (
+                  <div key={i} style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 700, fontSize: 6.5, color: INK3 }}>{d}</div>
+                ))}
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, position: "relative" as const }}>
+                {cells.map((day, i) => {
+                  if (!day) return <div key={`e${i}`} style={{ aspectRatio: "1" }} />
+                  const key = `${mo.y}-${String(mo.m + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+                  const s = byDate[key]
+                  return (
+                    <div
+                      key={key}
+                      onMouseEnter={() => s && setHover(key)}
+                      onMouseLeave={() => setHover(null)}
+                      style={{
+                        aspectRatio: "1", borderRadius: "50%",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        position: "relative" as const,
+                        background: s ? COACH_COLOR[s.coach] : "transparent",
+                        border: s ? "none" : `1px solid ${RULE}`,
+                        cursor: s ? "pointer" : "default",
+                      }}
+                    >
+                      <span style={{ fontFamily: FONT, fontWeight: s ? 800 : 300, fontSize: 8.5, color: s ? "#fff" : INK3, userSelect: "none" as const, lineHeight: 1 }}>{day}</span>
+                      {s && !isMobile && hover === key && (
+                        <div style={{
+                          position: "absolute" as const, bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
+                          background: INK, borderRadius: 8, padding: "7px 10px", whiteSpace: "nowrap" as const,
+                          zIndex: 20, boxShadow: "0 8px 22px rgba(0,0,0,0.25)", pointerEvents: "none" as const,
+                        }}>
+                          <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 10, color: "#fff" }}>{s.coach}</div>
+                          <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: "rgba(255,255,255,0.6)", marginTop: 1 }}>{mo.name.split(" ")[0]} {day} · {s.time}</div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // (Site access is enforced server-side: Vercel Edge middleware.js does
 //  HTTP Basic Auth before any file is served — same as mjmdashboard.org.)
@@ -2184,6 +2324,10 @@ export default function App() {
         {/* ════════════════════════════════════════ RECORDINGS + EMAIL THREADS ════════════════════════════════════════ */}
         {/* Hidden from the site for now — data + component kept below. Flip to true to show again. */}
         {SHOW_RECORDINGS && <RecordingsThreadsCard />}
+
+
+        {/* ════════════════════════════════════════ COACHING SESSIONS ════════════════════════════════════════ */}
+        <CoachingCalendar />
 
 
         {/* Footer */}
