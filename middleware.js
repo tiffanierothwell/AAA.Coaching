@@ -18,7 +18,20 @@ function loginPage(error) {
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AAA Coaching AIOS</title>
+<title>AAA Coaching AIOS · Tiffanie's Project Management Dashboard</title>
+<meta name="description" content="Private coaching dashboard for the MJM 360 Command Center build — phases, timeline, coaching sessions, and the AIOS architecture." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="AAA Coaching AIOS" />
+<meta property="og:url" content="https://aios-project-management.vercel.app/" />
+<meta property="og:title" content="AAA Coaching AIOS · Tiffanie's Project Management Dashboard" />
+<meta property="og:description" content="Private coaching dashboard for the MJM 360 Command Center build — phases, timeline, coaching sessions, and the AIOS architecture." />
+<meta property="og:image" content="https://aios-project-management.vercel.app/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="AAA Coaching AIOS · Tiffanie's Project Management Dashboard" />
+<meta name="twitter:description" content="Private coaching dashboard for the MJM 360 Command Center build." />
+<meta name="twitter:image" content="https://aios-project-management.vercel.app/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;600;700;800;900&display=swap" rel="stylesheet">
@@ -75,6 +88,13 @@ export default async function middleware(request) {
   }
 
   const url = new URL(request.url);
+
+  // Public assets so link-unfurlers (iMessage, Slack, LinkedIn, etc.) can build
+  // a preview card without the password. Only the OG image + favicons — no app
+  // content is exposed here.
+  const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico']);
+  if (OPEN_PATHS.has(url.pathname) || url.pathname.startsWith('/apple-touch-icon')) return;
+
   const wanted = `${COOKIE}=${encodeURIComponent(pass)}`;
   const cookie = request.headers.get('cookie') || '';
   const authed = cookie.split(';').some(c => c.trim() === wanted);
@@ -102,6 +122,8 @@ export default async function middleware(request) {
     return htmlResponse(loginPage(true), 401);
   }
 
-  // Everything else — show the login page.
-  return htmlResponse(loginPage(false), 401);
+  // Everything else — show the login page. Returned as 200 (not 401) so link
+  // unfurlers read the OG tags and build a preview; humans still can't reach
+  // the app without entering the password.
+  return htmlResponse(loginPage(false), 200);
 }

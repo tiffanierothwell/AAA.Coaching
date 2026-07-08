@@ -91,11 +91,11 @@ const html = `<!DOCTYPE html>
     margin-bottom: 12px;
   }
   .headline {
-    font-size: 88px;
+    font-size: 70px;
     font-weight: 900;
     color: #0A0A0A;
-    letter-spacing: -4px;
-    line-height: 0.9;
+    letter-spacing: -3px;
+    line-height: 0.94;
   }
 
   .project-label {
@@ -217,16 +217,16 @@ const html = `<!DOCTYPE html>
       <div class="left">
         <div class="badges">
           <span class="badge-dark"><span class="slash">///</span> Accelerator</span>
-          <span class="badge-chip">May 6, 2026</span>
-          <span class="badge-chip">Build Day · Week 1</span>
+          <span class="badge-chip">Phase 1</span>
+          <span class="badge-chip">Demo Day</span>
         </div>
         <div>
-          <p class="eyebrow">From zero to Mike's AIOS in 5 weeks</p>
-          <h1 class="headline">Hi AAA Coach</h1>
+          <p class="eyebrow">Tiffanie's Project Management Dashboard</p>
+          <h1 class="headline">AAA Coaching AIOS</h1>
         </div>
         <div>
           <p class="project-label">Project</p>
-          <p class="project-name">LTV Hub — Mike's AIOS</p>
+          <p class="project-name">MJM 360 Command Center · mjmdashboard.org</p>
         </div>
       </div>
 
@@ -234,29 +234,29 @@ const html = `<!DOCTYPE html>
       <div class="status-card">
         <div>
           <div class="status-label">Current</div>
-          <div class="status-session">Build Day 1</div>
-          <div class="status-date">May 6, 2026 · 9–4</div>
+          <div class="status-session">Demo Day</div>
+          <div class="status-date">MJM Group · Phase 1 wrap-up</div>
         </div>
         <div class="divider"></div>
         <div>
           <div class="ms-row">
-            <span class="status-label" style="margin:0">Milestones</span>
-            <span class="ms-count">5 / 12</span>
+            <span class="status-label" style="margin:0">Phases</span>
+            <span class="ms-count">Phase 2</span>
           </div>
-          <div class="progress-track"><div class="progress-fill" style="width:42%"></div></div>
-          <div class="progress-pct">42% · Week 1 of 5</div>
+          <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
+          <div class="progress-pct">Phase 1 done · Phase 2 today</div>
         </div>
         <div class="divider"></div>
         <div>
           <div class="next-label">Up next</div>
-          <div class="next-text">Schema design with Claude — service by service</div>
+          <div class="next-text">Build the MJM Command Center: role snapshots + KPI cards</div>
         </div>
       </div>
 
     </div>
   </div>
 
-  <div class="url">tiffanierothwell.github.io/AAA.Coaching</div>
+  <div class="url">aios-project-management.vercel.app</div>
 </div>
 </body>
 </html>`
