@@ -222,41 +222,81 @@ function SevPill({ count, kind }: { count: number; kind: "low" | "med" | "high" 
 // PROGRESS TIMELINE
 // ════════════════════════════════════════════════════════════════
 type MS = "done" | "now" | "later"
-const MILESTONES: { label: string; sub: string; status: MS }[] = [
-  { label: "Stack chosen",    sub: "Python · FastAPI",       status: "done"  },
-  { label: "Server live",     sub: "Andre · Caddy + SSL",    status: "done"  },
-  { label: "Supabase",        sub: "supabase.mjmspace.com",  status: "done"  },
-  { label: "Littletree data", sub: "~789k rows · read-only", status: "done"  },
-  { label: "Schema built",    sub: "masterdash · 25 tables", status: "done"  },
-  { label: "Supabase MCP",    sub: "Connected · Claude",     status: "done"  },
-  { label: "Daily AI intel",  sub: "GitHub Action + Claude", status: "done"  },
-  { label: "CEO Cmd Center",  sub: "8 KPI cards · realtime", status: "done"  },
-  { label: "Demo · MJM Group", sub: "TODAY · Phase 1 wrap",  status: "now"   },
-  { label: "Phase 2 · 360",   sub: "All 5 companies",        status: "later" },
-  { label: "Auth + roles",    sub: "Supabase Auth · RLS",    status: "later" },
-  { label: "Telegram CmdOS",  sub: "/idea /win /prep",       status: "later" },
-  { label: "KCF site + app",  sub: "Phase 3",                status: "later" },
+type Phase = {
+  num: number
+  name: string
+  note: string
+  milestones: { label: string; sub: string; status: MS }[]
+  emptyNote?: string
+}
+
+const PHASES: Phase[] = [
+  {
+    num: 1, name: "LTV Hub Command Center", note: "Complete · demoed to Mike last week",
+    milestones: [
+      { label: "Stack chosen",    sub: "Python · FastAPI",        status: "done" },
+      { label: "Server live",     sub: "Andre · Caddy + SSL",     status: "done" },
+      { label: "Supabase",        sub: "supabase.mjmspace.com",   status: "done" },
+      { label: "Littletree data", sub: "~789k rows · read-only",  status: "done" },
+      { label: "Schema built",    sub: "masterdash · 25 tables",  status: "done" },
+      { label: "Supabase MCP",    sub: "Connected · Claude",      status: "done" },
+      { label: "Daily AI intel",  sub: "GitHub Action + Claude",  status: "done" },
+      { label: "Telegram bots",   sub: "CommandOS live",          status: "done" },
+      { label: "Task management", sub: "Capture · route · assign", status: "done" },
+      { label: "Demo to Mike",    sub: "Ended last week",         status: "done" },
+    ],
+  },
+  {
+    num: 2, name: "MJM Command Center", note: "In progress · demo day today",
+    milestones: [
+      { label: "Demo prep",       sub: "Deck · data · dry run",    status: "done"  },
+      { label: "Demo Day",        sub: "TODAY · MJM Group",        status: "now"   },
+      { label: "Role snapshots",  sub: "Matt&Julie · Mike · Angie · Leah", status: "later" },
+      { label: "CEO Cmd Center",  sub: "8 KPI cards live",         status: "later" },
+      { label: "5 company dashes", sub: "MedBox · Le Roi · KCF · Moccasin · LT", status: "later" },
+      { label: "Morning & Prep",  sub: "Daily briefs per role",    status: "later" },
+      { label: "Decision queue",  sub: "Needs your attention",     status: "later" },
+      { label: "Knowledge Vault", sub: "Resources · PDF search",   status: "later" },
+      { label: "Auth + roles",    sub: "Supabase Auth · RLS",      status: "later" },
+    ],
+  },
+  {
+    num: 3, name: "AIOS Hand-over", note: "To be scoped",
+    milestones: [],
+    emptyNote: "Milestones to be scoped after Phase 2.",
+  },
 ]
 
-function ProgressTimeline() {
+function PhaseTimeline({ phase }: { phase: Phase }) {
   const isMobile = useIsMobile()
-  const total    = MILESTONES.length
-  const doneCount = MILESTONES.filter(m => m.status === "done").length
-  const nowIdx   = MILESTONES.findIndex(m => m.status === "now")
+  const empty = phase.milestones.length === 0
+  const list = empty
+    ? Array.from({ length: 5 }, () => ({ label: "", sub: "", status: "later" as MS }))
+    : phase.milestones
+  const total    = list.length
+  const doneCount = phase.milestones.filter(m => m.status === "done").length
+  const nowIdx   = list.findIndex(m => m.status === "now")
   const halfStep = 100 / total / 2
-  const fillPct  = nowIdx >= 0 ? halfStep + (nowIdx / (total - 1)) * (100 - 2 * halfStep) : 100
+  const allDone  = !empty && doneCount === total
+  const fillPct  = allDone ? 100 : nowIdx >= 0 ? halfStep + (nowIdx / (total - 1)) * (100 - 2 * halfStep) : halfStep
 
   return (
-    <div style={{ ...CARD, padding: isMobile ? "20px 16px 22px" : "26px 32px 28px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+    <div style={{ ...CARD, padding: isMobile ? "20px 16px 22px" : "26px 32px 28px", opacity: empty ? 0.85 : 1 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap" as const, gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-            Project timeline
+          <span style={{
+            fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 1.5,
+            padding: "3px 9px", borderRadius: 4,
+            background: empty ? CHIP : INK, color: empty ? INK3 : "#fff",
+            border: empty ? `1px solid ${RULE}` : "none",
+            textTransform: "uppercase" as const,
+          }}>Phase {phase.num}</span>
+          <span style={{ fontFamily: FONT, fontSize: 11, fontWeight: 800, letterSpacing: -0.2, color: INK }}>
+            {phase.name}
           </span>
         </div>
-        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: INK3 }}>
-          <span style={{ fontWeight: 800, color: INK }}>{doneCount}</span> of {total} steps complete
+        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: INK3, letterSpacing: 0.3 }}>
+          {empty ? phase.note : <><span style={{ fontWeight: 800, color: INK }}>{doneCount}</span> / {total} · {phase.note}</>}
         </span>
       </div>
 
@@ -266,19 +306,21 @@ function ProgressTimeline() {
           top: isMobile ? 10 : 27, left: `${halfStep}%`, right: `${halfStep}%`,
           height: 2, background: RULE, borderRadius: 99, zIndex: 0,
         }}/>
-        <div style={{
-          position: "absolute" as const,
-          top: isMobile ? 10 : 27, left: `${halfStep}%`,
-          width: `${fillPct - halfStep}%`,
-          height: 2, background: INK, borderRadius: 99, zIndex: 1,
-        }}/>
+        {!empty && (
+          <div style={{
+            position: "absolute" as const,
+            top: isMobile ? 10 : 27, left: `${halfStep}%`,
+            width: `${fillPct - halfStep}%`,
+            height: 2, background: INK, borderRadius: 99, zIndex: 1,
+          }}/>
+        )}
 
         <div style={{ display: "flex", position: "relative" as const, zIndex: 2 }}>
-          {MILESTONES.map((m, i) => {
+          {list.map((m, i) => {
             const done  = m.status === "done"
             const now   = m.status === "now"
             const later = m.status === "later"
-            const circleSize = isMobile ? 18 : 26
+            const circleSize = isMobile ? 16 : 24
             return (
               <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 0 }}>
                 {!isMobile && (
@@ -296,27 +338,27 @@ function ProgressTimeline() {
                 <div style={{
                   width: circleSize, height: circleSize, borderRadius: "50%", flexShrink: 0,
                   background: done ? INK : "#fff",
-                  border: done ? `2px solid ${INK}` : now ? `2.5px solid ${INK}` : `2px solid #D8D8D8`,
+                  border: done ? `2px solid ${INK}` : now ? `2.5px solid ${INK}` : `2px solid ${empty ? "#E4E4E4" : "#D8D8D8"}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   boxShadow: now ? "0 0 0 4px rgba(0,0,0,0.09)" : "none",
                 }}>
                   {done && (
-                    <svg width={isMobile ? 7 : 11} height={isMobile ? 7 : 11} viewBox="0 0 12 12">
+                    <svg width={isMobile ? 7 : 10} height={isMobile ? 7 : 10} viewBox="0 0 12 12">
                       <polyline points="2,6 5,9 10,3" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   )}
                   {now && <div style={{ width: isMobile ? 6 : 8, height: isMobile ? 6 : 8, borderRadius: "50%", background: INK }}/>}
-                  {later && <div style={{ width: isMobile ? 4 : 6, height: isMobile ? 4 : 6, borderRadius: "50%", background: "#D8D8D8" }}/>}
+                  {later && <div style={{ width: isMobile ? 4 : 5, height: isMobile ? 4 : 5, borderRadius: "50%", background: empty ? "#E4E4E4" : "#D8D8D8" }}/>}
                 </div>
-                {!isMobile && (
-                  <div style={{ marginTop: 9, textAlign: "center" as const, lineHeight: 1.35, padding: "0 2px" }}>
+                {!isMobile && !empty && (
+                  <div style={{ marginTop: 9, textAlign: "center" as const, lineHeight: 1.3, padding: "0 2px" }}>
                     <div style={{
-                      fontFamily: FONT, fontSize: 9.5,
+                      fontFamily: FONT, fontSize: 9,
                       fontWeight: now ? 800 : done ? 600 : 400,
                       color: now ? INK : done ? INK2 : INK3,
                       letterSpacing: now ? 0.2 : 0,
                     }}>{m.label}</div>
-                    <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: now ? INK2 : INK3, marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
+                    <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8, color: now ? INK2 : INK3, marginTop: 2, letterSpacing: 0.2 }}>{m.sub}</div>
                   </div>
                 )}
                 {isMobile && now && (
@@ -328,188 +370,19 @@ function ProgressTimeline() {
         </div>
       </div>
 
-      <div style={{ marginTop: 22 }}>
-        <div style={{ height: 3, background: RULE, borderRadius: 99, overflow: "hidden" as const }}>
-          <div style={{ height: "100%", width: `${(doneCount / total) * 100}%`, background: INK, borderRadius: 99 }}/>
+      {empty && (
+        <div style={{ textAlign: "center" as const, marginTop: 16, fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: INK3, letterSpacing: 0.3 }}>
+          {phase.emptyNote}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 5 }}>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Phase 1 start</span>
-          <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9, color: INK3 }}>
-            Demo day · {total - doneCount - 1} on the Phase 2 roadmap
-          </span>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: INK3, letterSpacing: 0.5 }}>Phase 2+</span>
-        </div>
-      </div>
+      )}
     </div>
   )
 }
 
-// ════════════════════════════════════════════════════════════════
-// PROJECT CALENDAR · JUNE–JULY 2026
-// ════════════════════════════════════════════════════════════════
-type Meeting = { title: string; time?: string; who: string[] }
-
-const JUNE_MEETINGS: Record<number, Meeting> = {
-  23: { title: "Kickoff · AAA Coach intro + onboarding", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
-  24: { title: "Build Day · Schema design with Claude", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  25: { title: "Build Day · Schema design", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  26: { title: "Coaching · Nick Voikin", time: "11:00 AM", who: ["Tiffanie Rothwell", "Nick Voikin"] },
-  29: { title: "Build Day · Supabase Auth + RLS", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  30: { title: "Build Day · Telegram bot scaffolding", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-}
-
-const JULY_MEETINGS: Record<number, Meeting> = {
-   1: { title: "Coaching · AAA Coach", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
-   2: { title: "Build Day · LTV Hub hero + calendar", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   3: { title: "Build Day · Cross-venture JWT", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   6: { title: "Build Day · Meeting Prep + AI brief", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   7: { title: "Coaching · Timo", time: "10:00 AM", who: ["Tiffanie Rothwell", "Timo"] },
-   8: { title: "Build Day · Resources + pgvector", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-   9: { title: "Build Day · Cmd+K semantic search", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  10: { title: "Build Day · Ask Your Mentor + Skills", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  13: { title: "Build Day · Skill rec engine", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  14: { title: "Coaching · AAA Coach", time: "10:00 AM", who: ["Tiffanie Rothwell", "AAA Coach"] },
-  15: { title: "Build Day · Weekly Snapshots PM row", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  16: { title: "Build Day · Leah row + win input", time: "9:00 AM–4:00 PM", who: ["Tiffanie Rothwell"] },
-  17: { title: "Demo to Mike · Sign-off", time: "11:00 AM", who: ["Tiffanie Rothwell", "Mike David"] },
-}
-
-// June 1, 2026 = Monday; July 1, 2026 = Wednesday.
-type MonthSpec = { name: string; monthIdx: number; year: number; startDay: number; days: number; meetings: Record<number, Meeting> }
-const PROJECT_MONTHS: MonthSpec[] = [
-  { name: "June 2026", monthIdx: 5, year: 2026, startDay: 1, days: 30, meetings: JUNE_MEETINGS },
-  { name: "July 2026", monthIdx: 6, year: 2026, startDay: 3, days: 31, meetings: JULY_MEETINGS },
-]
-
-function MayCalendar() {
-  const isMobile = useIsMobile()
+function ProgressTimeline() {
   return (
-    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 14, width: "100%", height: "100%" }}>
-      {PROJECT_MONTHS.map(m => (
-        <div key={m.name} style={{ flex: 1, display: "flex" }}>
-          <MonthGrid spec={m} />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function MonthGrid({ spec }: { spec: MonthSpec }) {
-  const isMobile = useIsMobile()
-  const [hovered, setHovered] = useState<number | null>(null)
-  const now = new Date()
-  const isCurrentMonth = now.getFullYear() === spec.year && now.getMonth() === spec.monthIdx
-  const isPastMonth    = new Date(spec.year, spec.monthIdx + 1, 0) < now
-  const todayDate = isCurrentMonth ? now.getDate() : (isPastMonth ? spec.days + 1 : 0)
-
-  const cells: (number | null)[] = [
-    ...Array(spec.startDay).fill(null),
-    ...Array.from({ length: spec.days }, (_, i) => i + 1),
-  ]
-  const meetingCount = Object.keys(spec.meetings).length
-
-  return (
-    <div style={{ ...CARD, padding: "18px 16px", display: "flex", flexDirection: "column" as const, width: "100%" }}>
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4 }}>
-          <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-          <span style={{ fontFamily: FONT, fontSize: 8, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3 }}>{spec.name}</span>
-        </div>
-        <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 11, color: INK }}>
-          {meetingCount} sessions
-        </span>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, marginBottom: 3 }}>
-        {["S","M","T","W","T","F","S"].map((d, i) => (
-          <div key={i} style={{
-            textAlign: "center" as const,
-            fontFamily: FONT, fontWeight: 700, fontSize: 7.5,
-            color: INK3, paddingBottom: 4,
-          }}>{d}</div>
-        ))}
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 3, position: "relative" as const }}>
-        {cells.map((day, i) => {
-          if (!day) return <div key={`e${i}`} style={{ height: 28, borderRadius: 6 }} />
-
-          const hasMeeting = !!spec.meetings[day]
-          const isToday    = day === todayDate
-          const isPast     = day < todayDate
-          const isFuture   = day > todayDate
-
-          return (
-            <div
-              key={day}
-              style={{
-                height: 28, borderRadius: 6,
-                display: "flex", alignItems: "center", justifyContent: "center",
-                position: "relative" as const,
-                cursor: hasMeeting ? "pointer" : "default",
-                background: hasMeeting ? INK : "transparent",
-                border: hasMeeting ? "none" : isToday ? `2px solid ${INK}` : `1px solid ${RULE}`,
-                opacity: isFuture && !hasMeeting ? 0.35 : 1,
-                transition: "transform 0.12s, box-shadow 0.12s",
-                transform: hovered === day ? "scale(1.25)" : "scale(1)",
-                boxShadow: hovered === day ? "0 4px 16px rgba(0,0,0,0.22)" : "none",
-                zIndex: hovered === day ? 10 : 1,
-              }}
-              onMouseEnter={() => hasMeeting && setHovered(day)}
-              onMouseLeave={() => setHovered(null)}
-            >
-              <span style={{
-                fontFamily: FONT,
-                fontWeight: hasMeeting ? 800 : isToday ? 700 : isPast ? 400 : 300,
-                fontSize: 9,
-                color: hasMeeting ? "#fff" : isToday ? INK : isPast ? INK2 : INK3,
-                userSelect: "none" as const,
-                lineHeight: 1,
-              }}>{day}</span>
-
-              {!isMobile && hovered === day && spec.meetings[day] && (
-                <div style={{
-                  position: "absolute" as const,
-                  bottom: "calc(100% + 8px)",
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  background: INK,
-                  borderRadius: 10,
-                  padding: "10px 14px",
-                  whiteSpace: "nowrap" as const,
-                  zIndex: 999,
-                  boxShadow: "0 10px 28px rgba(0,0,0,0.28)",
-                  minWidth: 200,
-                  pointerEvents: "none" as const,
-                }}>
-                  <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 8.5, color: "rgba(255,255,255,0.4)", letterSpacing: 1, textTransform: "uppercase" as const, marginBottom: 5 }}>
-                    {spec.name.split(" ")[0]} {day}, {spec.year}{spec.meetings[day].time ? ` · ${spec.meetings[day].time}` : ""}
-                  </div>
-                  <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 11, color: "#fff", marginBottom: 7, lineHeight: 1.3 }}>
-                    {spec.meetings[day].title}
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column" as const, gap: 3 }}>
-                    {spec.meetings[day].who.map(name => (
-                      <div key={name} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                        <div style={{ width: 4, height: 4, borderRadius: "50%", background: "rgba(255,255,255,0.35)", flexShrink: 0 }} />
-                        <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10, color: "rgba(255,255,255,0.75)" }}>{name}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{
-                    position: "absolute" as const,
-                    top: "100%", left: "50%", transform: "translateX(-50%)",
-                    width: 0, height: 0,
-                    borderLeft: "6px solid transparent",
-                    borderRight: "6px solid transparent",
-                    borderTop: `6px solid ${INK}`,
-                  }}/>
-                </div>
-              )}
-            </div>
-          )
-        })}
-      </div>
+    <div style={{ display: "flex", flexDirection: "column" as const, gap: 14 }}>
+      {PHASES.map(p => <PhaseTimeline key={p.num} phase={p} />)}
     </div>
   )
 }
@@ -2308,13 +2181,13 @@ export default function App() {
 
               <div>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Milestones</span>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>8 / 13</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const }}>Phases</span>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)" }}>Phase 2 of 3</span>
                 </div>
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
-                  <div style={{ height: "100%", width: "62%", background: "#fff", borderRadius: 99 }} />
+                  <div style={{ height: "100%", width: "45%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>Phase 1 complete · demoing today</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>Phase 1 done ✓ · Phase 2 demo today</div>
               </div>
 
               <div style={{ flex: 1 }} />
@@ -2323,7 +2196,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
                 <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>
-                  Phase 2 · MJM Ventures 360 Command Center
+                  Build the MJM Command Center — role snapshots + KPI cards
                 </div>
               </div>
             </div>
@@ -2471,10 +2344,6 @@ export default function App() {
 
         {/* ════════════════════════════════════════ RECORDINGS + EMAIL THREADS ════════════════════════════════════════ */}
         <RecordingsThreadsCard />
-
-
-        {/* ════════════════════════════════════════ PROJECT CALENDAR ════════════════════════════════════════ */}
-        <MayCalendar />
 
 
         {/* Footer */}
