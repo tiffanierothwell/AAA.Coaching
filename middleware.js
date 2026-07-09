@@ -92,7 +92,11 @@ export default async function middleware(request) {
   // Public assets so link-unfurlers (iMessage, Slack, LinkedIn, etc.) can build
   // a preview card without the password. Only the OG image + favicons — no app
   // content is exposed here.
-  const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico']);
+  // Public, unauthenticated: the OG image + favicons (for link unfurlers), and
+  // the standalone "This Week" progress log (so a bot can read it with a plain
+  // fetch). The This Week page contains only that one section — no other app
+  // content is exposed.
+  const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico', '/this-week', '/this-week.html']);
   if (OPEN_PATHS.has(url.pathname) || url.pathname.startsWith('/apple-touch-icon')) return;
 
   // Log out — clear the auth cookie and send back to the login page.
