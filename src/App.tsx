@@ -2092,6 +2092,7 @@ type WeekLog = {
   dates: string
   title: string
   intro: string
+  highlights: { lead: string; body: string }[]
   builtLead: string
   bots: { name: string; initials: string; role: string }[]
   coordinators: string
@@ -2105,7 +2106,11 @@ const WEEKLY_LOG: WeekLog[] = [
     dates: "Week of July 6, 2026",
     title: "Building the AI Operating Layer",
     intro: "This was a big week, maybe the biggest one yet. I went from having a dashboard to having an actual system that runs the companies, with a team of AI “employees” doing the repetitive work in the background. I'm genuinely proud of what I shipped.",
-    builtLead: "I stood up a full bot team, each one with a real job:",
+    highlights: [
+      { lead: "The entire “Mike's AIOS” demo.", body: "I built the full multi-page demo that pitches the MJM 360 Command Center — One Dashboard, Daily Brief & Meeting Prep, Reports, Categories of Improvement, the Project & Task board, Social Media, Other Possibilities, Next Steps, and The Architecture — plus the AI-Employee capabilities library and the cinematic “The Org, Amplified” walkthrough. This is what went in front of the MJM Group on demo day." },
+      { lead: "The data-extraction build-out.", body: "I built the pipeline that pulls the live Little Tree Gas numbers into the dashboard: a secure /api proxy that paginates and aggregates server-side (the database caps rows and disables aggregates), so the CEO Pulse dashboard shows real, current data — today's sales, month-to-date, trends, margins, loyalty, fuel — without the service key ever touching the browser. After the MySQL-to-Supabase parity audit came back clean (8M+ rows, zero missing), I unpinned it from the fallback and made it fully live." },
+    ],
+    builtLead: "I also stood up a full bot team, each one with a real job:",
     bots: [
       { name: "Progress Pete", initials: "PP", role: "Pulls the entire week together every Friday and delivers a clean one-page report to Mike: the wins, Leah's day-by-day log, every project's tasks with my own progress notes, and how many hours Mike and I each spent in meetings. He posts it to the team with a share link and archives it on the dashboard. At 1 PM he asks me for my project update; by 5 PM the report is done." },
       { name: "Catch-all Cal", initials: "CC", role: "Reads the group and files real task requests to the right person's board automatically — and if someone forgets a due date, he sets the next business day so nothing lands dateless." },
@@ -2153,8 +2158,19 @@ function ThisWeekCard() {
         </p>
 
         {/* What I built */}
-        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 4px" }}>
+        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 12px" }}>
           What I built
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 10, marginBottom: 18 }}>
+          {w.highlights.map((h, i) => (
+            <div key={i} style={{ display: "flex", gap: 12, padding: "14px 16px", borderRadius: 12, background: "#fff", border: `1.5px solid ${INK}` }}>
+              <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 900, fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>★</div>
+              <div>
+                <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13.5, color: INK }}>{h.lead} </span>
+                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 12.5, color: INK2, lineHeight: 1.65 }}>{h.body}</span>
+              </div>
+            </div>
+          ))}
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 400, fontSize: 12.5, color: INK, lineHeight: 1.6, margin: "0 0 14px" }}>{w.builtLead}</p>
         <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
