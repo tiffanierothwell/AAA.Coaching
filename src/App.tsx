@@ -2086,6 +2086,125 @@ function CoachingCalendar() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// THIS WEEK · WEEKLY PROGRESS LOG (newest first)
+// ════════════════════════════════════════════════════════════════
+type WeekLog = {
+  dates: string
+  title: string
+  intro: string
+  builtLead: string
+  bots: { name: string; initials: string; role: string }[]
+  coordinators: string
+  alongside: string
+  walls: { lead: string; body: string }[]
+  wrapUp: string
+}
+
+const WEEKLY_LOG: WeekLog[] = [
+  {
+    dates: "Week of July 6, 2026",
+    title: "Building the AI Operating Layer",
+    intro: "This was a big week, maybe the biggest one yet. I went from having a dashboard to having an actual system that runs the companies, with a team of AI “employees” doing the repetitive work in the background. I'm genuinely proud of what I shipped.",
+    builtLead: "I stood up a full bot team, each one with a real job:",
+    bots: [
+      { name: "Progress Pete", initials: "PP", role: "Pulls the entire week together every Friday and delivers a clean one-page report to Mike: the wins, Leah's day-by-day log, every project's tasks with my own progress notes, and how many hours Mike and I each spent in meetings. He posts it to the team with a share link and archives it on the dashboard. At 1 PM he asks me for my project update; by 5 PM the report is done." },
+      { name: "Catch-all Cal", initials: "CC", role: "Reads the group and files real task requests to the right person's board automatically — and if someone forgets a due date, he sets the next business day so nothing lands dateless." },
+      { name: "Checklist Chuck", initials: "CH", role: "Runs the daily rhythm: the morning brief and the end-of-day wrap." },
+      { name: "Shift Sheila", initials: "SS", role: "Checks in with Leah each afternoon and logs her day, which feeds straight into Pete's Friday report." },
+    ],
+    coordinators: "I also mapped out coordinators for the other companies — Cory for Capital, Marty for Pay, Diesel Dan for Fuel — so the same model scales across the portfolio.",
+    alongside: "Alongside the bots, I built my own command page (calendar, dashboards, an animated org chart showing every company and every bot, a resources library, and walkthrough videos), wrote a “Bot Factory” playbook so any new bot follows the same proven process, and set up the database and reporting behind all of it.",
+    walls: [
+      { lead: "The scheduling almost bit me.", body: "I first had Pete run on the built-in scheduler, and I caught that it runs late and skips. The lesson was clear: never trust that as the real trigger. I moved everything to a reliable external timer — the same way the other bots run — and made the report idempotent so it can never send twice." },
+      { lead: "Cal wasn't catching Mike's requests.", body: "Mike asked Leah to order something in the group and it never became a task. Two problems: the bot only reacted to keyword phrases, and privacy settings meant it couldn't even see normal messages. So I rebuilt it to read the room, with an AI gate that decides whether a message is actually a task before filing it, and I turned the privacy setting off so it can see the conversation." },
+      { lead: "Revoking a token quietly broke a bot.", body: "When I rotated a token, it wiped the bot's connection without warning. I learned I have to re-register that connection every time — and I did." },
+      { lead: "The demo asked for a password on mobile when it shouldn't have.", body: "It worked on desktop but not on my phone. The cause was that mobile browsers behave differently, so a couple of files were getting blocked. I fixed the specific files and hardened the whole gate so only real page visits ever ask for a login, never background assets." },
+      { lead: "My calendar isn't connected yet.", body: "It needs an admin setting turned on at the account level. Rather than wait, I built a working mockup of my week so the page still feels complete — and it'll swap to live the moment that setting is enabled." },
+      { lead: "I pushed the design harder when the first versions felt flat.", body: "I wasn't happy with a couple of passes and reworked them until they actually looked like something I'm proud to show." },
+    ],
+    wrapUp: "The foundation is real and running. The bots handle the daily and weekly load, the reporting reaches Mike on a predictable rhythm, and everything is documented so it can scale to the next company without starting over. This week turned a nice-looking dashboard into an operating system.",
+  },
+]
+
+function ThisWeekCard() {
+  const isMobile = useIsMobile()
+  const w = WEEKLY_LOG[0]
+  return (
+    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+      <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
+      <div style={{ padding: isMobile ? "22px 18px 24px" : "32px 36px 36px" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              This week · {w.dates}
+            </span>
+          </div>
+          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
+            Progress log
+          </span>
+        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 40, color: INK, letterSpacing: -1.4, lineHeight: 1.03, margin: "0 0 12px" }}>
+          {w.title}
+        </h2>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 720 }}>
+          {w.intro}
+        </p>
+
+        {/* What I built */}
+        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 4px" }}>
+          What I built
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 400, fontSize: 12.5, color: INK, lineHeight: 1.6, margin: "0 0 14px" }}>{w.builtLead}</p>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+          {w.bots.map(b => (
+            <div key={b.name} style={{ display: "flex", gap: 12, padding: "12px 14px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
+              <div style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3 }}>{b.initials}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: INK, marginBottom: 3 }}>{b.name}</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.6 }}>{b.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.coordinators}</p>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.alongside}</p>
+
+        {/* Where I hit walls */}
+        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 4px" }}>
+          Where I hit walls, and what I changed
+        </div>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.6, margin: "0 0 14px" }}>
+          Being honest about the hard parts — that's where I learned the most.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+          {w.walls.map((wa, i) => (
+            <div key={i} style={{ background: "rgba(255,20,147,0.05)", border: "1px solid rgba(255,20,147,0.22)", borderRadius: 12, padding: "12px 14px" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 12, lineHeight: 1.5, flexShrink: 0 }}>›</span>
+                <div>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK }}>{wa.lead} </span>
+                  <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>{wa.body}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Where we're at */}
+        <div style={{ background: INK, borderRadius: 14, padding: isMobile ? "16px 16px" : "18px 20px", marginTop: 22 }}>
+          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.4)", marginBottom: 7 }}>
+            Where we're at
+          </div>
+          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.7, margin: 0 }}>{w.wrapUp}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // (Site access is enforced server-side: Vercel Edge middleware.js does
 //  HTTP Basic Auth before any file is served — same as mjmdashboard.org.)
@@ -2201,6 +2320,10 @@ export default function App() {
 
         {/* ════════════════════════════════════════ TIMELINE ════════════════════════════════════════ */}
         <ProgressTimeline />
+
+
+        {/* ════════════════════════════════════════ THIS WEEK · PROGRESS LOG ════════════════════════════════════════ */}
+        <ThisWeekCard />
 
 
         {/* ════════════════════════════════════════ PROJECT BRIEF + QUESTIONS FOR COACH ════════════════════════════════════════ */}
