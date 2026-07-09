@@ -2205,6 +2205,250 @@ function ThisWeekCard() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// THE ORG, AMPLIFIED · bot-team org chart (mirrors mjmdashboard/tiffanie.html)
+// ════════════════════════════════════════════════════════════════
+type OrgChat = { s: "in" | "out"; who?: string; t: string; file?: { n: string; s: string } }
+type OrgBot = { id: string; name: string; short: string; sub: string; soon?: boolean; handle: string; cadence: string; tag: string; about: string; chips: string[]; chat?: OrgChat[] }
+
+const ORG_BOTS: Record<string, OrgBot> = {
+  pete: {
+    id: "pete", name: "Progress Pete", short: "Pete", sub: "Weekly report", handle: "@Progress_Pete_bot", cadence: "Fridays",
+    tag: "Turns the whole week into a one-page report for Mike, every Friday.",
+    chips: ["Telegram + Vercel", "Claude parsing", "Supabase", "PDF via headless Chrome", "GitHub Actions + EasyCron"],
+    about: "Every Friday at <b>1 PM</b>, Pete drops one message in the group asking Tiffanie for a quick line on each project. She replies once, in plain language, and Pete uses AI to sort it into a clean note per project (LTV, AIOS, LTC, LTF, LTP, Jayi). At <b>5 PM</b> he pulls the whole week together — the wins, Leah's day-by-day log, every project's tasks and Tiffanie's progress notes, and how many hours Mike and Tiffanie each spent in meetings — and builds a polished one-page black-and-white PDF. He posts it in the group with a share link so Mike can forward or print it, and it's tucked into the dashboard archive too. Gym and travel never count as meeting time.",
+    chat: [
+      { s: "in", who: "Progress Pete", t: "Progress Pete here — Tiffanie, reply to this message with your weekly project report details and I'll handle the rest." },
+      { s: "out", t: "LTV: baskets went out and the copyright is locked. AIOS: Pete went live and the report bot is done. LTF: still waiting on Alex for the exclusivity call." },
+      { s: "in", who: "Progress Pete", t: "Gotcha! ✅ I'll have the report over to you by 5 PM." },
+      { s: "in", who: "Progress Pete", t: "Progress Pete reporting for duty 🫡\nSee y'all next week!", file: { n: "Progress-Pete-Weekly-Report.pdf", s: "PDF · 1 page" } },
+    ],
+  },
+  chuck: {
+    id: "chuck", name: "Checklist Chuck", short: "Chuck", sub: "Daily briefs", handle: "@LTV_team_tasks_bot", cadence: "Daily",
+    tag: "The daily heartbeat: a morning plan and an end-of-day wrap-up.",
+    chips: ["Python", "GitHub Actions + EasyCron", "Reads calendar + tasks", "Auto link-shortener"],
+    about: "Chuck keeps the team in rhythm. He sends a <b>Monday kickoff</b>, a <b>daily morning brief</b> with the day's meetings and any pinned meeting-prep PDFs, and a <b>5 PM end-of-day wrap</b> showing what got done, what's still open, and the team's written updates. He reads the shared Google Calendar through a private link and the live task board, shortens any long links so the messages stay clean, and quietly flags it when Leah pushes a due date to a later day.",
+    chat: [
+      { s: "in", who: "Checklist Chuck", t: "☀️ Good morning team! Here's Wednesday, July 8.\n\nMike's day:\n• 9:00 Gym\n• 11:00 Jam² Improvement\n• 1:00 US Investments (Eric, Sophie)\n\n📎 Meeting prep attached below." },
+      { s: "in", who: "Checklist Chuck", t: "🌙 End of day wrap — Wed Jul 8\n\n✅ Done today:\n• Leah: booked McGill interview, re-ordered scarves\n• Tiffanie: shipped the report bot\n\n📋 Still open: 4 tasks\n⚠️ Leah moved \"Send invoices\" to Fri Jul 11." },
+    ],
+  },
+  cal: {
+    id: "cal", name: "Catch-all Cal", short: "Cal", sub: "Task catcher", handle: "@Ltv_task_adder_bot", cadence: "On demand",
+    tag: "Just say a task in the group and it lands on the right board.",
+    chips: ["Telegram + Vercel", "Claude extracts the details", "Writes to the task board"],
+    about: "Cal is the catch-all. Type a task into the group in normal words and he reads it with AI, figures out who it's for, the due date, which project it belongs to, and whether it needs a written update, then drops it straight onto that person's board on the dashboard. No form, no app, no logging in. If you're walking out of a meeting and something pops into your head, just say it in the group and it's captured.",
+    chat: [
+      { s: "out", t: "Cal, add a task for Leah to re-order the scarves by Friday" },
+      { s: "in", who: "Catch-all Cal", t: "✅ Task Added\n• Leah · Re-order scarves\n• Due Fri, Jul 11\nIt's on her board now." },
+    ],
+  },
+  sheila: {
+    id: "sheila", name: "Shift Sheila", short: "Sheila", sub: "Shift log", handle: "@Ltv_shift_log_bot", cadence: "Mon–Fri 4 PM",
+    tag: "Checks in with Leah every afternoon and logs her day.",
+    chips: ["Telegram + Vercel", "Claude splits the entries", "Feeds Leah's weekly card"],
+    about: "At <b>4 PM every weekday</b>, Sheila asks Leah what she worked on. Leah replies however feels natural, and Sheila breaks it into individual entries — picking up minutes or hours when they're mentioned — and posts them to Leah's weekly card on the dashboard. That same log fills the \"Leah's Week\" section of Progress Pete's Friday report, so one quick reply a day keeps both places up to date.",
+    chat: [
+      { s: "in", who: "Shift Sheila", t: "☀️ End of day wrap-up time! Leah, log your day today ↩️ Just reply to this message and I'll update the dashboard ✨" },
+      { s: "out", t: "Booked the McGill interview, re-ordered the scarves, and spent about 3 hours on the Avochato invoices" },
+      { s: "in", who: "Shift Sheila", t: "✅ Shift Logged — thanks Leah!" },
+    ],
+  },
+  cory: {
+    id: "cory", name: "Cory the Coordinator", short: "Cory", sub: "Coordinator", handle: "Little Tree Capital", cadence: "Weekly",
+    tag: "Runs the Little Tree Capital dashboard and rolls the week into a report.",
+    chips: ["LTC dashboard", "Task management", "Weekly report"],
+    about: "Cory is Little Tree Capital's coordinator. He manages the tasks in the LTC dashboard, keeps the board honest, and turns the week into a report so nothing at Capital slips through the cracks.",
+  },
+  marty: {
+    id: "marty", name: "Merchant Marty", short: "Marty", sub: "Coordinator", soon: true, handle: "Little Tree Pay", cadence: "Weekly",
+    tag: "Same role as Cory, for Little Tree Pay.",
+    chips: ["LTP dashboard", "Task management", "Weekly report"],
+    about: "Marty will be Little Tree Pay's coordinator — the same role Cory plays for Capital: manage the tasks in the dashboard and deliver a weekly report. He isn't set up yet; his desk is ready and waiting.",
+  },
+  dan: {
+    id: "dan", name: "Diesel Dan", short: "Dan", sub: "Coordinator", soon: true, handle: "Little Tree Fuel", cadence: "Weekly",
+    tag: "Same role as Cory, for Little Tree Fuel.",
+    chips: ["LTF dashboard", "Task management", "Weekly report"],
+    about: "Dan will be Little Tree Fuel's coordinator — the same role Cory plays for Capital: manage the tasks in the dashboard and deliver a weekly report. He isn't set up yet, but the name is locked in.",
+  },
+}
+const ORG_COMPANIES: { name: string; bots: string[] }[] = [
+  { name: "Little Tree Ventures", bots: ["pete", "chuck", "cal", "sheila"] },
+  { name: "Little Tree Capital",  bots: ["cory"] },
+  { name: "Little Tree Pay",      bots: ["marty"] },
+  { name: "Little Tree Fuel",     bots: ["dan"] },
+  { name: "AIOS",                 bots: [] },
+  { name: "Jay-i",                bots: [] },
+]
+
+function BotIcon() {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={INK} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="8" width="14" height="10" rx="2.5" />
+      <path d="M12 8V5.5" /><circle cx="12" cy="4" r="1.3" fill={INK} stroke="none" />
+      <circle cx="9.5" cy="13" r="1.1" fill={INK} stroke="none" /><circle cx="14.5" cy="13" r="1.1" fill={INK} stroke="none" />
+      <path d="M3 12.5v2.5M21 12.5v2.5" />
+    </svg>
+  )
+}
+
+function OrgNode({ initial, name, role, dashed, star }: { initial: string; name: string; role: string; dashed?: boolean; star?: boolean }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 8 }}>
+      <div style={{ position: "relative" as const }}>
+        <div style={{
+          width: 58, height: 58, borderRadius: 16,
+          background: dashed ? "#fff" : INK, color: dashed ? INK : "#fff",
+          border: dashed ? `2px dashed ${RULE}` : "none",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontFamily: FONT, fontWeight: 800, fontSize: 22,
+        }}>{initial}</div>
+        {star && (
+          <div style={{ position: "absolute" as const, top: -6, right: -6, width: 20, height: 20, borderRadius: "50%", background: "#fff", boxShadow: "0 2px 6px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10 }}>★</div>
+        )}
+      </div>
+      <div style={{ textAlign: "center" as const }}>
+        <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: INK }}>{name}</div>
+        <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 7.5, letterSpacing: 1, textTransform: "uppercase" as const, color: INK3, background: CHIP, border: `1px solid ${RULE}`, padding: "2px 8px", borderRadius: 99, marginTop: 4, display: "inline-block" }}>{role}</div>
+      </div>
+    </div>
+  )
+}
+
+function OrgChartSection() {
+  const isMobile = useIsMobile()
+  const [open, setOpen] = useState<OrgBot | null>(null)
+  const dash = `1px dashed ${RULE}`
+
+  const botCard = (b: OrgBot) => (
+    <button key={b.id} onClick={() => setOpen(b)} style={{
+      ...CARD, position: "relative" as const, padding: "16px 14px 14px", width: "100%",
+      display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 6,
+      cursor: "pointer", textAlign: "center" as const, opacity: b.soon ? 0.92 : 1,
+    }}>
+      <span style={{ position: "absolute" as const, top: 12, right: 12, width: 8, height: 8, borderRadius: "50%", background: b.soon ? "#fff" : INK, border: b.soon ? `1.5px solid ${INK3}` : "none" }} />
+      <div style={{ width: 44, height: 44, borderRadius: 12, background: CHIP, border: `1px solid ${RULE}`, display: "flex", alignItems: "center", justifyContent: "center" }}><BotIcon /></div>
+      <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK, lineHeight: 1.2 }}>{b.name}</div>
+      <div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 7.5, letterSpacing: 1, textTransform: "uppercase" as const, color: INK3 }}>{b.sub}{b.soon ? " · In build" : ""}</div>
+      <span style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9.5, color: INK2, background: CHIP, border: `1px solid ${RULE}`, padding: "5px 12px", borderRadius: 99, marginTop: 4 }}>Meet {b.short} →</span>
+    </button>
+  )
+
+  return (
+    <div style={{ ...CARD, padding: isMobile ? "22px 16px 26px" : "34px 36px 40px", overflow: "hidden" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+        <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+        <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+          The AI employees · org chart
+        </span>
+      </div>
+      <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 40, color: INK, letterSpacing: -1.4, lineHeight: 1.03, margin: "0 0 10px" }}>
+        The org, <span style={{ color: INK3 }}>amplified.</span>
+      </h2>
+      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: "0 0 24px", maxWidth: 620 }}>
+        The little robots running quietly in the background, across every company. Tap any of them to see what they do, how they were built, and a peek at them in action.
+      </p>
+
+      {/* Mike → Tiffanie */}
+      <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center" }}>
+        <OrgNode initial="M" name="Mike" role="Owner" star />
+        <div style={{ width: 0, height: 22, borderLeft: dash }} />
+        <OrgNode initial="T" name="Tiffanie" role="Systems & Automations" dashed />
+      </div>
+
+      {/* connector down to the company row */}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ width: 0, height: 20, borderLeft: dash }} />
+      </div>
+      {!isMobile && <div style={{ height: 0, borderTop: dash, margin: "0 8%" }} />}
+
+      {/* Companies + their bots */}
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(6, 1fr)", gap: isMobile ? 14 : 12, alignItems: "start", marginTop: isMobile ? 8 : 0 }}>
+        {ORG_COMPANIES.map(co => (
+          <div key={co.name} style={{ display: "flex", flexDirection: "column" as const, alignItems: "center" }}>
+            <div style={{ width: 0, height: 16, borderLeft: dash }} />
+            <div style={{ width: 60, height: 60, borderRadius: 16, background: INK, flexShrink: 0 }} />
+            <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 11.5, color: INK, textAlign: "center" as const, marginTop: 10, lineHeight: 1.25 }}>{co.name}</div>
+            {co.bots.length === 0 ? (
+              <>
+                <div style={{ width: 0, height: 14, borderLeft: dash }} />
+                <div style={{ width: "100%", border: `1.5px dashed ${RULE}`, borderRadius: 12, padding: "16px 8px", textAlign: "center" as const, fontFamily: FONT, fontWeight: 700, fontSize: 8, letterSpacing: 1, textTransform: "uppercase" as const, color: INK3 }}>No bots yet</div>
+              </>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", width: "100%", marginTop: 4 }}>
+                {co.bots.map(id => (
+                  <div key={id} style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", width: "100%" }}>
+                    <div style={{ width: 0, height: 14, borderLeft: dash }} />
+                    {botCard(ORG_BOTS[id])}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Meet-the-bot modal */}
+      <Modal open={open !== null} onClose={() => setOpen(null)}>
+        {open && (
+          <div>
+            <div style={{ background: INK, padding: isMobile ? "22px 20px" : "26px 32px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 10 }}>
+                <div style={{ width: 42, height: 42, borderRadius: 12, background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.14)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="5" y="8" width="14" height="10" rx="2.5" /><path d="M12 8V5.5" /><circle cx="12" cy="4" r="1.3" fill="#fff" stroke="none" />
+                    <circle cx="9.5" cy="13" r="1.1" fill="#fff" stroke="none" /><circle cx="14.5" cy="13" r="1.1" fill="#fff" stroke="none" /><path d="M3 12.5v2.5M21 12.5v2.5" />
+                  </svg>
+                </div>
+                <div>
+                  <div style={{ fontFamily: FONT, fontWeight: 900, fontSize: 18, color: "#fff", letterSpacing: -0.3 }}>{open.name}</div>
+                  <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 10.5, color: "rgba(255,255,255,0.55)" }}>{open.cadence} · {open.sub}{open.soon ? " · In build" : ""} · {open.handle}</div>
+                </div>
+              </div>
+              <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 13, color: "rgba(255,255,255,0.9)", lineHeight: 1.5 }}>{open.tag}</div>
+            </div>
+            <div style={{ padding: isMobile ? "20px 20px 26px" : "24px 32px 30px" }}>
+              <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, marginBottom: 8 }}>What it does</div>
+              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13, color: INK2, lineHeight: 1.75, margin: "0 0 18px" }} dangerouslySetInnerHTML={{ __html: open.about }} />
+              <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6, marginBottom: open.chat ? 20 : 0 }}>
+                {open.chips.map(c => (
+                  <span key={c} style={{ fontFamily: FONT, fontWeight: 700, fontSize: 9, background: CHIP, color: INK2, border: `1px solid ${RULE}`, padding: "4px 10px", borderRadius: 99 }}>{c}</span>
+                ))}
+              </div>
+              {open.chat && (
+                <>
+                  <div style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "4px 0 10px" }}>In action</div>
+                  <div style={{ background: INK, borderRadius: 14, padding: "14px 14px", display: "flex", flexDirection: "column" as const, gap: 8 }}>
+                    {open.chat.map((m, i) => (
+                      <div key={i} style={{
+                        alignSelf: m.s === "out" ? "flex-end" : "flex-start", maxWidth: "90%",
+                        background: m.s === "out" ? "#FF1493" : "rgba(255,255,255,0.07)",
+                        color: "#fff", borderRadius: m.s === "out" ? "12px 12px 3px 12px" : "12px 12px 12px 3px",
+                        padding: "8px 11px", border: m.s === "out" ? "none" : "1px solid rgba(255,255,255,0.08)",
+                      }}>
+                        {m.who && <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 9, color: "rgba(255,255,255,0.6)", marginBottom: 3 }}>{m.who}</div>}
+                        <div style={{ fontFamily: FONT, fontWeight: 400, fontSize: 11.5, lineHeight: 1.5, whiteSpace: "pre-wrap" as const }}>{m.t}</div>
+                        {m.file && (
+                          <div style={{ marginTop: 6, display: "flex", alignItems: "center", gap: 7, background: "rgba(255,255,255,0.1)", borderRadius: 8, padding: "6px 8px" }}>
+                            <span style={{ fontSize: 13 }}>📄</span>
+                            <div><div style={{ fontFamily: FONT, fontWeight: 700, fontSize: 10, color: "#fff" }}>{m.file.n}</div><div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 8.5, color: "rgba(255,255,255,0.55)" }}>{m.file.s}</div></div>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </Modal>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // APP
 // (Site access is enforced server-side: Vercel Edge middleware.js does
 //  HTTP Basic Auth before any file is served — same as mjmdashboard.org.)
@@ -2324,6 +2568,10 @@ export default function App() {
 
         {/* ════════════════════════════════════════ THIS WEEK · PROGRESS LOG ════════════════════════════════════════ */}
         <ThisWeekCard />
+
+
+        {/* ════════════════════════════════════════ ORG CHART · AI EMPLOYEES ════════════════════════════════════════ */}
+        <OrgChartSection />
 
 
         {/* ════════════════════════════════════════ PROJECT BRIEF + QUESTIONS FOR COACH ════════════════════════════════════════ */}
