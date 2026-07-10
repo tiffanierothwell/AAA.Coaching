@@ -18,6 +18,7 @@ export const WEEKLY_LOG = [
       { name: "Catch-all Cal", initials: "CC", role: "Reads the group and files real task requests to the right person's board automatically — and if someone forgets a due date, he sets the next business day so nothing lands dateless." },
       { name: "Checklist Chuck", initials: "CH", role: "Runs the daily rhythm: the morning brief and the end-of-day wrap." },
       { name: "Shift Sheila", initials: "SS", role: "Checks in with Leah each afternoon and logs her day, which feeds straight into Pete's Friday report." },
+      { name: "Cory the Coordinator", initials: "CO", role: "Little Tree Capital's own coordinator. He manages the tasks on the LTC dashboard, keeps the board current and honest, and rolls each week into a clean report, so Mike always has a clear read on where Capital stands without asking. He also updates the meeting agenda and makes sure Tiffanie gets all of her ideas onto the dashboard." },
     ],
     coordinators: "I also mapped out coordinators for the other companies — Cory for Capital, Marty for Pay, Diesel Dan for Fuel — so the same model scales across the portfolio.",
     alongside: "Alongside the bots, I built my own command page (calendar, dashboards, an animated org chart showing every company and every bot, a resources library, and walkthrough videos), wrote a “Bot Factory” playbook so any new bot follows the same proven process, and set up the database and reporting behind all of it.",
