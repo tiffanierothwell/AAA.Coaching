@@ -247,11 +247,11 @@ const PHASES: Phase[] = [
     ],
   },
   {
-    num: 2, name: "MJM Command Center", note: "In progress · demo day today",
+    num: 2, name: "MJM Command Center", note: "In progress · needs analysis prep",
     milestones: [
       { label: "Demo Prep",              sub: "Deck · data · dry run",   status: "done"  },
-      { label: "Demo Day",               sub: "TODAY · MJM Group",       status: "now"   },
-      { label: "Needs Analysis Prep",    sub: "Questions for the team",  status: "later" },
+      { label: "Demo Day",               sub: "MJM Group",               status: "done"  },
+      { label: "Needs Analysis Prep",    sub: "Questions for the team",  status: "now"   },
       { label: "Needs Analysis Received", sub: "Requirements in",        status: "later" },
       { label: "Plan Proposal",          sub: "Scope · phases · cost",   status: "later" },
       { label: "Proposal Day",           sub: "Present to MJM",          status: "later" },
@@ -1602,8 +1602,8 @@ function EmailThreadCard() {
 // ════════════════════════════════════════════════════════════════
 const RUNBOOK_STEPS: { title: string; detail: React.ReactNode; status: "done" | "now" | "next" }[] = [
   { status: "done", title: "Demo Prep",                 detail: <>Deck, data, and dry run pulled together for the MJM Group.</> },
-  { status: "now",  title: "Demo Day",                  detail: <>Today — walking the MJM Group through the MJM 360 Command Center.</> },
-  { status: "next", title: "Needs Analysis Prep",       detail: <>Prep the discovery questions for each company and role.</> },
+  { status: "done", title: "Demo Day",                  detail: <>Walked the MJM Group through the MJM 360 Command Center.</> },
+  { status: "now",  title: "Needs Analysis Prep",       detail: <>Prep the discovery questions for each company and role.</> },
   { status: "next", title: "Needs Analysis Received",   detail: <>Requirements back from the team, captured and organized.</> },
   { status: "next", title: "Plan Proposal",             detail: <>Scope, phases, timeline, and cost written up.</> },
   { status: "next", title: "Proposal Day",              detail: <>Present the plan to MJM for the go-ahead.</> },
@@ -1630,11 +1630,11 @@ function CoachRunbookCard() {
             </span>
           </div>
           <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
-            Demo day
+            Needs analysis
           </span>
         </div>
         <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, margin: "8px 0 18px", lineHeight: 1.6 }}>
-          The full sequence for the MJM Command Center engagement — from today's demo through needs analysis, proposal, the phased build, and into training and ongoing improvement. Would love your coaching on how we sequence it.
+          The full sequence for the MJM Command Center engagement — the demo is done, now into needs analysis, proposal, the phased build, and on to training and ongoing improvement. Would love your coaching on how we sequence it.
         </p>
 
         <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gridTemplateRows: isMobile ? undefined : "repeat(7, auto)", gridAutoFlow: isMobile ? "row" : "column", gap: 10, alignItems: "start" }}>
