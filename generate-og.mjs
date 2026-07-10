@@ -217,8 +217,8 @@ const html = `<!DOCTYPE html>
       <div class="left">
         <div class="badges">
           <span class="badge-dark"><span class="slash">///</span> Accelerator</span>
-          <span class="badge-chip">Phase 1</span>
-          <span class="badge-chip">Demo Day</span>
+          <span class="badge-chip">Phase 2</span>
+          <span class="badge-chip">Needs Analysis</span>
         </div>
         <div>
           <p class="eyebrow">Tiffanie's Project Management Dashboard</p>
@@ -234,8 +234,8 @@ const html = `<!DOCTYPE html>
       <div class="status-card">
         <div>
           <div class="status-label">Current</div>
-          <div class="status-session">Demo Day</div>
-          <div class="status-date">MJM Group · Phase 1 wrap-up</div>
+          <div class="status-session">Needs Analysis</div>
+          <div class="status-date">Phase 2 · MJM Command Center</div>
         </div>
         <div class="divider"></div>
         <div>
@@ -244,12 +244,12 @@ const html = `<!DOCTYPE html>
             <span class="ms-count">Phase 2</span>
           </div>
           <div class="progress-track"><div class="progress-fill" style="width:50%"></div></div>
-          <div class="progress-pct">Phase 1 done · Phase 2 today</div>
+          <div class="progress-pct">Phase 1 done · Phase 2 underway</div>
         </div>
         <div class="divider"></div>
         <div>
           <div class="next-label">Up next</div>
-          <div class="next-text">Build the MJM Command Center: role snapshots + KPI cards</div>
+          <div class="next-text">Needs analysis in, then the plan proposal for MJM</div>
         </div>
       </div>
 

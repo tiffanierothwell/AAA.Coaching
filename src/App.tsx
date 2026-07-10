@@ -2471,7 +2471,7 @@ export default function App() {
                   <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 11 }}>///</span>
                   <span style={{ color: "#fff" }}>Accelerator</span>
                 </span>
-                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Phase 1 · Demo Day"].map(b => (
+                {[new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }), "Phase 2 · Needs Analysis"].map(b => (
                   <span key={b} style={{
                     fontFamily: FONT, fontSize: 9, fontWeight: 600,
                     letterSpacing: 0.5, textTransform: "uppercase" as const,
@@ -2491,7 +2491,7 @@ export default function App() {
                   color: INK, letterSpacing: isMobile ? -1.5 : -3, lineHeight: 0.92, margin: 0,
                 }}>Hi AAA Coach</h1>
                 <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 13 : 15, color: INK2, lineHeight: 1.5, margin: "12px 0 0", maxWidth: 520 }}>
-                  Phase 1 of the <strong style={{ color: INK }}>MJM 360 Command Center</strong> is wrapping up — today's the demo to the MJM Group. Here's where the build stands and what I'd love your read on next.
+                  Phase 1 is shipped and demoed. Now into Phase 2 — the full <strong style={{ color: INK }}>MJM 360 Command Center</strong> across all five companies — starting with the needs analysis. Here's where the build stands and what I'd love your read on next.
                 </p>
               </div>
 
@@ -2511,8 +2511,8 @@ export default function App() {
             }}>
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 4 }}>Current</div>
-                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Demo Day · MJM Group</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · Phase 1 wrap-up</div>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 18, color: "#fff", letterSpacing: -0.5, lineHeight: 1.1 }}>Needs Analysis Prep</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11, color: "rgba(255,255,255,0.65)", marginTop: 3 }}>{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })} · Phase 2 · MJM Command Center</div>
               </div>
 
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", margin: "20px 0" }} />
@@ -2525,7 +2525,7 @@ export default function App() {
                 <div style={{ height: 3, background: "rgba(255,255,255,0.1)", borderRadius: 99, overflow: "hidden" as const }}>
                   <div style={{ height: "100%", width: "45%", background: "#fff", borderRadius: 99 }} />
                 </div>
-                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>Phase 1 done ✓ · Phase 2 demo today</div>
+                <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.55)", marginTop: 5, letterSpacing: 0.3 }}>Phase 1 done ✓ · Phase 2 underway</div>
               </div>
 
               <div style={{ flex: 1 }} />
@@ -2534,7 +2534,7 @@ export default function App() {
               <div>
                 <div style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.35)", letterSpacing: 2, textTransform: "uppercase" as const, marginBottom: 6 }}>Up next</div>
                 <div style={{ fontFamily: FONT, fontWeight: 600, fontSize: 12, color: "#fff", lineHeight: 1.4 }}>
-                  Build the MJM Command Center — role snapshots + KPI cards
+                  Needs analysis in, then the plan proposal for MJM
                 </div>
               </div>
             </div>
@@ -2601,13 +2601,13 @@ export default function App() {
                 </span>
               </div>
               <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                Phase 1 is wrapping up — today I'm demoing the MJM 360 Command Center to the MJM Group.
+                Phase 1 shipped and demoed. Now into Phase 2 — the needs analysis for the full MJM 360 Command Center.
               </h2>
               <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                The foundation is live: self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a daily GitHub Action that generates AI intelligence with Claude, and the CEO Command Center with live KPI cards. After the demo I want your read on the Phase 2 plan — the full MJM Ventures 360 Command Center across all five companies.
+                The foundation is live: self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a daily GitHub Action that generates AI intelligence with Claude, and the CEO Command Center with live KPI cards — all demoed to the MJM Group. Now I'm prepping the needs analysis for Phase 2: the full MJM Ventures 360 Command Center across all five companies, and I'd love your read on it.
               </p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                {["Phase 1 shipped ✓", "Demo day", "CEO Command Center", "Phase 2 next"].map(tag => (
+                {["Phase 1 shipped ✓", "Demo done ✓", "Needs analysis", "Phase 2 underway"].map(tag => (
                   <span key={tag} style={{
                     fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
                     color: INK2, background: CHIP,
@@ -2626,10 +2626,10 @@ export default function App() {
               </div>
               <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
                 {[
-                  "Phase 2 scope: build out all five company dashboards (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under the CEO Command Center — want your read on sequencing.",
-                  "Wire the 8 KPI cards to live data via Supabase Realtime instead of the current seed values, per company.",
-                  "Authentication next: Supabase Auth (email/password) + roles + RLS per company, replacing the localStorage gate.",
-                  "Keep the daily AI-intelligence loop healthy (GitHub Action + Claude) and extend it beyond Little Tree to the other companies.",
+                  "Needs analysis: prep the discovery questions for each company and role, then collect the requirements back from the team.",
+                  "Turn that into a plan proposal — scope, phases, timeline, and cost — to present to MJM for the go-ahead.",
+                  "Phase 2 build (once approved): the five company dashboards (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under the CEO Command Center, want your read on sequencing.",
+                  "Wire the 8 KPI cards to live Supabase Realtime data per company, and add Supabase Auth + roles + RLS.",
                 ].map((t, i) => (
                   <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
                     <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
@@ -2638,7 +2638,7 @@ export default function App() {
                 ))}
               </div>
               <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Phase 1 wrap-up · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Phase 2 · needs analysis · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
               </div>
             </div>
           </div>
@@ -2699,7 +2699,7 @@ export default function App() {
 
         {/* Footer */}
         <p style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 200, fontSize: 10, color: "#BBBBBB", letterSpacing: 2, textTransform: "uppercase" as const, paddingTop: 4 }}>
-          MJM 360 Command Center · mjmdashboard.org · Phase 1 · Demo Day · Summer 2026
+          MJM 360 Command Center · mjmdashboard.org · Phase 2 · Needs Analysis · Summer 2026
         </p>
 
       </div>
