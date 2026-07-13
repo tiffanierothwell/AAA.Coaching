@@ -2185,6 +2185,95 @@ function ThisWeekCard() {
 }
 
 // ════════════════════════════════════════════════════════════════
+// VOICE AGENTS PROJECT · this week's focus (larger, with attached PDFs)
+// ════════════════════════════════════════════════════════════════
+function VoiceAgentsFocusCard() {
+  const isMobile = useIsMobile()
+  const base = import.meta.env.BASE_URL
+  const brief: { k: string; v: string }[] = [
+    { k: "The opportunity", v: "Use our loyalty data — roughly 102,000 customers with purchase history back to 2017 — to make targeted, personalized re-engagement and customer-care calls. Not cold calling." },
+    { k: "The technology", v: "Retell AI for the voice agent, connected to Twilio for telephony. Real two-way calls in English and French, following a detailed script, with a Python layer that analyzes each call and writes the outcome back into the CRM." },
+    { k: "The cost", v: "About $0.15 per active call minute. A 1,000-customer pilot at ~3 minutes each is roughly $450 in call usage, before build and software costs." },
+    { k: "The CRM", v: "Long-term direction is a custom CRM on AIOS + Supabase for full control; GoHighLevel can serve as a faster bridge during the transition." },
+    { k: "Fast track", v: "Teemu's company (sub60.ai) builds voice agents and custom CRMs as a paid service outside the coaching program — he'll send a proposal and run a demo for Mike." },
+    { k: "Before launch", v: "A proper Canadian and Quebec compliance review, plus a Claude-run security audit." },
+  ]
+  return (
+    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
+      <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
+      <div style={{ padding: isMobile ? "22px 18px 24px" : "34px 40px 34px" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 12 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+              This week's focus
+            </span>
+          </div>
+          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
+            New priority
+          </span>
+        </div>
+        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 30 : 44, color: INK, letterSpacing: -1.6, lineHeight: 1.02, margin: "0 0 12px" }}>
+          Voice Agents Project
+        </h2>
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 14, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 780 }}>
+          Coming out of the meeting with Teemu, I've scoped a personalized AI voice-agent system that calls Mike's existing loyalty customers for customer-care and re-engagement — not cold calling. Here's the plan in brief; the full executive summary and the meeting transcript are attached below to download.
+        </p>
+
+        {/* Attached PDFs */}
+        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 10, margin: "22px 0 6px" }}>
+          <a href={`${base}voice-agent-project-report.pdf`} target="_blank" rel="noopener noreferrer"
+             style={{ display: "inline-flex", alignItems: "center", gap: 9, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase" as const, padding: "12px 17px", borderRadius: 10, textDecoration: "none" }}>
+            <span style={{ fontSize: 13 }}>▤</span> Executive summary · PDF
+          </a>
+          <a href={`${base}teemu-voice-agents-meeting-transcript.pdf`} target="_blank" rel="noopener noreferrer"
+             style={{ display: "inline-flex", alignItems: "center", gap: 9, background: "#fff", color: INK, border: `1.5px solid ${INK}`, fontFamily: FONT, fontWeight: 800, fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase" as const, padding: "12px 17px", borderRadius: 10, textDecoration: "none" }}>
+            <span style={{ fontSize: 13 }}>▤</span> Meeting transcript · PDF
+          </a>
+        </div>
+
+        {/* Plan in brief */}
+        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "24px 0 12px" }}>
+          The plan in brief
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+          {brief.map((b, i) => (
+            <div key={i} style={{ display: "flex", gap: 12, padding: "12px 15px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
+              <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: INK3, flexShrink: 0, lineHeight: 1.9, letterSpacing: 0.5, width: 16 }}>0{i + 1}</span>
+              <div>
+                <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK }}>{b.k}. </span>
+                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12.5, color: INK2, lineHeight: 1.65 }}>{b.v}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Dark footer — also this week (email bots) */}
+      <div style={{ background: INK, padding: isMobile ? "18px 18px 20px" : "22px 40px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
+          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)" }}>
+            Also this week
+          </span>
+        </div>
+        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+          <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 11, color: "rgba(255,255,255,0.25)", flexShrink: 0, lineHeight: 1.6 }}>›</span>
+          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.7, margin: 0 }}>
+            <span style={{ fontWeight: 800, color: "#fff" }}>Email bots. </span>
+            Separate from the voice agents, but still a priority for Mike: this week I'm also building out the email bots — the automation that reads and handles incoming email (touched on briefly with Teemu). It runs in parallel with the voice-agent work.
+          </p>
+        </div>
+        <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: 0.5 }}>For Mike · Voice Agents Project · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ════════════════════════════════════════════════════════════════
 // THE ORG, AMPLIFIED · bot-team org chart (mirrors mjmdashboard/tiffanie.html)
 // ════════════════════════════════════════════════════════════════
 type OrgChat = { s: "in" | "out"; who?: string; t: string; file?: { n: string; s: string } }
@@ -2589,71 +2678,18 @@ export default function App() {
 
 
         {/* ════════════════════════════════════════ FOCUS + PEOPLE ════════════════════════════════════════ */}
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 14 }}>
+        <VoiceAgentsFocusCard />
 
-          {/* This week's focus */}
-          <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
-            <div style={{ padding: isMobile ? "18px 16px 16px" : "28px 28px 22px", background: "#fff" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <div style={{ width: 5, height: 5, borderRadius: 1, background: INK }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-                  This week's focus
-                </span>
-              </div>
-              <h2 style={{ fontFamily: FONT, fontWeight: 800, fontSize: 17, color: INK, lineHeight: 1.4, letterSpacing: -0.4, margin: "0 0 12px" }}>
-                Phase 1 shipped and demoed. Now into Phase 2 — the needs analysis for the full MJM 360 Command Center.
-              </h2>
-              <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, lineHeight: 1.7, margin: "0 0 16px" }}>
-                The foundation is live: self-hosted Supabase (<code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>supabase.mjmspace.com</code>), the <code style={{ background: CHIP, padding: "1px 4px", borderRadius: 3, fontSize: 10.5 }}>masterdash</code> schema, the Claude ↔ Supabase MCP, a daily GitHub Action that generates AI intelligence with Claude, and the CEO Command Center with live KPI cards — all demoed to the MJM Group. Now I'm prepping the needs analysis for Phase 2: the full MJM Ventures 360 Command Center across all five companies, and I'd love your read on it.
-              </p>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" as const }}>
-                {["Phase 1 shipped ✓", "Demo done ✓", "Needs analysis", "Phase 2 underway"].map(tag => (
-                  <span key={tag} style={{
-                    fontFamily: FONT, fontWeight: 500, fontSize: 9.5,
-                    color: INK2, background: CHIP,
-                    border: `1px solid ${RULE}`,
-                    padding: "3px 10px", borderRadius: 99,
-                  }}>{tag}</span>
-                ))}
-              </div>
-            </div>
-            <div style={{ background: INK, padding: isMobile ? "16px 16px 18px" : "20px 28px 22px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-                <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
-                <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.3)" }}>
-                  Also needed
-                </span>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column" as const, gap: 12 }}>
-                {[
-                  "Needs analysis: prep the discovery questions for each company and role, then collect the requirements back from the team.",
-                  "Turn that into a plan proposal — scope, phases, timeline, and cost — to present to MJM for the go-ahead.",
-                  "Phase 2 build (once approved): the five company dashboards (MedBox · Le Roi · KCF · Moccasin Joe · Little Tree) under the CEO Command Center, want your read on sequencing.",
-                  "Wire the 8 KPI cards to live Supabase Realtime data per company, and add Supabase Auth + roles + RLS.",
-                ].map((t, i) => (
-                  <div key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                    <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: "rgba(255,255,255,0.2)", flexShrink: 0, lineHeight: 1.6, letterSpacing: 0.5 }}>0{i + 1}</span>
-                    <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: "rgba(255,255,255,0.65)", lineHeight: 1.6, margin: 0 }}>{t}</p>
-                  </div>
-                ))}
-              </div>
-              <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-                <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.2)", letterSpacing: 0.5 }}>For AAA Coach · Phase 2 · needs analysis · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* People */}
-          <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
-            <SectionLabel label="People" />
-            <Row label="Tiffanie"     value="Project owner / PM — 4 hrs/day, drives schema with Claude, builds the app and dashboards." />
-            <Row label="Mike D."      value="Operator of Little Tree Ventures — end user / decision maker. POC user for the AIOS." />
-            <Row label="Andre B."     value="IT lead, 25+ yrs. Owns Andre's server, Supabase install, transactional pipeline, DB user/role mgmt." />
-            <Row label="Valera"       value="Technical coach — schema, dev cycle, migrations, sanity checks. Limited availability." />
-            <Row label="Nick Voikin"  value="Backup coach in rotation when Valera's calendar is full." />
-            <Row label="Timo"         value="Backup coach in rotation. Format: blockers list + progress since last session." />
-            <Row label="Leah"         value="Mike's delegation recipient — Friday digest of her week routes back to Mike." />
-          </div>
+        {/* People */}
+        <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
+          <SectionLabel label="People" />
+          <Row label="Tiffanie"     value="Project owner / PM — 4 hrs/day, drives schema with Claude, builds the app and dashboards." />
+          <Row label="Mike D."      value="Operator of Little Tree Ventures — end user / decision maker. POC user for the AIOS." />
+          <Row label="Andre B."     value="IT lead, 25+ yrs. Owns Andre's server, Supabase install, transactional pipeline, DB user/role mgmt." />
+          <Row label="Valera"       value="Technical coach — schema, dev cycle, migrations, sanity checks. Limited availability." />
+          <Row label="Nick Voikin"  value="Backup coach in rotation when Valera's calendar is full." />
+          <Row label="Timo"         value="Backup coach in rotation. Format: blockers list + progress since last session." />
+          <Row label="Leah"         value="Mike's delegation recipient — Friday digest of her week routes back to Mike." />
         </div>
 
 
