@@ -2029,7 +2029,7 @@ function CoachingCalendar() {
       </div>
 
       {/* Month grids */}
-      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)", gap: isMobile ? 14 : 18 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(4, 1fr)", gap: isMobile ? 22 : 18, maxWidth: isMobile ? 340 : "none", marginInline: isMobile ? "auto" : 0 }}>
         {COACHING_MONTHS.map(mo => {
           const first = new Date(mo.y, mo.m, 1).getDay()
           const days = new Date(mo.y, mo.m + 1, 0).getDate()
@@ -2041,7 +2041,7 @@ function CoachingCalendar() {
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 3 }}>
                 {WD.map((d, i) => (
-                  <div key={i} style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 700, fontSize: 6.5, color: INK3 }}>{d}</div>
+                  <div key={i} style={{ textAlign: "center" as const, fontFamily: FONT, fontWeight: 700, fontSize: isMobile ? 9 : 6.5, color: INK3 }}>{d}</div>
                 ))}
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, position: "relative" as const }}>
@@ -2063,7 +2063,7 @@ function CoachingCalendar() {
                         cursor: s ? "pointer" : "default",
                       }}
                     >
-                      <span style={{ fontFamily: FONT, fontWeight: s ? 800 : 300, fontSize: 8.5, color: s ? "#fff" : INK3, userSelect: "none" as const, lineHeight: 1 }}>{day}</span>
+                      <span style={{ fontFamily: FONT, fontWeight: s ? 800 : 300, fontSize: isMobile ? 12 : 8.5, color: s ? "#fff" : INK3, userSelect: "none" as const, lineHeight: 1 }}>{day}</span>
                       {s && !isMobile && hover === key && (
                         <div style={{
                           position: "absolute" as const, bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)",
