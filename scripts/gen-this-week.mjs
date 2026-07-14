@@ -2,7 +2,8 @@
 // page at public/this-week.html — same look as the on-site section, but fully
 // rendered in the HTML so a bot can read it with a plain fetch (no JS, no auth).
 // Runs automatically before every build (npm "prebuild"). Single source of
-// truth for the content is src/data/weeklyLog.js.
+// truth for the content is src/data/weeklyLog.js — this renders WEEKLY_LOG[0]
+// (the current week). Every section is optional and only renders when present.
 
 import { writeFileSync, mkdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -22,25 +23,61 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 
 const w = WEEKLY_LOG[0]
 
-const highlights = w.highlights.map(h => `
+const attachments = (w.attachments ?? []).map((a, i) => `
+    <a href="/${esc(a.href)}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:${i === 0 ? INK : '#fff'};color:${i === 0 ? '#fff' : INK};border:${i === 0 ? 'none' : `1.5px solid ${INK}`};font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:12px 17px;border-radius:10px;text-decoration:none">&#9636; ${esc(a.label)}</a>`).join('')
+
+const highlights = (w.highlights ?? []).map(h => `
     <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid ${INK}">
       <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:${INK};color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
       <div><span style="font-weight:800;font-size:13.5px;color:${INK}">${esc(h.lead)} </span><span style="font-weight:300;font-size:12.5px;color:${INK2};line-height:1.65">${esc(h.body)}</span></div>
     </div>`).join('')
 
-const bots = w.bots.map(b => `
+const bots = (w.bots ?? []).map(b => `
     <div style="display:flex;gap:12px;padding:12px 14px;border-radius:12px;background:${CHIP};border:1px solid ${RULE}">
       <div style="width:30px;height:30px;border-radius:50%;flex-shrink:0;background:${INK};color:#fff;font-weight:800;font-size:10px;display:flex;align-items:center;justify-content:center;letter-spacing:.3px">${esc(b.initials)}</div>
       <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:13px;color:${INK};margin-bottom:3px">${esc(b.name)}</div><div style="font-weight:300;font-size:12px;color:${INK2};line-height:1.6">${esc(b.role)}</div></div>
     </div>`).join('')
 
-const walls = w.walls.map(x => `
+const walls = (w.walls ?? []).map(x => `
     <div style="background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.22);border-radius:12px;padding:12px 14px">
       <div style="display:flex;gap:10px;align-items:flex-start">
         <span style="color:${PINK};font-weight:900;font-size:12px;line-height:1.5;flex-shrink:0">&rsaquo;</span>
         <div><span style="font-weight:800;font-size:12.5px;color:${INK}">${esc(x.lead)} </span><span style="font-weight:300;font-size:12px;color:${INK2};line-height:1.65">${esc(x.body)}</span></div>
       </div>
     </div>`).join('')
+
+// Section blocks — only emitted when the underlying data exists.
+const attachmentsBlock = attachments
+  ? `\n      <div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 4px">${attachments}\n      </div>`
+  : ''
+
+const highlightsBlock = highlights
+  ? `\n      <div class="sub-label" style="margin:26px 0 12px">What I built</div>\n      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:${w.builtLead ? '18px' : '0'}">${highlights}\n      </div>`
+  : ''
+
+const builtLeadBlock = w.builtLead
+  ? `\n      <p style="font-weight:400;font-size:12.5px;color:${INK};line-height:1.6;margin:0 0 14px">${esc(w.builtLead)}</p>`
+  : ''
+
+const botsBlock = bots
+  ? `\n      <div style="display:flex;flex-direction:column;gap:8px">${bots}\n      </div>`
+  : ''
+
+const coordinatorsBlock = w.coordinators
+  ? `\n      <p style="font-weight:300;font-size:12px;color:${INK2};line-height:1.65;margin:12px 0 0">${esc(w.coordinators)}</p>`
+  : ''
+
+const alongsideBlock = w.alongside
+  ? `\n      <p style="font-weight:300;font-size:12px;color:${INK2};line-height:1.65;margin:12px 0 0">${esc(w.alongside)}</p>`
+  : ''
+
+const wallsBlock = walls
+  ? `\n      <div class="sub-label" style="margin:26px 0 4px">Where I hit walls, and what I changed</div>\n      <p style="font-weight:300;font-size:12px;color:${INK3};line-height:1.6;margin:0 0 14px">Being honest about the hard parts — that's where I learned the most.</p>\n      <div style="display:flex;flex-direction:column;gap:8px">${walls}\n      </div>`
+  : ''
+
+const wrapUpBlock = w.wrapUp
+  ? `\n      <div style="background:${INK};border-radius:14px;padding:18px 20px;margin-top:22px">\n        <div class="sub-label" style="color:rgba(255,255,255,0.4);margin-bottom:7px">Where we're at</div>\n        <p style="font-weight:300;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.7;margin:0">${esc(w.wrapUp)}</p>\n      </div>`
+  : ''
 
 const html = `<!doctype html>
 <html lang="en">
@@ -84,25 +121,7 @@ const html = `<!doctype html>
 
       <h2 class="title">${esc(w.title)}</h2>
       <p style="font-weight:300;font-size:13.5px;color:${INK2};line-height:1.7;margin:0;max-width:720px">${esc(w.intro)}</p>
-
-      <div class="sub-label" style="margin:26px 0 12px">What I built</div>
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">${highlights}
-      </div>
-      <p style="font-weight:400;font-size:12.5px;color:${INK};line-height:1.6;margin:0 0 14px">${esc(w.builtLead)}</p>
-      <div style="display:flex;flex-direction:column;gap:8px">${bots}
-      </div>
-      <p style="font-weight:300;font-size:12px;color:${INK2};line-height:1.65;margin:12px 0 0">${esc(w.coordinators)}</p>
-      <p style="font-weight:300;font-size:12px;color:${INK2};line-height:1.65;margin:12px 0 0">${esc(w.alongside)}</p>
-
-      <div class="sub-label" style="margin:26px 0 4px">Where I hit walls, and what I changed</div>
-      <p style="font-weight:300;font-size:12px;color:${INK3};line-height:1.6;margin:0 0 14px">Being honest about the hard parts — that's where I learned the most.</p>
-      <div style="display:flex;flex-direction:column;gap:8px">${walls}
-      </div>
-
-      <div style="background:${INK};border-radius:14px;padding:18px 20px;margin-top:22px">
-        <div class="sub-label" style="color:rgba(255,255,255,0.4);margin-bottom:7px">Where we're at</div>
-        <p style="font-weight:300;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.7;margin:0">${esc(w.wrapUp)}</p>
-      </div>
+${attachmentsBlock}${highlightsBlock}${builtLeadBlock}${botsBlock}${coordinatorsBlock}${alongsideBlock}${wallsBlock}${wrapUpBlock}
 
     </div>
   </div>

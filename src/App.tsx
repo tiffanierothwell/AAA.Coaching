@@ -2090,6 +2090,112 @@ function CoachingCalendar() {
 // THIS WEEK · WEEKLY PROGRESS LOG (newest first)
 // ════════════════════════════════════════════════════════════════
 
+type Week = typeof WEEKLY_LOG[number]
+
+// Renders the body of one week — shared by "This week" and the Archive.
+// Every section is optional, so a light current week and a full retrospective
+// both render cleanly (no empty section headers).
+function WeekBody({ w }: { w: Week }) {
+  const isMobile = useIsMobile()
+  const base = import.meta.env.BASE_URL
+  return (
+    <>
+      <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 40, color: INK, letterSpacing: -1.4, lineHeight: 1.03, margin: "0 0 12px" }}>
+        {w.title}
+      </h2>
+      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 720 }}>
+        {w.intro}
+      </p>
+
+      {w.attachments && w.attachments.length > 0 && (
+        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 10, margin: "20px 0 4px" }}>
+          {w.attachments.map((a, i) => (
+            <a key={i} href={`${base}${a.href}`} target="_blank" rel="noopener noreferrer"
+               style={{ display: "inline-flex", alignItems: "center", gap: 9, background: i === 0 ? INK : "#fff", color: i === 0 ? "#fff" : INK, border: i === 0 ? "none" : `1.5px solid ${INK}`, fontFamily: FONT, fontWeight: 800, fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase" as const, padding: "12px 17px", borderRadius: 10, textDecoration: "none" }}>
+              <span style={{ fontSize: 13 }}>▤</span> {a.label}
+            </a>
+          ))}
+        </div>
+      )}
+
+      {w.highlights && w.highlights.length > 0 && (
+        <>
+          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 12px" }}>
+            What I built
+          </div>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: 10, marginBottom: w.builtLead ? 18 : 0 }}>
+            {w.highlights.map((h, i) => (
+              <div key={i} style={{ display: "flex", gap: 12, padding: "14px 16px", borderRadius: 12, background: "#fff", border: `1.5px solid ${INK}` }}>
+                <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 900, fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>★</div>
+                <div>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13.5, color: INK }}>{h.lead} </span>
+                  <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 12.5, color: INK2, lineHeight: 1.65 }}>{h.body}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {w.builtLead && (
+        <p style={{ fontFamily: FONT, fontWeight: 400, fontSize: 12.5, color: INK, lineHeight: 1.6, margin: "0 0 14px" }}>{w.builtLead}</p>
+      )}
+      {w.bots && w.bots.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+          {w.bots.map(b => (
+            <div key={b.name} style={{ display: "flex", gap: 12, padding: "12px 14px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
+              <div style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3 }}>{b.initials}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: INK, marginBottom: 3 }}>{b.name}</div>
+                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.6 }}>{b.role}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {w.coordinators && (
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.coordinators}</p>
+      )}
+      {w.alongside && (
+        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.alongside}</p>
+      )}
+
+      {w.walls && w.walls.length > 0 && (
+        <>
+          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 4px" }}>
+            Where I hit walls, and what I changed
+          </div>
+          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.6, margin: "0 0 14px" }}>
+            Being honest about the hard parts — that's where I learned the most.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
+            {w.walls.map((wa, i) => (
+              <div key={i} style={{ background: "rgba(255,20,147,0.05)", border: "1px solid rgba(255,20,147,0.22)", borderRadius: 12, padding: "12px 14px" }}>
+                <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 12, lineHeight: 1.5, flexShrink: 0 }}>›</span>
+                  <div>
+                    <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK }}>{wa.lead} </span>
+                    <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>{wa.body}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {w.wrapUp && (
+        <div style={{ background: INK, borderRadius: 14, padding: isMobile ? "16px 16px" : "18px 20px", marginTop: 22 }}>
+          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.4)", marginBottom: 7 }}>
+            Where we're at
+          </div>
+          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.7, margin: 0 }}>{w.wrapUp}</p>
+        </div>
+      )}
+    </>
+  )
+}
+
 function ThisWeekCard() {
   const isMobile = useIsMobile()
   const w = WEEKLY_LOG[0]
@@ -2114,160 +2220,51 @@ function ThisWeekCard() {
             </span>
           </div>
         </div>
-        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 28 : 40, color: INK, letterSpacing: -1.4, lineHeight: 1.03, margin: "0 0 12px" }}>
-          {w.title}
-        </h2>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 13.5, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 720 }}>
-          {w.intro}
-        </p>
-
-        {/* What I built */}
-        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 12px" }}>
-          What I built
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 10, marginBottom: 18 }}>
-          {w.highlights.map((h, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, padding: "14px 16px", borderRadius: 12, background: "#fff", border: `1.5px solid ${INK}` }}>
-              <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 900, fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center", marginTop: 1 }}>★</div>
-              <div>
-                <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13.5, color: INK }}>{h.lead} </span>
-                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 12.5, color: INK2, lineHeight: 1.65 }}>{h.body}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p style={{ fontFamily: FONT, fontWeight: 400, fontSize: 12.5, color: INK, lineHeight: 1.6, margin: "0 0 14px" }}>{w.builtLead}</p>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
-          {w.bots.map(b => (
-            <div key={b.name} style={{ display: "flex", gap: 12, padding: "12px 14px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
-              <div style={{ width: 30, height: 30, borderRadius: "50%", flexShrink: 0, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 10, display: "flex", alignItems: "center", justifyContent: "center", letterSpacing: 0.3 }}>{b.initials}</div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: FONT, fontWeight: 800, fontSize: 13, color: INK, marginBottom: 3 }}>{b.name}</div>
-                <div style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.6 }}>{b.role}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.coordinators}</p>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK2, lineHeight: 1.65, margin: "12px 0 0" }}>{w.alongside}</p>
-
-        {/* Where I hit walls */}
-        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "26px 0 4px" }}>
-          Where I hit walls, and what I changed
-        </div>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: 12, color: INK3, lineHeight: 1.6, margin: "0 0 14px" }}>
-          Being honest about the hard parts — that's where I learned the most.
-        </p>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
-          {w.walls.map((wa, i) => (
-            <div key={i} style={{ background: "rgba(255,20,147,0.05)", border: "1px solid rgba(255,20,147,0.22)", borderRadius: 12, padding: "12px 14px" }}>
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <span style={{ color: "#FF1493", fontWeight: 900, fontSize: 12, lineHeight: 1.5, flexShrink: 0 }}>›</span>
-                <div>
-                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK }}>{wa.lead} </span>
-                  <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12, color: INK2, lineHeight: 1.65 }}>{wa.body}</span>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Where we're at */}
-        <div style={{ background: INK, borderRadius: 14, padding: isMobile ? "16px 16px" : "18px 20px", marginTop: 22 }}>
-          <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.4)", marginBottom: 7 }}>
-            Where we're at
-          </div>
-          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.7, margin: 0 }}>{w.wrapUp}</p>
-        </div>
+        <WeekBody w={w} />
       </div>
     </div>
   )
 }
 
 // ════════════════════════════════════════════════════════════════
-// VOICE AGENTS PROJECT · this week's focus (larger, with attached PDFs)
+// WEEKLY ARCHIVE · past weeks in a click-to-open accordion (newest first)
 // ════════════════════════════════════════════════════════════════
-function VoiceAgentsFocusCard() {
+function WeeklyArchive() {
   const isMobile = useIsMobile()
-  const base = import.meta.env.BASE_URL
-  const brief: { k: string; v: string }[] = [
-    { k: "The opportunity", v: "Use our loyalty data — roughly 102,000 customers with purchase history back to 2017 — to make targeted, personalized re-engagement and customer-care calls. Not cold calling." },
-    { k: "The technology", v: "Retell AI for the voice agent, connected to Twilio for telephony. Real two-way calls in English and French, following a detailed script, with a Python layer that analyzes each call and writes the outcome back into the CRM." },
-    { k: "The cost", v: "About $0.15 per active call minute. A 1,000-customer pilot at ~3 minutes each is roughly $450 in call usage, before build and software costs." },
-    { k: "The CRM", v: "Long-term direction is a custom CRM on AIOS + Supabase for full control; GoHighLevel can serve as a faster bridge during the transition." },
-    { k: "Fast track", v: "Teemu's company (sub60.ai) builds voice agents and custom CRMs as a paid service outside the coaching program — he'll send a proposal and run a demo for Mike." },
-    { k: "Before launch", v: "A proper Canadian and Quebec compliance review, plus a Claude-run security audit." },
-  ]
+  const past = WEEKLY_LOG.slice(1)
+  const [open, setOpen] = useState<number | null>(null)
+  if (past.length === 0) return null
   return (
-    <div style={{ ...CARD, padding: 0, overflow: "hidden" }}>
-      <div style={{ height: 3, background: "#FF1493", width: "100%" }} />
-      <div style={{ padding: isMobile ? "22px 18px 24px" : "34px 40px 34px" }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap" as const, gap: 10, marginBottom: 12 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
-            <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
-              This week's focus
-            </span>
-          </div>
-          <span style={{ fontFamily: FONT, fontSize: 8.5, fontWeight: 800, letterSpacing: 1, textTransform: "uppercase" as const, background: "#FF1493", color: "#fff", padding: "4px 11px", borderRadius: 99 }}>
-            New priority
-          </span>
-        </div>
-        <h2 style={{ fontFamily: FONT, fontWeight: 900, fontSize: isMobile ? 30 : 44, color: INK, letterSpacing: -1.6, lineHeight: 1.02, margin: "0 0 12px" }}>
-          Voice Agents Project
-        </h2>
-        <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12.5 : 14, color: INK2, lineHeight: 1.7, margin: 0, maxWidth: 780 }}>
-          Coming out of the meeting with Teemu, I've scoped a personalized AI voice-agent system that calls Mike's existing loyalty customers for customer-care and re-engagement — not cold calling. Here's the plan in brief; the full executive summary and the meeting transcript are attached below to download.
-        </p>
-
-        {/* Attached PDFs */}
-        <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 10, margin: "22px 0 6px" }}>
-          <a href={`${base}voice-agent-project-report.pdf`} target="_blank" rel="noopener noreferrer"
-             style={{ display: "inline-flex", alignItems: "center", gap: 9, background: INK, color: "#fff", fontFamily: FONT, fontWeight: 800, fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase" as const, padding: "12px 17px", borderRadius: 10, textDecoration: "none" }}>
-            <span style={{ fontSize: 13 }}>▤</span> Executive summary · PDF
-          </a>
-          <a href={`${base}teemu-voice-agents-meeting-transcript.pdf`} target="_blank" rel="noopener noreferrer"
-             style={{ display: "inline-flex", alignItems: "center", gap: 9, background: "#fff", color: INK, border: `1.5px solid ${INK}`, fontFamily: FONT, fontWeight: 800, fontSize: 11, letterSpacing: 0.5, textTransform: "uppercase" as const, padding: "12px 17px", borderRadius: 10, textDecoration: "none" }}>
-            <span style={{ fontSize: 13 }}>▤</span> Meeting transcript · PDF
-          </a>
-        </div>
-
-        {/* Plan in brief */}
-        <div style={{ fontFamily: FONT, fontSize: 9, fontWeight: 800, letterSpacing: 2, textTransform: "uppercase" as const, color: INK3, margin: "24px 0 12px" }}>
-          The plan in brief
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 8 }}>
-          {brief.map((b, i) => (
-            <div key={i} style={{ display: "flex", gap: 12, padding: "12px 15px", borderRadius: 12, background: CHIP, border: `1px solid ${RULE}` }}>
-              <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 10, color: INK3, flexShrink: 0, lineHeight: 1.9, letterSpacing: 0.5, width: 16 }}>0{i + 1}</span>
-              <div>
-                <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: 12.5, color: INK }}>{b.k}. </span>
-                <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 11.5 : 12.5, color: INK2, lineHeight: 1.65 }}>{b.v}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+    <div style={{ ...CARD, padding: isMobile ? "22px 18px 20px" : "30px 36px 28px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 4 }}>
+        <div style={{ width: 4, height: 4, background: INK, borderRadius: 1 }} />
+        <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: INK3 }}>
+          Archive · past weeks
+        </span>
       </div>
-
-      {/* Dark footer — also this week (email bots) */}
-      <div style={{ background: INK, padding: isMobile ? "18px 18px 20px" : "22px 40px 24px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-          <div style={{ width: 5, height: 5, borderRadius: 1, background: "rgba(255,255,255,0.25)" }} />
-          <span style={{ fontFamily: FONT, fontSize: 9, fontWeight: 700, letterSpacing: 2.5, textTransform: "uppercase" as const, color: "rgba(255,255,255,0.35)" }}>
-            Also this week
-          </span>
-        </div>
-        <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-          <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 11, color: "rgba(255,255,255,0.25)", flexShrink: 0, lineHeight: 1.6 }}>›</span>
-          <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.7, margin: 0 }}>
-            <span style={{ fontWeight: 800, color: "#fff" }}>Email bots. </span>
-            Separate from the voice agents, but still a priority for Mike: this week I also shipped the first one — <span style={{ fontWeight: 700, color: "#fff" }}>Filter Phil</span> (@Filter_Phil_bot), now live. He watches my Gmail and only pings me on Telegram when an email genuinely needs me, so nothing that matters slips by (touched on briefly with Teemu). More email automation continues in parallel with the voice-agent work.
-          </p>
-        </div>
-        <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
-          <span style={{ fontFamily: FONT, fontWeight: 200, fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: 0.5 }}>For Mike · Voice Agents Project · {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</span>
-        </div>
+      <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 12.5, color: INK3, lineHeight: 1.6, margin: "0 0 16px", maxWidth: 620 }}>
+        Every past week, kept in full. Tap a date to open it.
+      </p>
+      <div style={{ display: "flex", flexDirection: "column" as const, gap: 10 }}>
+        {past.map((wk, i) => {
+          const isOpen = open === i
+          return (
+            <div key={wk.dates} style={{ border: `1px solid ${RULE}`, borderRadius: 14, overflow: "hidden", background: "#fff" }}>
+              <button onClick={() => setOpen(isOpen ? null : i)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: isMobile ? "14px 16px" : "16px 20px", background: isOpen ? CHIP : "#fff", border: "none", cursor: "pointer", textAlign: "left" as const }}>
+                <span style={{ display: "flex", flexDirection: "column" as const, gap: 2, minWidth: 0 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: 800, fontSize: isMobile ? 14 : 16, color: INK, letterSpacing: -0.4 }}>{wk.dates}</span>
+                  {!isOpen && <span style={{ fontFamily: FONT, fontWeight: 300, fontSize: 11.5, color: INK3, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" as const }}>{wk.title}</span>}
+                </span>
+                <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: isOpen ? INK : CHIP, color: isOpen ? "#fff" : INK, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 700, transition: "transform 0.15s", transform: isOpen ? "rotate(45deg)" : "none" }}>+</span>
+              </button>
+              {isOpen && (
+                <div style={{ padding: isMobile ? "6px 16px 20px" : "8px 20px 24px", borderTop: `1px solid ${RULE}` }}>
+                  <WeekBody w={wk} />
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -2649,6 +2646,10 @@ export default function App() {
         <ThisWeekCard />
 
 
+        {/* ════════════════════════════════════════ ARCHIVE · PAST WEEKS ════════════════════════════════════════ */}
+        <WeeklyArchive />
+
+
         {/* ════════════════════════════════════════ ORG CHART · AI EMPLOYEES ════════════════════════════════════════ */}
         <OrgChartSection />
 
@@ -2687,9 +2688,7 @@ export default function App() {
         <BuildCalendar />
 
 
-        {/* ════════════════════════════════════════ FOCUS + PEOPLE ════════════════════════════════════════ */}
-        <VoiceAgentsFocusCard />
-
+        {/* ════════════════════════════════════════ PEOPLE ════════════════════════════════════════ */}
         {/* People */}
         <div style={{ ...CARD, padding: isMobile ? "18px 16px" : "28px 28px" }}>
           <SectionLabel label="People" />

@@ -1,9 +1,29 @@
-// Single source of truth for the "This Week" progress log.
-// Imported by App.tsx (the on-site section) AND by scripts/gen-this-week.mjs
-// (which pre-renders the standalone, public, bot-readable /this-week.html).
-// Plain data only (no JSX) so both sides render it identically.
+// Single source of truth for the "This Week" progress log + the Archive.
+// Imported by App.tsx (the on-site section + archive accordion) AND by
+// scripts/gen-this-week.mjs (which pre-renders the standalone, public,
+// bot-readable /this-week.html). Plain data only (no JSX).
+//
+// NEWEST FIRST. WEEKLY_LOG[0] is the CURRENT week (shown as "This week");
+// WEEKLY_LOG[1..] are archived weeks (shown in the Archive accordion).
+// Rollover happens on Sunday: prepend a fresh entry for the new week and the
+// prior current week becomes the top of the archive. See scripts/rollover-week.mjs.
 
 export const WEEKLY_LOG = [
+  {
+    dates: "Week of July 12, 2026",
+    title: "Voice agents, the first email bot, and mobile",
+    intro: "A focused week with two priorities for Mike moving in parallel — the Voice Agents Project and the email bots — plus I made the whole dashboard work properly on a phone.",
+    attachments: [
+      { label: "Voice Agent Project · Summary", sub: "PDF · Executive summary for Mike", href: "voice-agent-project-report.pdf" },
+      { label: "Teemu Meeting · Transcript", sub: "PDF", href: "teemu-voice-agents-meeting-transcript.pdf" },
+    ],
+    highlights: [
+      { lead: "Voice Agents Project.", body: "Coming out of the meeting with Teemu, I scoped a personalized AI voice-agent system that calls Mike's existing loyalty customers (roughly 102,000, with purchase history back to 2017) for customer-care and re-engagement — not cold calling. The plan: Retell AI for the voice agent plus Twilio for telephony, a Python layer that analyzes each call and writes the outcome back to the CRM, about $0.15 per active call minute (~$450 for a 1,000-customer pilot), a custom CRM on AIOS + Supabase as the long-term home, and a proper Canadian/Quebec compliance review plus a security audit before anything launches. Full executive summary and the meeting transcript are attached above." },
+      { lead: "Filter Phil — the first email bot, live.", body: "I set up @Filter_Phil_bot under the AIOS project. He watches my Gmail around the clock and only pings me on Telegram when an email genuinely needs me — a real person, money, a deadline, a contract. Spam, promotions and social noise never get through. A small Google Apps Script checks new mail every 5 minutes and Claude makes the judgment call; when it's unsure, he stays silent. He's on the org chart now, and more email automation continues from here." },
+      { lead: "Made the dashboard mobile friendly.", body: "I went through the whole dashboard at phone width and tightened it up — the biggest fix was the coaching-sessions calendar, which now stacks one month per row with big, tappable day circles instead of four cramped columns. Confirmed there's no sideways scrolling anywhere and every section reads cleanly on a phone." },
+    ],
+    wrapUp: "Two tracks moving for Mike — voice agents (Teemu to send a proposal and a demo) and the email bots (Filter Phil live, more to come) — and the dashboard itself now looks right on a phone.",
+  },
   {
     dates: "Week of July 6, 2026",
     title: "Building the AI Operating Layer",
@@ -19,7 +39,6 @@ export const WEEKLY_LOG = [
       { name: "Checklist Chuck", initials: "CH", role: "Runs the daily rhythm: the morning brief and the end-of-day wrap." },
       { name: "Shift Sheila", initials: "SS", role: "Checks in with Leah each afternoon and logs her day, which feeds straight into Pete's Friday report." },
       { name: "Cory the Coordinator", initials: "CO", role: "Little Tree Capital's own coordinator. He manages the tasks on the LTC dashboard, keeps the board current and honest, and rolls each week into a clean report, so Mike always has a clear read on where Capital stands without asking. He also updates the meeting agenda and makes sure Tiffanie gets all of her ideas onto the dashboard." },
-      { name: "Filter Phil", initials: "FP", role: "My Gmail attention bot, live as @Filter_Phil_bot under the AIOS project. He watches my inbox around the clock and only pings me on Telegram when an email genuinely needs me — a real person, money, a deadline, a contract, something I'd regret missing. Spam, promotions and social noise never get through. A small Google Apps Script in my own inbox checks new mail every 5 minutes and hands the subject, sender and a short preview to a secured endpoint where Claude makes the call; when it's unsure, he stays silent." },
     ],
     coordinators: "I also mapped out coordinators for the other companies — Cory for Capital, Marty for Pay, Diesel Dan for Fuel — so the same model scales across the portfolio.",
     alongside: "Alongside the bots, I built my own command page (calendar, dashboards, an animated org chart showing every company and every bot, a resources library, and walkthrough videos), wrote a “Bot Factory” playbook so any new bot follows the same proven process, and set up the database and reporting behind all of it.",
