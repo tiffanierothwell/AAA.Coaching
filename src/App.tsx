@@ -1978,6 +1978,7 @@ const COACHING_SESSIONS: CoachSession[] = [
   { date: "2026-06-30", coach: "Teemu Lahdenpera", time: "11:00 AM" },
   { date: "2026-07-08", coach: "James Latos",   time: "9:00 AM" },
   { date: "2026-07-13", coach: "Teemu Lahdenpera", time: "9:00 AM" },
+  { date: "2026-07-16", coach: "Teemu Lahdenpera", time: "11:00 AM" },
 ]
 const COACHING_MONTHS = [
   { name: "April 2026", y: 2026, m: 3 },
