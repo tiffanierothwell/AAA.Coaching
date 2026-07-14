@@ -2262,7 +2262,7 @@ function VoiceAgentsFocusCard() {
           <span style={{ fontFamily: FONT, fontWeight: 900, fontSize: 11, color: "rgba(255,255,255,0.25)", flexShrink: 0, lineHeight: 1.6 }}>›</span>
           <p style={{ fontFamily: FONT, fontWeight: 300, fontSize: isMobile ? 12 : 13, color: "rgba(255,255,255,0.75)", lineHeight: 1.7, margin: 0 }}>
             <span style={{ fontWeight: 800, color: "#fff" }}>Email bots. </span>
-            Separate from the voice agents, but still a priority for Mike: this week I'm also building out the email bots — the automation that reads and handles incoming email (touched on briefly with Teemu). It runs in parallel with the voice-agent work.
+            Separate from the voice agents, but still a priority for Mike: this week I also shipped the first one — <span style={{ fontWeight: 700, color: "#fff" }}>Filter Phil</span> (@Filter_Phil_bot), now live. He watches my Gmail and only pings me on Telegram when an email genuinely needs me, so nothing that matters slips by (touched on briefly with Teemu). More email automation continues in parallel with the voice-agent work.
           </p>
         </div>
         <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)" }}>
@@ -2341,13 +2341,23 @@ const ORG_BOTS: Record<string, OrgBot> = {
     chips: ["LTF dashboard", "Task management", "Weekly report"],
     about: "Dan will be Little Tree Fuel's coordinator — the same role Cory plays for Capital: manage the tasks in the dashboard and deliver a weekly report. He isn't set up yet, but the name is locked in.",
   },
+  phil: {
+    id: "phil", name: "Filter Phil", short: "Filter", sub: "Email filter", handle: "@Filter_Phil_bot", cadence: "Real-time",
+    tag: "Watches Tiffanie's Gmail around the clock and pings her on Telegram only when an email genuinely needs her.",
+    chips: ["Google Apps Script", "Claude judges importance", "Telegram DM", "No spam, no promos"],
+    about: "Phil lives inside Tiffanie's Gmail and checks every new email as it lands — spam, promotions and social noise never make it past the door. Everything else gets a real judgment call: is this a person, money, a deadline, a contract, something she'd regret missing? A small <b>Google Apps Script</b> in her own inbox scans new mail every <b>5 minutes</b> — her email never leaves her account beyond a short preview — and hands the subject, sender and preview to a secured endpoint on the dashboard, where <b>Claude (claude-opus-4-8)</b> makes the call. When it's unsure, it stays quiet. If it matters, Phil sends her a private <b>Telegram</b> message with the subject, who it's from, and one plain-language line on why it counts. No digest, no noise — just the emails that count. He's live as <b>@Filter_Phil_bot</b>.",
+    chat: [
+      { s: "in", who: "Filter Phil", t: "Hi Tiffanie,\nFilter Phil here 👋🤓\nYou just got an email that might need your attention.\n✉️ LTC shareholder agreement, signature pages\n👤 Eric Sharp\n💡 Eric needs the signed pages back before Thursday's council meeting." },
+      { s: "in", who: "Filter Phil", t: "Hi Tiffanie,\nFilter Phil here 👋🤓\nYou just got an email that might need your attention.\n✉️ Invoice 2214 past due\n👤 Avochato Billing\n💡 A real balance is overdue and the account could pause if it isn't handled." },
+    ],
+  },
 }
 const ORG_COMPANIES: { name: string; bots: string[] }[] = [
   { name: "Little Tree Ventures", bots: ["pete", "chuck", "cal", "sheila"] },
   { name: "Little Tree Capital",  bots: ["cory"] },
   { name: "Little Tree Pay",      bots: ["marty"] },
   { name: "Little Tree Fuel",     bots: ["dan"] },
-  { name: "AIOS",                 bots: [] },
+  { name: "AIOS",                 bots: ["phil"] },
   { name: "Jay-i",                bots: [] },
 ]
 
