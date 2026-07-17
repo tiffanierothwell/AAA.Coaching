@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>This Week · Voice agents, the first email bot, and mobile</title>
-<meta name="description" content="Voice agents, the first email bot, and mobile — weekly progress log." />
+<title>This Week · Six companies mapped, the CEO walkthrough, and Progress Pat’s first report</title>
+<meta name="description" content="Six companies mapped, the CEO walkthrough, and Progress Pat’s first report — weekly progress log." />
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,31 +38,60 @@
         <span style="font-size:8.5px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:#FF1493;color:#fff;padding:4px 11px;border-radius:99px">Progress log</span>
       </div>
 
-      <h2 class="title">Voice agents, the first email bot, and mobile</h2>
-      <p style="font-weight:300;font-size:13.5px;color:#4A4A4A;line-height:1.7;margin:0;max-width:720px">A focused week with two priorities for Mike moving in parallel — the Voice Agents Project and the email bots — plus I made the whole dashboard work properly on a phone.</p>
+      <h2 class="title">Six companies mapped, the CEO walkthrough, and Progress Pat’s first report</h2>
+      <p style="font-weight:300;font-size:13.5px;color:#4A4A4A;line-height:1.7;margin:0;max-width:720px">The MJM side lit up this week — all six companies got mapped into live org charts, Angelika got a full walkthrough of the system, and Progress Pat’s first weekly report is ready for the group — while the voice-agent and email-bot tracks for Mike kept moving in parallel.</p>
 
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 4px">
-    <a href="/voice-agent-project-report.pdf" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#0A0A0A;color:#fff;border:none;font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:12px 17px;border-radius:10px;text-decoration:none">&#9636; Voice Agent Project · Summary</a>
+    <a href="/progress-pat-weekly-report-july17.pdf" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#0A0A0A;color:#fff;border:none;font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:12px 17px;border-radius:10px;text-decoration:none">&#9636; Progress Pat · Weekly Report to MJM</a>
+    <a href="/voice-agent-project-report.pdf" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:#0A0A0A;border:1.5px solid #0A0A0A;font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:12px 17px;border-radius:10px;text-decoration:none">&#9636; Voice Agent Project · Summary</a>
     <a href="/teemu-voice-agents-meeting-transcript.pdf" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:9px;background:#fff;color:#0A0A0A;border:1.5px solid #0A0A0A;font-weight:800;font-size:11px;letter-spacing:.5px;text-transform:uppercase;padding:12px 17px;border-radius:10px;text-decoration:none">&#9636; Teemu Meeting · Transcript</a>
       </div>
       <div class="sub-label" style="margin:26px 0 12px">What I built</div>
       <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:0">
     <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
       <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
-      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Voice Agents Project. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">Coming out of the meeting with Teemu, I scoped a personalized AI voice-agent system that calls Mike's existing loyalty customers (roughly 102,000, with purchase history back to 2017) for customer-care and re-engagement — not cold calling. The plan: Retell AI for the voice agent plus Twilio for telephony, a Python layer that analyzes each call and writes the outcome back to the CRM, about $0.15 per active call minute (~$450 for a 1,000-customer pilot), a custom CRM on AIOS + Supabase as the long-term home, and a proper Canadian/Quebec compliance review plus a security audit before anything launches. Full executive summary and the meeting transcript are attached above.</span></div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Six company org charts, mapped. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">Every company in the portfolio now has a live org chart drawn straight from the reporting data the team entered — Little Tree, The Medicine Box, Kanehsatake Community Fitness, Leroi Tobacco Vape, The Box Cafe, and Moccasin Joe Coffee Roasters. They’re mostly complete, just missing some reporting detail, and the mission meter now sits at the top of the weekly report: 100% of the company knowledge, extracted — we’re at 5% and climbing.</span></div>
     </div>
     <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
       <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
-      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Filter Phil — the first email bot, live. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">I set up @Filter_Phil_bot under the AIOS project. He watches my Gmail around the clock and only pings me on Telegram when an email genuinely needs me — a real person, money, a deadline, a contract. Spam, promotions and social noise never get through. A small Google Apps Script checks new mail every 5 minutes and Claude makes the judgment call; when it's unsure, he stays silent. He's on the org chart now, and more email automation continues from here.</span></div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Angie (CEO) reviewed the system. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">I walked Angelika through a live demo of the data extraction and the direction — org charts, KPIs, and the bots — and recorded a Loom walkthrough of how company knowledge gets captured into the system. We set a biweekly cadence and she’s sending ideas as they come. I also built the bilingual (EN + FR) employee form that captures each person’s role and how best to support them — curiosity and support, never “replace.” Angie can edit it, and once she sends it out, collection starts. Andre is on board too — I showed him AIOS and he’s happy to help with the transition — and the systems-and-access handoff with Amy is booked for Tuesday morning, agenda sent Thursday.</span></div>
     </div>
     <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
       <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
-      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Made the dashboard mobile friendly. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">I went through the whole dashboard at phone width and tightened it up — the biggest fix was the coaching-sessions calendar, which now stacks one month per row with big, tappable day circles instead of four cramped columns. Confirmed there's no sideways scrolling anywhere and every section reads cleanly on a phone.</span></div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Progress Pat’s first report to MJM. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">The MJM group now has its own weekly reporter. Pat’s report is a full-color nine-pager — the mission meter, what shipped, all six org charts as full pages, the roadblocks I’m solving, and next week’s plan — living at a public dated link with a new “On-going Progress Reports” tab on the demo site that archives every week as the next one lands.</span></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
+      <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Filter Phil — the first email bot, live. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">I set up @Filter_Phil_bot under the AIOS project. He watches my Gmail around the clock and only pings me on Telegram when an email genuinely needs me — a real person, money, a deadline, a contract. Spam, promotions and social noise never get through. A small Google Apps Script checks new mail every 5 minutes and Claude makes the judgment call; when it’s unsure, he stays silent. He’s on the org chart now, and more email automation continues from here.</span></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
+      <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Voice Agents Project. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">Coming out of the meeting with Teemu, I scoped a personalized AI voice-agent system that calls Mike’s existing loyalty customers (roughly 102,000, with purchase history back to 2017) for customer-care and re-engagement — not cold calling. The plan: Retell AI for the voice agent plus Twilio for telephony, a Python layer that analyzes each call and writes the outcome back to the CRM, about $0.15 per active call minute (~$450 for a 1,000-customer pilot), a custom CRM on AIOS + Supabase as the long-term home, and a proper Canadian/Quebec compliance review plus a security audit before anything launches. The full proposal lands next week — built to be a key marketing engine for Little Tree first, then rolled out across the other companies.</span></div>
+    </div>
+    <div style="display:flex;gap:12px;padding:14px 16px;border-radius:12px;background:#fff;border:1.5px solid #0A0A0A">
+      <div style="width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#0A0A0A;color:#fff;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;margin-top:1px">★</div>
+      <div><span style="font-weight:800;font-size:13.5px;color:#0A0A0A">Made the dashboard mobile friendly. </span><span style="font-weight:300;font-size:12.5px;color:#4A4A4A;line-height:1.65">I went through the whole dashboard at phone width and tightened it up — the biggest fix was the coaching-sessions calendar, which now stacks one month per row with big, tappable day circles instead of four cramped columns. Confirmed there’s no sideways scrolling anywhere and every section reads cleanly on a phone — including the new weekly report, which scales itself to fit any screen.</span></div>
+    </div>
+      </div>
+      <div class="sub-label" style="margin:26px 0 4px">Where I hit walls, and what I changed</div>
+      <p style="font-weight:300;font-size:12px;color:#9A9A9A;line-height:1.6;margin:0 0 14px">Being honest about the hard parts — that's where I learned the most.</p>
+      <div style="display:flex;flex-direction:column;gap:8px">
+    <div style="background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.22);border-radius:12px;padding:12px 14px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:#FF1493;font-weight:900;font-size:12px;line-height:1.5;flex-shrink:0">&rsaquo;</span>
+        <div><span style="font-weight:800;font-size:12.5px;color:#0A0A0A">Phil opens the inbox, not the exact email, yet. </span><span style="font-weight:300;font-size:12px;color:#4A4A4A;line-height:1.65">Testing workarounds now — I’ll have it solid before Mike’s account is connected.</span></div>
+      </div>
+    </div>
+    <div style="background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.22);border-radius:12px;padding:12px 14px">
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <span style="color:#FF1493;font-weight:900;font-size:12px;line-height:1.5;flex-shrink:0">&rsaquo;</span>
+        <div><span style="font-weight:800;font-size:12.5px;color:#0A0A0A">Tuning Phil’s judgment. </span><span style="font-weight:300;font-size:12px;color:#4A4A4A;line-height:1.65">A few hours of trial and error so he skips cc-only threads, repetitive reports, and anything a stakeholder wouldn’t care about. He’s 10/10 now.</span></div>
+      </div>
     </div>
       </div>
       <div style="background:#0A0A0A;border-radius:14px;padding:18px 20px;margin-top:22px">
         <div class="sub-label" style="color:rgba(255,255,255,0.4);margin-bottom:7px">Where we're at</div>
-        <p style="font-weight:300;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.7;margin:0">Two tracks moving for Mike — voice agents (Teemu to send a proposal and a demo) and the email bots (Filter Phil live, more to come) — and the dashboard itself now looks right on a phone.</p>
+        <p style="font-weight:300;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.7;margin:0">Mike’s two tracks keep moving — voice agents and the email bots — and the MJM side now has a rhythm of its own: the portfolio mapped, the CEO looped in, the employee form ready to send, and a weekly report that keeps the receipts.</p>
       </div>
 
     </div>
