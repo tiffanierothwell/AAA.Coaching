@@ -12,12 +12,20 @@ export const config = {
 
 const COOKIE = 'aaa_auth';
 
+// De-index directive, sent as an HTTP header on every response this middleware
+// generates (the login page + redirects). Belt-and-suspenders with the <meta>
+// tags in the HTML and the site-wide rule in vercel.json — together they keep
+// this whole site out of Google and every other search engine.
+const ROBOTS = 'noindex, nofollow, noarchive, nosnippet, noimageindex';
+
 function loginPage(error) {
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="${ROBOTS}" />
+<meta name="googlebot" content="${ROBOTS}" />
 <title>AAA Coaching AIOS · Tiffanie's Project Management Dashboard</title>
 <meta name="description" content="Private coaching dashboard for the MJM 360 Command Center build — phases, timeline, coaching sessions, and the AIOS architecture." />
 <meta property="og:type" content="website" />
@@ -74,7 +82,11 @@ function loginPage(error) {
 function htmlResponse(body, status) {
   return new Response(body, {
     status,
-    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'X-Robots-Tag': ROBOTS,
+    },
   });
 }
 
@@ -83,7 +95,7 @@ export default async function middleware(request) {
   if (!pass) {
     return new Response(
       'Site password is not configured. Set the SITE_PASSWORD env var on Vercel.',
-      { status: 503 },
+      { status: 503, headers: { 'X-Robots-Tag': ROBOTS } },
     );
   }
 
@@ -92,11 +104,12 @@ export default async function middleware(request) {
   // Public assets so link-unfurlers (iMessage, Slack, LinkedIn, etc.) can build
   // a preview card without the password. Only the OG image + favicons — no app
   // content is exposed here.
-  // Public, unauthenticated: the OG image + favicons (for link unfurlers), and
-  // the standalone "This Week" progress log (so a bot can read it with a plain
-  // fetch). The This Week page contains only that one section — no other app
-  // content is exposed.
-  const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico', '/this-week', '/this-week.html']);
+  // Public, unauthenticated: the OG image + favicons (for link unfurlers), the
+  // standalone "This Week" progress log (so a bot can read it with a plain
+  // fetch), and robots.txt (so crawlers can actually read it instead of being
+  // served the login page). These fall through to Vercel, which stamps the
+  // X-Robots-Tag header on them via the rule in vercel.json.
+  const OPEN_PATHS = new Set(['/og-image.png', '/favicon.svg', '/favicon.ico', '/this-week', '/this-week.html', '/robots.txt']);
   if (OPEN_PATHS.has(url.pathname) || url.pathname.startsWith('/apple-touch-icon')) return;
 
   // Log out — clear the auth cookie and send back to the login page.
@@ -105,6 +118,7 @@ export default async function middleware(request) {
     headers.set('Set-Cookie', `${COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`);
     headers.set('Location', '/');
     headers.set('Cache-Control', 'no-store');
+    headers.set('X-Robots-Tag', ROBOTS);
     return new Response(null, { status: 303, headers });
   }
 
@@ -112,7 +126,7 @@ export default async function middleware(request) {
   const cookie = request.headers.get('cookie') || '';
   const authed = cookie.split(';').some(c => c.trim() === wanted);
 
-  // Already signed in — serve the site.
+  // Already signed in — serve the site. (Vercel stamps X-Robots-Tag via vercel.json.)
   if (authed) return;
 
   // Login submission.
@@ -130,6 +144,7 @@ export default async function middleware(request) {
       );
       headers.set('Location', url.pathname);
       headers.set('Cache-Control', 'no-store');
+      headers.set('X-Robots-Tag', ROBOTS);
       return new Response(null, { status: 303, headers });
     }
     return htmlResponse(loginPage(true), 401);

@@ -4,5 +4,13 @@
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/this-week", "destination": "/this-week.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow, noarchive, nosnippet, noimageindex" }
+      ]
+    }
   ]
 }

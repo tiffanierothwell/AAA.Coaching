@@ -1,0 +1,17 @@
+# robots.txt — aios-project-management.vercel.app
+#
+# This site is intentionally DE-INDEXED, yet we deliberately ALLOW crawling.
+#
+# Why not "Disallow: /"?  Because blocking crawlers would stop them from ever
+# fetching the pages — which means they would never SEE the noindex directives
+# (the X-Robots-Tag HTTP header and the <meta name="robots"> tags). A search
+# engine can only DROP a URL from its index once it re-crawls the page and
+# reads "noindex". If we blocked crawling here, any URLs already indexed would
+# get STUCK as stale results, because the crawler could never return to learn
+# they should be removed.
+#
+# So: let crawlers in, let them read "noindex" on every page and asset, and let
+# them remove us. Do NOT add "Disallow: /" to this file.
+
+User-agent: *
+Allow: /
